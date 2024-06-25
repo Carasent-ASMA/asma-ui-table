@@ -1,11 +1,9 @@
 {
     "fontFamily": {
-        "sans": ["Roboto"],
         "roboto": ["Roboto"]
     },
     "colors": {
         "inherit": "inherit",
-        "textcolor-component": "var(--colors-text-component)",
         "color-active-component": "var(--colors-active-component)",
         "alpha-100": "var(--colors-alpha-100)",
         "alpha-500": "var(--colors-alpha-500)",
