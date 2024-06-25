@@ -2,7 +2,7 @@ import type { Meta } from '@storybook/react'
 import type { StoryObj } from '@storybook/react'
 import { StyledRadio } from './StyledRadio'
 import { StyledRadioGroup } from './StyledRadioGroup'
-import { StyledFormControlLabel } from 'asma-core-ui'
+import { StyledFormControlLabel } from 'asma-ui-table'
 import React from 'react'
 
 const meta = {
@@ -23,19 +23,10 @@ export const Radio: Story = {
 
 const StyledRadioExample = () => {
     return (
-        <StyledRadioGroup dataTest='radio-group' defaultValue="one" name="radio-buttons-group">
-            <StyledFormControlLabel
-                label='one'
-                control={<StyledRadio dataTest='one' value="one"  />}
-            />
-            <StyledFormControlLabel
-                label='two'
-                control={<StyledRadio dataTest='two' value="two" />}
-            />
-            <StyledFormControlLabel
-                label='three'
-                control={<StyledRadio dataTest='three' value="three" />}
-            />
+        <StyledRadioGroup dataTest='radio-group' defaultValue='one' name='radio-buttons-group'>
+            <StyledFormControlLabel label='one' control={<StyledRadio dataTest='one' value='one' />} />
+            <StyledFormControlLabel label='two' control={<StyledRadio dataTest='two' value='two' />} />
+            <StyledFormControlLabel label='three' control={<StyledRadio dataTest='three' value='three' />} />
         </StyledRadioGroup>
     )
 }

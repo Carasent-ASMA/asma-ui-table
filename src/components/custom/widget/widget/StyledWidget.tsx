@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon, StyledButton, StyledLink, StyledWidgetTitle } from 'asma-core-ui'
+import { ChevronDownIcon, ChevronUpIcon, StyledButton, StyledLink, StyledWidgetTitle } from 'asma-ui-table'
 import type { PropsWithChildren, ReactNode } from 'react'
 import style from './StyledWidget.module.scss'
 import { useState } from 'react'
@@ -29,7 +29,7 @@ export const StyledWidget: React.FC<PropsWithChildren<StyledWidgetProps>> = ({
     const [expanded, setExpanded] = useState(false)
 
     return (
-        <div className={style['asma-core-ui-styled-widget']}>
+        <div className={style['asma-ui-table-styled-widget']}>
             <div
                 className={clsx(
                     style['widget-wrapper'],

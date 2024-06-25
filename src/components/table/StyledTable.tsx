@@ -52,7 +52,7 @@ export const StyledTable = <
     }, [props.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
     return (
-        <div className={style['asma-core-ui-styled-table']}>
+        <div className={style['asma-ui-table-styled-table']}>
             <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
                 <table
                     className={style['styled-table']}

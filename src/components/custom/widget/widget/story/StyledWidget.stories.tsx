@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react'
 import { StyledWidget } from '../StyledWidget'
-import { InboxOutboxOutlineIcon } from 'asma-core-ui'
+import { InboxOutboxOutlineIcon } from 'asma-ui-table'
 import styles from './StyledWidgetStories.module.scss'
 
 const meta: Meta = {
@@ -16,7 +16,7 @@ export default meta
 export const Widget = () => {
     return (
         <div className={styles['page-wrapper']}>
-            <div className={styles['column-wrapper']} style={{ width: '736px' }} >
+            <div className={styles['column-wrapper']} style={{ width: '736px' }}>
                 <StyledWidget
                     title='Widget name'
                     icon={<InboxOutboxOutlineIcon width={24} height={24} />}

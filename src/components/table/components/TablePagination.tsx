@@ -17,7 +17,7 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         handleOpen(event)
     }
-    const AsmaCoreUiStyledTable = styleTable['asma-core-ui-styled-table']
+    const AsmaCoreUiStyledTable = styleTable['asma-ui-table-styled-table']
     const scrollToTop = () => {
         tablePagination?.current
             ?.closest(`.${AsmaCoreUiStyledTable}`)

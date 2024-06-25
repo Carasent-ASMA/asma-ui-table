@@ -10,7 +10,7 @@
         "paths": {
             "*": ["*"],
             "@": ["src/*"],
-            "asma-core-ui": ["src/index.ts"]
+            "asma-ui-table": ["src/index.ts"]
         },
         "target": "ESNext",
         "useDefineForClassFields": true,

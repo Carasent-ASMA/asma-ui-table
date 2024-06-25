@@ -1,5 +1,5 @@
 import { AccordionSummary, type AccordionSummaryProps } from '@mui/material'
-import { ChevronDownIcon } from 'asma-core-ui'
+import { ChevronDownIcon } from 'asma-ui-table'
 import clsx from 'clsx'
 
 export const StyledAccordionSummary = (props: AccordionSummaryProps) => (

@@ -81,7 +81,7 @@ export const StyledButton = ({
         <button
             {...otherProps}
             className={clsx(
-                style['asma-core-ui-button'],
+                style['asma-ui-table-button'],
                 BtnStyles[variant],
                 BtnStyles[color],
                 BtnStyles[size],

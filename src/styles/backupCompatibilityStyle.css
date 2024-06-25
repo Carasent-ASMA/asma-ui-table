@@ -1445,12 +1445,12 @@
 ._button_2p4hz_1._large_2p4hz_46 {
     height: 40px;
 }
-.asma-core-ui-button {
+.asma-ui-table-button {
     border-width: 1px;
     border-color: transparent;
     border-style: solid;
 }
-.asma-core-ui-button.contained.common {
+.asma-ui-table-button.contained.common {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1472,33 +1472,33 @@
     background-color: var(--colors-button-contained-common-bg-color) !important;
     border-color: var(--colors-button-contained-common-border-color) !important;
 }
-.asma-core-ui-button.contained.common:active {
+.asma-ui-table-button.contained.common:active {
     color: var(--colors-button-contained-common-active-text-color) !important;
     background-color: var(--colors-button-contained-common-active-bg-color) !important;
     border-color: var(--colors-button-contained-common-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.contained.common:hover {
+.asma-ui-table-button.contained.common:hover {
     color: var(--colors-button-contained-common-hover-text-color) !important;
     background-color: var(--colors-button-contained-common-hover-bg-color) !important;
     border-color: var(--colors-button-contained-common-hover-border-color) !important;
 }
-.asma-core-ui-button.contained.common:focus {
+.asma-ui-table-button.contained.common:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-contained-common-focused-text-color) !important;
     background-color: var(--colors-button-contained-common-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-contained-common-focused-border-color) !important;
 }
-.asma-core-ui-button.contained.common:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.contained.common:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.contained.common:disabled {
+.asma-ui-table-button.contained.common:disabled {
     cursor: default;
     color: var(--colors-button-contained-common-disabled-text-color) !important;
     background-color: var(--colors-button-contained-common-disabled-bg-color) !important;
     border-color: var(--colors-button-contained-common-disabled-border-color) !important;
 }
-.asma-core-ui-button.contained.error {
+.asma-ui-table-button.contained.error {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1520,33 +1520,33 @@
     background-color: var(--colors-button-contained-error-bg-color) !important;
     border-color: var(--colors-button-contained-error-border-color) !important;
 }
-.asma-core-ui-button.contained.error:active {
+.asma-ui-table-button.contained.error:active {
     color: var(--colors-button-contained-error-active-text-color) !important;
     background-color: var(--colors-button-contained-error-active-bg-color) !important;
     border-color: var(--colors-button-contained-error-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.contained.error:hover {
+.asma-ui-table-button.contained.error:hover {
     color: var(--colors-button-contained-error-hover-text-color) !important;
     background-color: var(--colors-button-contained-error-hover-bg-color) !important;
     border-color: var(--colors-button-contained-error-hover-border-color) !important;
 }
-.asma-core-ui-button.contained.error:focus {
+.asma-ui-table-button.contained.error:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-contained-error-focused-text-color) !important;
     background-color: var(--colors-button-contained-error-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-contained-error-focused-border-color) !important;
 }
-.asma-core-ui-button.contained.error:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.contained.error:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.contained.error:disabled {
+.asma-ui-table-button.contained.error:disabled {
     cursor: default;
     color: var(--colors-button-contained-error-disabled-text-color) !important;
     background-color: var(--colors-button-contained-error-disabled-bg-color) !important;
     border-color: var(--colors-button-contained-error-disabled-border-color) !important;
 }
-.asma-core-ui-button.outlined.common {
+.asma-ui-table-button.outlined.common {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1568,33 +1568,33 @@
     background-color: var(--colors-button-outlined-common-bg-color) !important;
     border-color: var(--colors-button-outlined-common-border-color) !important;
 }
-.asma-core-ui-button.outlined.common:active {
+.asma-ui-table-button.outlined.common:active {
     color: var(--colors-button-outlined-common-active-text-color) !important;
     background-color: var(--colors-button-outlined-common-active-bg-color) !important;
     border-color: var(--colors-button-outlined-common-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.outlined.common:hover {
+.asma-ui-table-button.outlined.common:hover {
     color: var(--colors-button-outlined-common-hover-text-color) !important;
     background-color: var(--colors-button-outlined-common-hover-bg-color) !important;
     border-color: var(--colors-button-outlined-common-hover-border-color) !important;
 }
-.asma-core-ui-button.outlined.common:focus {
+.asma-ui-table-button.outlined.common:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-outlined-common-focused-text-color) !important;
     background-color: var(--colors-button-outlined-common-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-outlined-common-focused-border-color) !important;
 }
-.asma-core-ui-button.outlined.common:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.outlined.common:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.outlined.common:disabled {
+.asma-ui-table-button.outlined.common:disabled {
     cursor: default;
     color: var(--colors-button-outlined-common-disabled-text-color) !important;
     background-color: var(--colors-button-outlined-common-disabled-bg-color) !important;
     border-color: var(--colors-button-outlined-common-disabled-border-color) !important;
 }
-.asma-core-ui-button.outlined.error {
+.asma-ui-table-button.outlined.error {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1616,33 +1616,33 @@
     background-color: var(--colors-button-outlined-error-bg-color) !important;
     border-color: var(--colors-button-outlined-error-border-color) !important;
 }
-.asma-core-ui-button.outlined.error:active {
+.asma-ui-table-button.outlined.error:active {
     color: var(--colors-button-outlined-error-active-text-color) !important;
     background-color: var(--colors-button-outlined-error-active-bg-color) !important;
     border-color: var(--colors-button-outlined-error-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.outlined.error:hover {
+.asma-ui-table-button.outlined.error:hover {
     color: var(--colors-button-outlined-error-hover-text-color) !important;
     background-color: var(--colors-button-outlined-error-hover-bg-color) !important;
     border-color: var(--colors-button-outlined-error-hover-border-color) !important;
 }
-.asma-core-ui-button.outlined.error:focus {
+.asma-ui-table-button.outlined.error:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-outlined-error-focused-text-color) !important;
     background-color: var(--colors-button-outlined-error-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-outlined-error-focused-border-color) !important;
 }
-.asma-core-ui-button.outlined.error:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.outlined.error:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.outlined.error:disabled {
+.asma-ui-table-button.outlined.error:disabled {
     cursor: default;
     color: var(--colors-button-outlined-error-disabled-text-color) !important;
     background-color: var(--colors-button-outlined-error-disabled-bg-color) !important;
     border-color: var(--colors-button-outlined-error-disabled-border-color) !important;
 }
-.asma-core-ui-button.text.common {
+.asma-ui-table-button.text.common {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1664,33 +1664,33 @@
     background-color: var(--colors-button-text-common-bg-color) !important;
     border-color: var(--colors-button-text-common-border-color) !important;
 }
-.asma-core-ui-button.text.common:active {
+.asma-ui-table-button.text.common:active {
     color: var(--colors-button-text-common-active-text-color) !important;
     background-color: var(--colors-button-text-common-active-bg-color) !important;
     border-color: var(--colors-button-text-common-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.text.common:hover {
+.asma-ui-table-button.text.common:hover {
     color: var(--colors-button-text-common-hover-text-color) !important;
     background-color: var(--colors-button-text-common-hover-bg-color) !important;
     border-color: var(--colors-button-text-common-hover-border-color) !important;
 }
-.asma-core-ui-button.text.common:focus {
+.asma-ui-table-button.text.common:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-text-common-focused-text-color) !important;
     background-color: var(--colors-button-text-common-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-text-common-focused-border-color) !important;
 }
-.asma-core-ui-button.text.common:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.text.common:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.text.common:disabled {
+.asma-ui-table-button.text.common:disabled {
     cursor: default;
     color: var(--colors-button-text-common-disabled-text-color) !important;
     background-color: var(--colors-button-text-common-disabled-bg-color) !important;
     border-color: var(--colors-button-text-common-disabled-border-color) !important;
 }
-.asma-core-ui-button.text.error {
+.asma-ui-table-button.text.error {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1712,33 +1712,33 @@
     background-color: var(--colors-button-text-error-bg-color) !important;
     border-color: var(--colors-button-text-error-border-color) !important;
 }
-.asma-core-ui-button.text.error:active {
+.asma-ui-table-button.text.error:active {
     color: var(--colors-button-text-error-active-text-color) !important;
     background-color: var(--colors-button-text-error-active-bg-color) !important;
     border-color: var(--colors-button-text-error-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.text.error:hover {
+.asma-ui-table-button.text.error:hover {
     color: var(--colors-button-text-error-hover-text-color) !important;
     background-color: var(--colors-button-text-error-hover-bg-color) !important;
     border-color: var(--colors-button-text-error-hover-border-color) !important;
 }
-.asma-core-ui-button.text.error:focus {
+.asma-ui-table-button.text.error:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-text-error-focused-text-color) !important;
     background-color: var(--colors-button-text-error-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-text-error-focused-border-color) !important;
 }
-.asma-core-ui-button.text.error:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.text.error:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.text.error:disabled {
+.asma-ui-table-button.text.error:disabled {
     cursor: default;
     color: var(--colors-button-text-error-disabled-text-color) !important;
     background-color: var(--colors-button-text-error-disabled-bg-color) !important;
     border-color: var(--colors-button-text-error-disabled-border-color) !important;
 }
-.asma-core-ui-button.textGray.common {
+.asma-ui-table-button.textGray.common {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1760,33 +1760,33 @@
     background-color: var(--colors-button-textGray-common-bg-color) !important;
     border-color: var(--colors-button-textGray-common-border-color) !important;
 }
-.asma-core-ui-button.textGray.common:active {
+.asma-ui-table-button.textGray.common:active {
     color: var(--colors-button-textGray-common-active-text-color) !important;
     background-color: var(--colors-button-textGray-common-active-bg-color) !important;
     border-color: var(--colors-button-textGray-common-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.textGray.common:hover {
+.asma-ui-table-button.textGray.common:hover {
     color: var(--colors-button-textGray-common-hover-text-color) !important;
     background-color: var(--colors-button-textGray-common-hover-bg-color) !important;
     border-color: var(--colors-button-textGray-common-hover-border-color) !important;
 }
-.asma-core-ui-button.textGray.common:focus {
+.asma-ui-table-button.textGray.common:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-textGray-common-focused-text-color) !important;
     background-color: var(--colors-button-textGray-common-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-textGray-common-focused-border-color) !important;
 }
-.asma-core-ui-button.textGray.common:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.textGray.common:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.textGray.common:disabled {
+.asma-ui-table-button.textGray.common:disabled {
     cursor: default;
     color: var(--colors-button-textGray-common-disabled-text-color) !important;
     background-color: var(--colors-button-textGray-common-disabled-bg-color) !important;
     border-color: var(--colors-button-textGray-common-disabled-border-color) !important;
 }
-.asma-core-ui-button.textWhite.common {
+.asma-ui-table-button.textWhite.common {
     display: flex;
     cursor: pointer;
     align-items: center;
@@ -1808,39 +1808,39 @@
     background-color: var(--colors-button-textWhite-common-bg-color) !important;
     border-color: var(--colors-button-textWhite-common-border-color) !important;
 }
-.asma-core-ui-button.textWhite.common:active {
+.asma-ui-table-button.textWhite.common:active {
     color: var(--colors-button-textWhite-common-active-text-color) !important;
     background-color: var(--colors-button-textWhite-common-active-bg-color) !important;
     border-color: var(--colors-button-textWhite-common-active-border-color) !important;
     outline: none !important;
 }
-.asma-core-ui-button.textWhite.common:hover {
+.asma-ui-table-button.textWhite.common:hover {
     color: var(--colors-button-textWhite-common-hover-text-color) !important;
     background-color: var(--colors-button-textWhite-common-hover-bg-color) !important;
     border-color: var(--colors-button-textWhite-common-hover-border-color) !important;
 }
-.asma-core-ui-button.textWhite.common:focus {
+.asma-ui-table-button.textWhite.common:focus {
     outline-offset: -2px !important;
     color: var(--colors-button-textWhite-common-focused-text-color) !important;
     background-color: var(--colors-button-textWhite-common-focused-bg-color) !important;
     outline: 2px solid var(--colors-button-textWhite-common-focused-border-color) !important;
 }
-.asma-core-ui-button.textWhite.common:focus.asma-core-ui-button.contained {
+.asma-ui-table-button.textWhite.common:focus.asma-ui-table-button.contained {
     box-shadow: inset 0 0 0 2px #fff;
 }
-.asma-core-ui-button.textWhite.common:disabled {
+.asma-ui-table-button.textWhite.common:disabled {
     cursor: default;
     color: var(--colors-button-textWhite-common-disabled-text-color) !important;
     background-color: var(--colors-button-textWhite-common-disabled-bg-color) !important;
     border-color: var(--colors-button-textWhite-common-disabled-border-color) !important;
 }
-.asma-core-ui-button.medium {
+.asma-ui-table-button.medium {
     height: 38px;
 }
-.asma-core-ui-button.small {
+.asma-ui-table-button.small {
     height: 32px;
 }
-.asma-core-ui-button.large {
+.asma-ui-table-button.large {
     height: 40px;
 }
 ._textarea_1p8hl_1._active_1p8hl_1 {
@@ -2394,27 +2394,27 @@
     outline: 1px solid var(--colors-warning-500) !important;
     color: var(--colors-gama-500) !important;
 }
-.asma-core-ui-styled-table .hide-table-header {
+.asma-ui-table-styled-table .hide-table-header {
     height: 0px;
     opacity: 0;
 }
-.asma-core-ui-styled-table .show-table-header {
+.asma-ui-table-styled-table .show-table-header {
     height: 30px;
     opacity: 1;
 }
-.asma-core-ui-styled-table .sortable-column {
+.asma-ui-table-styled-table .sortable-column {
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
 }
-.asma-core-ui-styled-table .table-header {
+.asma-ui-table-styled-table .table-header {
     display: table-header-group;
     z-index: 50;
     background-color: #fcfcfd;
     cursor: default;
 }
-.asma-core-ui-styled-table .table-header .t-cell {
+.asma-ui-table-styled-table .table-header .t-cell {
     text-transform: uppercase;
     background-color: transparent;
     font-size: 10px;
@@ -2426,15 +2426,15 @@
     border-top: 0.5px solid var(--colors-delta-300);
     border-bottom: 0.5px solid var(--colors-delta-300);
 }
-.asma-core-ui-styled-table .table-header .t-cell.t-cell__actions {
+.asma-ui-table-styled-table .table-header .t-cell.t-cell__actions {
     position: sticky;
     right: 0;
     background-color: #fcfcfd;
 }
-.asma-core-ui-styled-table .table-header .sort-icon {
+.asma-ui-table-styled-table .table-header .sort-icon {
     color: var(--colors-delta-800);
 }
-.asma-core-ui-styled-table .t-row {
+.asma-ui-table-styled-table .t-row {
     margin-top: 1px;
     display: table-row;
     border-style: solid;
@@ -2446,39 +2446,39 @@
     border-right-color: transparent;
     border-top-color: var(--colors-delta-300);
 }
-.asma-core-ui-styled-table .t-row:hover {
+.asma-ui-table-styled-table .t-row:hover {
     background-color: var(--colors-gama-25);
     cursor: pointer;
 }
-.asma-core-ui-styled-table .t-row:hover .action-cell {
+.asma-ui-table-styled-table .t-row:hover .action-cell {
     background-color: var(--colors-gama-25);
 }
-.asma-core-ui-styled-table .t-row:focus {
+.asma-ui-table-styled-table .t-row:focus {
     background-color: var(--colors-gama-50);
 }
-.asma-core-ui-styled-table .t-row:focus .action-cell {
+.asma-ui-table-styled-table .t-row:focus .action-cell {
     background-color: var(--colors-gama-50);
 }
-.asma-core-ui-styled-table .t-row:focus .t-cell {
+.asma-ui-table-styled-table .t-row:focus .t-cell {
     border-top: 0.5px solid var(--colors-gama-500);
     border-bottom: 0.5px solid var(--colors-gama-500);
 }
-.asma-core-ui-styled-table .t-row:focus .t-cell:first-child {
+.asma-ui-table-styled-table .t-row:focus .t-cell:first-child {
     border-left: 0.5px solid var(--colors-gama-500);
 }
-.asma-core-ui-styled-table .t-row:focus .t-cell:last-child {
+.asma-ui-table-styled-table .t-row:focus .t-cell:last-child {
     border-right: 0.5px solid var(--colors-gama-500);
 }
-.asma-core-ui-styled-table .t-row:focus-visible {
+.asma-ui-table-styled-table .t-row:focus-visible {
     outline: none;
 }
-.asma-core-ui-styled-table .t-row:last-child {
+.asma-ui-table-styled-table .t-row:last-child {
     border-bottom-color: transparent;
 }
-.asma-core-ui-styled-table .t-row:first-child {
+.asma-ui-table-styled-table .t-row:first-child {
     border-top-color: transparent;
 }
-.asma-core-ui-styled-table .t-row .t-cell {
+.asma-ui-table-styled-table .t-row .t-cell {
     overflow-wrap: break-word;
     vertical-align: middle;
     font-size: 14px;
@@ -2490,31 +2490,31 @@
     border-top: 0.5px solid transparent;
     border-bottom: 0.5px solid var(--colors-delta-300);
 }
-.asma-core-ui-styled-table .t-row .t-cell:first-child {
+.asma-ui-table-styled-table .t-row .t-cell:first-child {
     border-left: 0.5px solid transparent;
 }
-.asma-core-ui-styled-table .t-row .t-cell:last-child {
+.asma-ui-table-styled-table .t-row .t-cell:last-child {
     border-right: 0.5px solid transparent;
 }
-.asma-core-ui-styled-table .t-row .action-cell {
+.asma-ui-table-styled-table .t-row .action-cell {
     height: 100%;
     position: sticky;
     right: -1px;
 }
-.asma-core-ui-styled-table .t-row .action-cell.selected,
-.asma-core-ui-styled-table .t-row.selected {
+.asma-ui-table-styled-table .t-row .action-cell.selected,
+.asma-ui-table-styled-table .t-row.selected {
     background-color: var(--colors-gama-50);
 }
-.asma-core-ui-styled-table .t-row.is-loading {
+.asma-ui-table-styled-table .t-row.is-loading {
     opacity: 0.5;
 }
-.asma-core-ui-styled-table .action-cell-default-background {
+.asma-ui-table-styled-table .action-cell-default-background {
     background-color: #fff;
 }
-.asma-core-ui-styled-table tr.no-rows-overlay {
+.asma-ui-table-styled-table tr.no-rows-overlay {
     height: 112px;
 }
-.asma-core-ui-styled-table tr.no-rows-overlay td {
+.asma-ui-table-styled-table tr.no-rows-overlay td {
     font-size: 0.875rem;
     line-height: 1.25rem;
     text-align: center;
@@ -2557,7 +2557,7 @@
     top: 4px;
     color: var(--colors-gama-500);
 }
-.asma-core-ui-styled-table .table-footer {
+.asma-ui-table-styled-table .table-footer {
     display: flex;
     width: 100%;
     gap: 8px;
@@ -2568,17 +2568,17 @@
     align-items: center;
     justify-content: flex-end;
 }
-.asma-core-ui-styled-table *,
-.asma-core-ui-styled-table *:after,
-.asma-core-ui-styled-table *:before {
+.asma-ui-table-styled-table *,
+.asma-ui-table-styled-table *:after,
+.asma-ui-table-styled-table *:before {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
-.asma-core-ui-styled-table .table-wrapper {
+.asma-ui-table-styled-table .table-wrapper {
     overflow: auto;
     width: 100%;
 }
-.asma-core-ui-styled-table .styled-table {
+.asma-ui-table-styled-table .styled-table {
     display: table;
     margin: 0;
     border-collapse: separate;
@@ -2586,12 +2586,12 @@
     max-width: inherit;
     width: 100%;
 }
-.asma-core-ui-styled-table .styled-table .tbody {
+.asma-ui-table-styled-table .styled-table .tbody {
     display: table-row-group;
     vertical-align: middle;
     max-width: inherit;
 }
-.asma-core-ui-styled-table .loading-icon {
+.asma-ui-table-styled-table .loading-icon {
     position: absolute;
     top: 50%;
     left: 50%;

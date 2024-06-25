@@ -77,7 +77,7 @@ import {
     OutlineCalendarMonth,
     PlusIcon,
     StyledTooltip,
-} from 'asma-core-ui'
+} from 'asma-ui-table'
 import { MessageReplyIcon } from './message-reply-icon'
 import { EditSquareIcon } from './edit-square-icon/EditSquareIcon'
 import { CheckFactIcon } from './check-fact-icon'

@@ -1,5 +1,5 @@
 {
-    "name": "asma-core-ui",
+    "name": "asma-ui-table",
     "publishConfig": {
         "access": "public"
     },
@@ -13,8 +13,8 @@
     "keywords": [],
     "author": "asma-team",
     "types": "./dist/index.d.ts",
-    "main": "./dist/asma-core-ui.es.js",
-    "module": "./dist/asma-core-ui.es.js",
+    "main": "./dist/asma-ui-table.es.js",
+    "module": "./dist/asma-ui-table.es.js",
     "scripts": {
         "dev": "vite",
         "build": "npx tsc && rm -rf ./dist && vite build",
@@ -117,7 +117,7 @@
     },
     "exports": {
         ".": {
-            "import": "./dist/asma-core-ui.es.js"
+            "import": "./dist/asma-ui-table.es.js"
         },
         "./dist/style.css": "./dist/style.css",
         "./tw-configs/twConfigs.json": "./tw-configs/twConfigs.json"

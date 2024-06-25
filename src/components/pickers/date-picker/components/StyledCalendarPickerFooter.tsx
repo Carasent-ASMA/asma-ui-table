@@ -1,5 +1,5 @@
 import { useNavigation, type Matcher } from 'react-day-picker'
-import { ChevronLeftIcon, ChevronRightIcon, StyledButton } from 'asma-core-ui'
+import { ChevronLeftIcon, ChevronRightIcon, StyledButton } from 'asma-ui-table'
 import { Icon } from '@iconify/react'
 import { isDate, isSameMonth } from 'date-fns'
 import type { Dispatch, SetStateAction } from 'react'
