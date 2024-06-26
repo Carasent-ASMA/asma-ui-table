@@ -36,11 +36,12 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
             <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
                 <div>
                     <StyledButton
+                        size='small'
                         variant='outlined'
-                        style={{ minWidth: '160px' }}
+                        style={{ minWidth: '140px' }}
                         onClick={handleClick}
                         endIcon={
-                            open ? <ChevronUpIcon height={24} width={24} /> : <ChevronDownIcon height={24} width={24} />
+                            open ? <ChevronUpIcon height={22} width={22} /> : <ChevronDownIcon height={22} width={22} />
                         }
                     >
                         {isNo ? 'Side' : 'Page'} {currentPage} {isNo ? 'av' : 'of'} {pagesLength}
@@ -96,6 +97,7 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                             scrollToTop()
                         }}
                         disabled={!table.getCanPreviousPage()}
+                        style={{ minWidth: 40, width: 40 }}
                     >
                         <ChevronLeftIcon height={24} width={24} />
                     </StyledButton>
@@ -111,6 +113,7 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                             scrollToTop()
                         }}
                         disabled={!table.getCanNextPage()}
+                        style={{ minWidth: 40, width: 40 }}
                     >
                         <ChevronRightIcon height={24} width={24} />
                     </StyledButton>
