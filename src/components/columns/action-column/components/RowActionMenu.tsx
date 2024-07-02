@@ -3,8 +3,8 @@ import type { CellContext, Row } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import { Popover } from '@mui/material'
 import { DotsVerticalIcon } from 'src/shared-components/DotsVerticalIcon'
-import { StyledMenuItem } from 'asma-core-ui'
 import { StyledButton } from 'src/shared-components/StyledButton'
+import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 
 export function RowActionMenu<TData>({
     tableData,

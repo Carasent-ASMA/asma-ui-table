@@ -1,5 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
-import twConfigs from 'asma-core-ui/tw-configs/twConfigs.json'
+import twConfigs from './tw-configs/twConfigs.json'
 
 const boxShadow = twConfigs.boxShadow,
     animation = twConfigs.animation,

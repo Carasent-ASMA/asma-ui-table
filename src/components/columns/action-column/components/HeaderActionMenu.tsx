@@ -1,9 +1,10 @@
 import { Popover } from '@mui/material'
 import type { HeaderContext } from '@tanstack/react-table'
-import { SELECT_COLUMN_ID, StyledMenuItem } from 'asma-core-ui'
 import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import { PinIcon } from 'src/shared-components/PinIcon'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
+import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
+import { SELECT_COLUMN_ID } from 'src/types'
 
 export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderContext<TData, TData> }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()

@@ -2,7 +2,7 @@ import { type Table } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { TableHeaderCell } from './TableHeaderCell'
 import style from '../StyledTable.module.scss'
-import type { StyledTableProps } from 'asma-core-ui'
+import type { StyledTableProps } from 'src/types'
 
 export function TableHeader<
     TData extends {
