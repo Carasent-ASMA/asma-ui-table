@@ -38,10 +38,10 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                     <StyledButton
                         size='small'
                         variant='outlined'
-                        style={{ minWidth: '140px' }}
+                        style={{ minWidth: '140px', height: 32 }}
                         onClick={handleClick}
                         endIcon={
-                            open ? <ChevronUpIcon height={22} width={22} /> : <ChevronDownIcon height={22} width={22} />
+                            open ? <ChevronUpIcon height={24} width={24} /> : <ChevronDownIcon height={24} width={24} />
                         }
                     >
                         {isNo ? 'Side' : 'Page'} {currentPage} {isNo ? 'av' : 'of'} {pagesLength}
