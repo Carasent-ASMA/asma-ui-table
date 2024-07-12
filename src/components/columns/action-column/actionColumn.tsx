@@ -2,16 +2,11 @@ import { type CellContext, type HeaderContext, type Row } from '@tanstack/react-
 import { RowActionMenu } from './components/RowActionMenu'
 import { HeaderActionMenu } from './components/HeaderActionMenu'
 import type { ReactNode } from 'react'
+import type { IAction, ICustomAction } from 'src/types'
 
 export function generateActionsColumn<TData>(options: {
     headerPin: boolean
-    actions?: (row: Row<TData>) => {
-        label: ReactNode
-        className?: string
-        disabled?: boolean
-        hide?: boolean
-        onClick?: (row: Row<TData>) => void
-    }[]
+    actions?: (row: Row<TData>) => (IAction<TData> | ICustomAction<TData>)[]
     customActionsNode?: (row: CellContext<TData, TData>) => ReactNode
 }) {
     const { headerPin, actions, customActionsNode } = options

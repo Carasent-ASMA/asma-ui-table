@@ -40,6 +40,16 @@ export interface IAction<TData> {
     onClick?: (row: Row<TData>) => void
 }
 
+export interface ICustomAction<TData> {
+    component: (row: Row<TData>) => ReactNode
+}
+
+export const isCustomAction = <TData>(
+    action: IAction<TData> | ICustomAction<TData>,
+): action is ICustomAction<TData> => {
+    return (action as ICustomAction<TData>).component !== undefined
+}
+
 type IFooter<TData> = {
     footer?: (table: Table<TData>) => ReactNode
     hideFooter?: never
@@ -58,7 +68,7 @@ export type * from '@tanstack/react-table'
 export type StyledTableProps<TData, TCustomData> = {
     locale?: 'no' | 'en'
     height?: string | number
-    actions?: (row: Row<TData>) => IAction<TData>[]
+    actions?: (row: Row<TData>) => (IAction<TData> | ICustomAction<TData>)[]
     customActionsNode?: (row: CellContext<TData, TData>) => ReactNode
     customSubRowData?: Map<string, TCustomData[]>
     headerPin?: boolean
