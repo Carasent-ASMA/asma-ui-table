@@ -41,7 +41,7 @@ export interface IAction<TData> {
 }
 
 export interface ICustomAction<TData> {
-    component: (row: Row<TData>) => ReactNode
+    component: (row: Row<TData>, handleClose: () => void) => ReactNode
 }
 
 export const isCustomAction = <TData>(

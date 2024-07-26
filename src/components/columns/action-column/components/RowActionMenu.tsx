@@ -57,7 +57,7 @@ export function RowActionMenu<TData>({
                     >
                         {actions(tableData.row).map((action, index) => {
                             if (isCustomAction(action)) {
-                                const CustomComponent = action.component(tableData.row)
+                                const CustomComponent = action.component(tableData.row, handleClose)
                                 return React.isValidElement(CustomComponent) ? (
                                     <React.Fragment key={index}>{CustomComponent}</React.Fragment>
                                 ) : null
