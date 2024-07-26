@@ -9,7 +9,7 @@ import { SELECT_COLUMN_ID } from 'src/types'
 export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderContext<TData, TData> }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
     return (
-        <div className='w-full  flex items-center justify-end '>
+        <div className='w-full flex items-center justify-end'>
             <div className='px-2.5 h-[30px] flex items-center justify-center cursor-pointer' onClick={handleOpen}>
                 <PinIcon className='text-delta-500 hover:text-delta-600 min-w-[20px] min-h-[20px]' />
             </div>
@@ -21,6 +21,13 @@ export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderCont
                 }}
                 open={open}
                 onClose={handleClose}
+                sx={{
+                    '& .MuiPaper-root': {
+                        maxHeight: 'calc(7 * 44px)',
+                        overflowY: 'auto',
+                        scrollbarWidth: 'thin',
+                    },
+                }}
             >
                 {headerData.table
                     .getAllLeafColumns()
@@ -30,6 +37,7 @@ export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderCont
                             <StyledMenuItem
                                 key={column.id}
                                 onClick={() => column.toggleVisibility(!column.getIsVisible())}
+                                className='h-[44px]'
                             >
                                 <StyledCheckbox
                                     size='small'

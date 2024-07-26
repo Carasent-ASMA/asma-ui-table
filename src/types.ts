@@ -22,6 +22,7 @@ declare module '@tanstack/react-table' {
         className?: string
         cellAlign?: 'left' | 'center' | 'right'
         headerAlign?: 'left' | 'center' | 'right'
+        fixedLeft?: boolean
     }
 
     interface ColumnDefBase<TData extends RowData, TValue = unknown> extends ColumnDefExtensions<TData, TValue> {

@@ -16,10 +16,14 @@ export function TableHeaderCell<
     styledTableProps,
     header,
     tableCanResize = false,
+    left,
+    hasFixedLeftColumn,
 }: {
     styledTableProps: StyledTableProps<TData, TCustomData>
     header: Header<TData, unknown>
     tableCanResize: boolean
+    left: number
+    hasFixedLeftColumn: boolean
 }) {
     const { hideHeader = false, enableResizing = false } = styledTableProps
 
@@ -35,8 +39,13 @@ export function TableHeaderCell<
                 // *
                 //  sticky actions
                 header.column.id === 'actions' && style['t-cell__actions'],
+                hasFixedLeftColumn && header.column.id === 'actions' && style['shadowed'],
+                header.column.columnDef.fixedLeft === true && style['t-cell__fixed'],
             )}
-            style={getTableHeaderStyle({ enableResizing, header, element: ref.current })}
+            style={{
+                ...getTableHeaderStyle({ enableResizing, header, element: ref.current }),
+                ...(header.column.columnDef.fixedLeft && { left }),
+            }}
         >
             <div
                 className={clsx(

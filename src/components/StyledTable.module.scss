@@ -53,11 +53,17 @@
             .action-cell {
                 background-color: var(--colors-gama-25);
             }
+            .fixed-cell {
+                background-color: var(--colors-gama-25);
+            }
         }
 
         &:focus {
             background-color: var(--colors-gama-50);
             .action-cell {
+                background-color: var(--colors-gama-50);
+            }
+            .fixed-cell {
                 background-color: var(--colors-gama-50);
             }
 
@@ -111,7 +117,24 @@
         .action-cell {
             height: 100%;
             position: sticky;
-            right: -1px;
+            right: 0px;
+            z-index: 1;
+            // cell selected
+            &.selected {
+                background-color: var(--colors-gama-50);
+            }
+            &.shadowed {
+                box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        // fixed cell
+        .fixed-cell {
+            height: 100%;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
 
             // cell selected
             &.selected {
@@ -131,6 +154,10 @@
 
     // custom
     .action-cell-default-background {
+        background-color: white;
+    }
+
+    .fixed-cell-default-background {
         background-color: white;
     }
 
@@ -213,6 +240,19 @@
                 position: sticky;
                 right: 0;
                 background-color: #fcfcfd;
+                // box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
+
+                &.shadowed {
+                    box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
+                }
+            }
+
+            &.t-cell__fixed {
+                position: sticky;
+                left: 0;
+                background-color: #fcfcfd;
+                z-index: 160;
+                box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
             }
         }
 

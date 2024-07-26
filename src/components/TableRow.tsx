@@ -1,7 +1,6 @@
 import { flexRender, type Row } from '@tanstack/react-table'
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import type { StyledTableProps } from '../types'
-
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 
@@ -50,6 +49,17 @@ export function TableRow<
         if (onRowClick && !selection) onRowClick(e, row)
     }
 
+    const cells = row.getVisibleCells()
+    const fixedCells = useMemo(
+        () =>
+            cells.map((cell, index) => ({
+                ...cell,
+                left: cells.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
+            })),
+        [cells]
+    )
+    const someFixed = useMemo(() => fixedCells.some((cell) => cell.column.columnDef.fixedLeft === true), [fixedCells])
+
     return (
         <Fragment key={row.id}>
             <tr
@@ -68,25 +78,31 @@ export function TableRow<
                 }}
                 onMouseUp={onMouseUp}
             >
-                {row.getVisibleCells().map((cell) => {
-                    // *
-                    //  sticky actions
+                {fixedCells.map((cell) => {
                     const isActionsCell = cell.column.id === 'actions'
+                    const isFixed = cell.column.columnDef.fixedLeft
+
                     return (
                         <td
                             key={cell.id}
                             className={clsx(
                                 style['t-cell'],
                                 tdClassName,
-                                // *
-                                //  sticky actions
                                 isActionsCell && style['action-cell'],
+                                isActionsCell && someFixed && style['shadowed'],
                                 isActionsCell && (row.getIsExpanded() || row.getIsSelected()) && style['selected'],
                                 isActionsCell &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['action-cell-default-background']),
+                                isFixed && style['fixed-cell'],
+                                isFixed && (row.getIsExpanded() || row.getIsSelected()) && style['selected'],
+                                isFixed &&
+                                    (getRowClassName?.(row)
+                                        ? getRowClassName?.(row)
+                                        : style['fixed-cell-default-background']),
                             )}
+                            style={isFixed ? { left: cell.left } : {}}
                         >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
