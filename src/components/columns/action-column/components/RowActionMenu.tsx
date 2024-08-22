@@ -2,10 +2,11 @@ import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import type { CellContext, Row } from '@tanstack/react-table'
 import { Popover } from '@mui/material'
 import { DotsVerticalIcon } from 'src/shared-components/DotsVerticalIcon'
-import { StyledButton } from 'src/shared-components/StyledButton'
+
 import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 import { isCustomAction, type IAction, type ICustomAction } from 'src/types'
 import React from 'react'
+import { StyledButton } from 'src/shared-components/button'
 
 export function RowActionMenu<TData>({
     tableData,
@@ -23,6 +24,7 @@ export function RowActionMenu<TData>({
             {allActions.length ? (
                 <>
                     <StyledButton
+                        dataTest=''
                         variant='text'
                         onClick={(e) => {
                             e.stopPropagation()
@@ -37,7 +39,6 @@ export function RowActionMenu<TData>({
                             e.stopPropagation()
                             e.preventDefault()
                         }}
-                        sx={{ minWidth: '20px' }}
                     >
                         <DotsVerticalIcon className='text-delta-800' width={20} height={20} />
                     </StyledButton>

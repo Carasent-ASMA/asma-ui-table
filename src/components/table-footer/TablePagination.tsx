@@ -8,9 +8,10 @@ import { ChevronUpIcon } from 'src/shared-components/ChevronUpIcon'
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
 import { ChevronRightIcon } from 'src/shared-components/ChevronRightIcon'
 import style from './TablePagination.module.scss'
-import { StyledButton } from 'src/shared-components/StyledButton'
+
 import { ChevronLeftIcon } from 'src/shared-components/ChevronLeftIcon'
 import { CheckIcon } from 'src/shared-components/CheckIcon'
+import { StyledButton } from 'src/shared-components/button'
 
 export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no'; table: Table<TData> }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
@@ -36,9 +37,9 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
             <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
                 <div>
                     <StyledButton
-                        size='small'
+                        dataTest=''
                         variant='outlined'
-                        style={{ minWidth: '140px', height: 32 }}
+                        style={{ minWidth: '140px' }}
                         onClick={handleClick}
                         endIcon={
                             open ? <ChevronUpIcon height={24} width={24} /> : <ChevronDownIcon height={24} width={24} />
@@ -90,7 +91,7 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
             <Tooltip title={currentPage === 1 ? '' : isNo ? 'Forrige side' : 'Previous Page'}>
                 <div>
                     <StyledButton
-                        size='small'
+                        dataTest=''
                         variant='outlined'
                         onClick={() => {
                             table.previousPage()
@@ -98,15 +99,14 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                         }}
                         disabled={!table.getCanPreviousPage()}
                         style={{ minWidth: 40, width: 40 }}
-                    >
-                        <ChevronLeftIcon height={24} width={24} />
-                    </StyledButton>
+                        startIcon={<ChevronLeftIcon height={24} width={24} />}
+                    />
                 </div>
             </Tooltip>
             <Tooltip title={currentPage === pagesLength ? '' : isNo ? 'Neste side' : 'Next Page'}>
                 <div>
                     <StyledButton
-                        size='small'
+                        dataTest=''
                         variant='outlined'
                         onClick={() => {
                             table.nextPage()
@@ -114,9 +114,8 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                         }}
                         disabled={!table.getCanNextPage()}
                         style={{ minWidth: 40, width: 40 }}
-                    >
-                        <ChevronRightIcon height={24} width={24} />
-                    </StyledButton>
+                        startIcon={<ChevronRightIcon height={24} width={24} />}
+                    />
                 </div>
             </Tooltip>
         </div>

@@ -111,7 +111,7 @@ const templates = [
 ]
 
 export const Table = () => {
-    // const { data } = useFetchTemplates()
+    const { data } = useFetchTemplates()
     const { columns } = useColumns()
 
     const [globalFilter, setGlobalFilter] = useState('')
@@ -124,7 +124,7 @@ export const Table = () => {
                 enableResizing
                 className='h-[calc(100vh-130px)]'
                 locale='no'
-                data={templates}
+                data={data}
                 columns={columns}
                 actions={(row) => generateActions(row)}
                 state={{
