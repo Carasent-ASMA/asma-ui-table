@@ -1,4 +1,4 @@
-import { type StyledTableProps, type TableState } from '../types'
+import { type ColumnDef, type StyledTableProps, type TableState } from '../types'
 import { TableBody } from './TableBody'
 import { TableFooter } from './table-footer/TableFooter'
 import { useStyledTable } from '../hooks/useStyledTable'
@@ -6,9 +6,12 @@ import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
-import { memo, useMemo } from 'react'
+import { Fragment, memo, useMemo } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
+import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { arrayMove } from '@dnd-kit/sortable'
 
 /**
  *
@@ -27,9 +30,10 @@ export const StyledTable = <
     props: StyledTableProps<TData, TCustomData> & {
         getColumnSizing?: (column_sizing: ColumnSizingState) => void
         getTableState?: (tableState: TableState) => void
+        setData?: (callback: (data: TData[]) => TData[]) => void
     },
 ) => {
-    const { className, height } = props
+    const { className, height, data, enableDnd, setData } = props
 
     injectColumns(props)
     const { table } = useStyledTable(props)
@@ -51,32 +55,56 @@ export const StyledTable = <
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
+    const Wrapper = enableDnd ? DndContext : Fragment
+
+    const dataIds = useMemo<UniqueIdentifier[]>(() => data?.map((d) => d.id), [data])
+
+    function handleDragEnd(event: DragEndEvent) {
+        if (!enableDnd || !setData) return
+
+        const { active, over } = event
+        if (active && over && active.id !== over.id) {
+            setData((data) => {
+                const oldIndex = dataIds.indexOf(active.id)
+                const newIndex = dataIds.indexOf(over.id)
+
+                return arrayMove(data, oldIndex, newIndex)
+            })
+        }
+    }
+
     return (
-        <div className={style['asma-ui-table-styled-table']}>
-            <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
-                <table
-                    className={style['styled-table']}
-                    style={{
-                        ...columnSizeVars,
-                        //width: table.getTotalSize(),
-                    }}
-                >
-                    <TableHeader table={table} styledTableProps={props} tableCanResize={!!props.enableColumnResizing} />
-                    {columnSizeVars ? (
-                        <>
-                            {table.getState().columnSizingInfo.isResizingColumn ? (
-                                <MemoizedTableBody table={table} styledTableProps={props} />
-                            ) : (
-                                <TableBody table={table} styledTableProps={props} />
-                            )}
-                        </>
-                    ) : (
-                        <TableBody table={table} styledTableProps={props} />
-                    )}
-                </table>
+        <Wrapper collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
+            <div className={style['asma-ui-table-styled-table']}>
+                <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
+                    <table
+                        className={style['styled-table']}
+                        style={{
+                            ...columnSizeVars,
+                            //width: table.getTotalSize(),
+                        }}
+                    >
+                        <TableHeader
+                            table={table}
+                            styledTableProps={props}
+                            tableCanResize={!!props.enableColumnResizing}
+                        />
+                        {columnSizeVars ? (
+                            <>
+                                {table.getState().columnSizingInfo.isResizingColumn ? (
+                                    <MemoizedTableBody table={table} styledTableProps={props} />
+                                ) : (
+                                    <TableBody table={table} styledTableProps={props} />
+                                )}
+                            </>
+                        ) : (
+                            <TableBody table={table} styledTableProps={props} />
+                        )}
+                    </table>
+                </div>
+                <TableFooter table={table} styledTableProps={props} />
             </div>
-            <TableFooter table={table} styledTableProps={props} />
-        </div>
+        </Wrapper>
     )
 }
 
