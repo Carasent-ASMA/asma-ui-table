@@ -1,8 +1,10 @@
 import { flexRender, type Row } from '@tanstack/react-table'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, type CSSProperties } from 'react'
 import type { StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 export function TableRow<
     TData extends {
@@ -25,10 +27,24 @@ export function TableRow<
         rowHeight,
         onRowClick,
         expandArrow,
+        enableDnd,
         tdClassName,
         customSubRowData,
         renderSubRows,
     } = styledTableProps
+
+    const { transform, transition, setNodeRef, isDragging } = useSortable({
+        id: row.original.id,
+        disabled: !enableDnd,
+    })
+
+    const dndStyle: CSSProperties = {
+        transform: CSS.Transform.toString(transform),
+        transition: transition,
+        opacity: isDragging ? 0.8 : 1,
+        zIndex: isDragging ? 1 : 0,
+        position: 'relative',
+    }
 
     const onMouseUp = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
         if (
@@ -56,7 +72,7 @@ export function TableRow<
                 ...cell,
                 left: cells.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
             })),
-        [cells]
+        [cells],
     )
     const someFixed = useMemo(() => fixedCells.some((cell) => cell.column.columnDef.fixedLeft === true), [fixedCells])
 
@@ -75,7 +91,9 @@ export function TableRow<
                 )}
                 style={{
                     height: rowHeight ? `${rowHeight}px` : 'inherit',
+                    ...(enableDnd && dndStyle),
                 }}
+                ref={setNodeRef}
                 onMouseUp={onMouseUp}
             >
                 {fixedCells.map((cell) => {

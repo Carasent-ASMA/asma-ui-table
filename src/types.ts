@@ -1,4 +1,4 @@
-import type { CellContext, ColumnMeta, HeaderContext, Row, TableOptions, Table } from '@tanstack/react-table'
+import type { CellContext, ColumnMeta, HeaderContext, Row, TableOptions, Table, ColumnDef } from '@tanstack/react-table'
 import type { AccessorFn, ColumnDefTemplate } from '@tanstack/react-table'
 import type {
     ColumnPinningColumnDef,
@@ -89,6 +89,8 @@ export type StyledTableProps<TData, TCustomData> = {
     hideHeader?: boolean
     pageSize?: number
     enableResizing?: boolean
+    enableDnd?: boolean
+    customDndColumnProps?: ColumnDef<TData, unknown>
 } & Omit<
     TTableOptions<TData>,
     'getCoreRowModel' | 'getExpandedRowModel' | 'getFilteredRowModel' | 'getSortedRowModel'
@@ -98,3 +100,4 @@ export type StyledTableProps<TData, TCustomData> = {
 export const SELECT_COLUMN_ID = 'select'
 export const EXPAND_COLUMN_ID = 'expand-column-id'
 export const ACTIONS_COLUMN_ID = 'actions'
+export const DND_HANDLE_COLUMN_ID = 'dnd-handle'
