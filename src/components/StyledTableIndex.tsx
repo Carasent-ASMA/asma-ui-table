@@ -6,12 +6,64 @@ import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
-import { Fragment, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
+
+const DndContextCustom = <TData extends { id: string | number }>({
+    data,
+    setData,
+    children,
+}: {
+    data: TData[]
+    setData?: (callback: (data: TData[]) => TData[]) => void
+    children: JSX.Element
+}) => {
+    const dataIds = useMemo<UniqueIdentifier[]>(() => data?.map((d) => d.id), [data])
+
+    function handleDragEnd(event: DragEndEvent) {
+        if (!setData) return
+
+        const { active, over } = event
+        if (active && over && active.id !== over.id) {
+            setData((data) => {
+                const oldIndex = dataIds.indexOf(active.id)
+                const newIndex = dataIds.indexOf(over.id)
+
+                return arrayMove(data, oldIndex, newIndex)
+            })
+        }
+    }
+
+    return (
+        <DndContext collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
+            {children}
+        </DndContext>
+    )
+}
+
+const Wrapper = <TData extends { id: string | number }>({
+    data,
+    setData,
+    enableDnd,
+    children,
+}: {
+    data: TData[]
+    enableDnd: boolean
+    setData?: (callback: (data: TData[]) => TData[]) => void
+    children: JSX.Element
+}) => {
+    return enableDnd ? (
+        <DndContextCustom data={data} setData={setData}>
+            {children}
+        </DndContextCustom>
+    ) : (
+        <>{children}</>
+    )
+}
 
 /**
  *
@@ -56,26 +108,8 @@ export const StyledTable = <
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
-    const Wrapper = enableDnd ? DndContext : Fragment
-
-    const dataIds = useMemo<UniqueIdentifier[]>(() => data?.map((d) => d.id), [data])
-
-    function handleDragEnd(event: DragEndEvent) {
-        if (!enableDnd || !setData) return
-
-        const { active, over } = event
-        if (active && over && active.id !== over.id) {
-            setData((data) => {
-                const oldIndex = dataIds.indexOf(active.id)
-                const newIndex = dataIds.indexOf(over.id)
-
-                return arrayMove(data, oldIndex, newIndex)
-            })
-        }
-    }
-
     return (
-        <Wrapper collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
+        <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
             <div className={style['asma-ui-table-styled-table']}>
                 <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
                     <table

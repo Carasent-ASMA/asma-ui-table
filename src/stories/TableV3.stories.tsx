@@ -27,17 +27,17 @@ export const TableV3 = () => {
     return (
         <StyledTable<IFixedTest, IFixedTest>
             stickyHeader
-            // enableDnd
-            // customDndColumnProps={{
-            //     header: 'Order',
-            //     cell: ({ row }) => (
-            //         <div className='flex items-center gap-2'>
-            //             <RowDragHandleCell rowId={row.id} />
-            //             <span className='text-delta-800 text-base font-semibold'>{row.original.id}</span>
-            //         </div>
-            //     ),
-            // }}
-            // setData={(callback) => setData(callback(data))}
+            enableDnd
+            customDndColumnProps={{
+                header: 'Order',
+                cell: ({ row }) => (
+                    <div className='flex items-center gap-2'>
+                        <RowDragHandleCell rowId={row.id} />
+                        <span className='text-delta-800 text-base font-semibold'>{row.original.id}</span>
+                    </div>
+                ),
+            }}
+            setData={(callback) => setData(callback(data))}
             enableResizing
             className='h-[calc(100vh-130px)] scrollbar-thin overflow-auto'
             locale='en'
