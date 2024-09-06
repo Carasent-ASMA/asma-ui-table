@@ -6,6 +6,8 @@
         -webkit-box-sizing: border-box;
     }
 
+    @apply w-full;
+
     .table-wrapper {
         overflow: auto;
         width: 100%;
