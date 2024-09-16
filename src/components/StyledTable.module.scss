@@ -49,7 +49,7 @@
         // border-bottom-color: var(--colors-delta-300);
 
         &:hover {
-            background-color: var(--colors-gama-25);
+            background-color: var(--colors-gray-50);
             cursor: pointer;
 
             .action-cell {
@@ -98,7 +98,7 @@
             vertical-align: middle;
             font-size: 14px;
             line-height: 20px;
-            color: var(--colors-delta-900);
+            color: var(--colors-gray-700);
             display: table-cell;
             white-space: pre-wrap;
             padding-left: 5px;
@@ -219,7 +219,7 @@
     .table-header {
         display: table-header-group;
         z-index: 49;
-        background-color: #fcfcfd;
+        background-color: var(--colors-gray-10);
         cursor: default;
 
         .t-cell {
@@ -228,7 +228,7 @@
             font-size: 10px;
             font-weight: 600;
             text-align: start;
-            color: var(--colors-delta-500);
+            color: var(--colors-delta-600);
             // display: table-cell;
             white-space: pre-wrap;
             padding-left: 5px;
@@ -241,7 +241,7 @@
             &.t-cell__actions {
                 position: sticky;
                 right: 0;
-                background-color: #fcfcfd;
+                background-color: var(--colors-gray-10);
                 // box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
 
                 &.shadowed {
@@ -252,7 +252,7 @@
             &.t-cell__fixed {
                 position: sticky;
                 left: 0;
-                background-color: #fcfcfd;
+                background-color: var(--colors-gray-10);
                 z-index: 160;
                 box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
             }

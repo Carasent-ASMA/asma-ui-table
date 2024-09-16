@@ -22,7 +22,6 @@ export const TableV3 = () => {
             name: `test${index + 1}`,
         })),
     )
-    const [rowId, setRowId] = useState('')
 
     return (
         <StyledTable<IFixedTest, IFixedTest>
@@ -44,12 +43,8 @@ export const TableV3 = () => {
             data={data}
             columns={columns}
             actions={useActions}
-            rowHeight={45}
-            onRowClick={(_, row) => setRowId(row.original.id)}
-            getRowClassName={(row) => {
-                if (row.original.id === rowId) return 'bg-gama-50'
-                return ''
-            }}
+            rowHeight={60}
+            focusable
         />
     )
 }
@@ -60,16 +55,15 @@ const useColumns = () => {
             accessorFn: (row: IFixedTest) => row.name,
             id,
             header,
-            className: 'pl-4',
             cell: (info: { row: { original: IFixedTest } }) => (
-                <span className='text-sm text-delta-800 pl-4'>{info.row.original.name}</span>
+                <span>{info.row.original.name}</span>
             ),
             minSize,
             fixedLeft,
         })
 
         return [
-            // createColumn('name1', 'Fixed', 200, true),
+            createColumn('name1', 'Name1', 200),
             createColumn('name2', 'Name2', 200),
             createColumn('name3', 'Name3', 200),
             createColumn('name4', 'Name4', 200),
@@ -92,10 +86,5 @@ interface IFixedTest {
     id: string
     name: string
 }
-
-// const data = Array.from({ length: 30 }, (_, index) => ({
-//     id: (index + 1).toString(),
-//     name: `test${index + 1}`,
-// }))
 
 const useActions = () => [{ label: 'Delete', disabled: true }]
