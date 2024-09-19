@@ -32,7 +32,7 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
     const pagesLength = table.getPageCount()
     const currentPage = table.getState().pagination.pageIndex + 1
     const pages = Array.from({ length: pagesLength }, (_value, index) => index + 1)
-    return pagesLength > 1 ? (
+    return (
         <div ref={tablePagination} className={style['table-pagination']}>
             <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
                 <div>
@@ -119,5 +119,5 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
                 </div>
             </Tooltip>
         </div>
-    ) : null
+    )
 }
