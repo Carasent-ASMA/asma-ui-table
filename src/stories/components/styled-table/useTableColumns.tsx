@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import type { Person } from '../../helpers/makeData'
-import type { CellContext, ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import { CheckIcon } from 'src/shared-components/CheckIcon'
 
 /**
@@ -9,6 +9,7 @@ import { CheckIcon } from 'src/shared-components/CheckIcon'
  * @param size. use NaN (width 100%) only one time for the main column. It will make the column very responsive
  *
  */
+
 export const useStyledTableColumns = () => {
     const columns = useMemo<ColumnDef<Person, Person>[]>(
         () => [
@@ -59,8 +60,14 @@ export const useStyledTableColumns = () => {
                 accessorFn: (row) => row.id,
                 id: 'multiheight-description',
                 header: 'About Me',
-                cell: (info) => {
-                    return <PersonDescriptionDiv cellContext={info} />
+                cell: () => {
+                    return <div style={{
+                        overflow: 'inherit',
+                        textOverflow: 'inherit',
+                        whiteSpace: 'inherit',
+                        paddingBlock: 10,
+                    }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed similique incidunt excepturi adipisci veritatis nemo et harum.</div>
+                    // return <PersonDescriptionDiv cellContext={info} />
                 },
                 minSize: 100,
             },
@@ -68,8 +75,14 @@ export const useStyledTableColumns = () => {
                 accessorFn: (row) => row.id,
                 id: 'description',
                 header: 'About',
-                cell: (info) => {
-                    return <PersonDescription cellContext={info} />
+                cell: () => {
+                    return <div style={{
+                        overflow: 'inherit',
+                        textOverflow: 'inherit',
+                        whiteSpace: 'inherit',
+                        paddingBlock: 10,
+                    }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed similique incidunt excepturi adipisci veritatis nemo et harum.</div>
+                    // return <PersonDescription cellContext={info} />
                 },
                 minSize: 100,
                 size: NaN,
@@ -120,17 +133,17 @@ export const useStyledTableColumns = () => {
     return { columns }
 }
 
-const PersonDescription: React.FC<{ cellContext: CellContext<Person, Person> }> = () => {
-    return (
-        <div>
-            <input
-                className='border-none pointer-events-none bg-transparent max-h-[40px] truncate w-full min-w-[120px] max-w-full'
-                defaultValue={`Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy text`}
-            />
-        </div>
-    )
-}
+// const PersonDescription: React.FC<{ cellContext: CellContext<Person, Person> }> = () => {
+//     return (
+//         <div>
+//             <input
+//                 className='border-none pointer-events-none bg-transparent max-h-[40px] truncate w-full min-w-[120px] max-w-full'
+//                 defaultValue={`Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy textLorem Ipsum is simply dummy text`}
+//             />
+//         </div>
+//     )
+// }
 
-const PersonDescriptionDiv: React.FC<{ cellContext: CellContext<Person, Person> }> = () => {
-    return <div className='min-w-[200px] w-fit'>Lorem Ipsum is simply dummy text is</div>
-}
+// const PersonDescriptionDiv: React.FC<{ cellContext: CellContext<Person, Person> }> = () => {
+//     return <div className='min-w-[200px] w-fit'>Lorem Ipsum is simply dummy text is</div>
+// }

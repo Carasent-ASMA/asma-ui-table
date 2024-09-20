@@ -12,6 +12,7 @@ import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
+import { ShowFullTextProvider } from './columns/showTextColumn'
 
 const DndContextCustom = <TData extends { id: string | number }>({
     data,
@@ -86,13 +87,14 @@ export const StyledTable = <
         setData?: (callback: (data: TData[]) => TData[]) => void
     },
 ) => {
-    const { className, height, data, enableDnd, setData } = props
+    const options = { ...props, rowHeight: props.rowHeight || 48 }
+    const { className, height, data, enableDnd, setData } = options
 
-    injectColumns(props)
-    const { table } = useStyledTable(props)
+    injectColumns(options)
+    const { table } = useStyledTable(options)
 
     const columnSizeVars = useMemo(() => {
-        if (!props.enableColumnResizing) return
+        if (!options.enableColumnResizing) return
 
         const headers = table.getFlatHeaders()
         const colSizes: { [key: string]: number } = {}
@@ -102,13 +104,14 @@ export const StyledTable = <
             colSizes[`--header-${header.id}-size`] = header.getSize()
             colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
         }
-        props.getTableState?.(table.getState())
-        props.getColumnSizing?.(table.getState().columnSizing)
+        options.getTableState?.(table.getState())
+        options.getColumnSizing?.(table.getState().columnSizing)
         return colSizes
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
+    }, [options.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
     return (
+        <ShowFullTextProvider>
         <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
             <div className={style['asma-ui-table-styled-table']}>
                 <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
@@ -121,25 +124,26 @@ export const StyledTable = <
                     >
                         <TableHeader
                             table={table}
-                            styledTableProps={props}
-                            tableCanResize={!!props.enableColumnResizing}
+                            styledTableProps={options}
+                            tableCanResize={!!options.enableColumnResizing}
                         />
                         {columnSizeVars ? (
                             <>
                                 {table.getState().columnSizingInfo.isResizingColumn ? (
-                                    <MemoizedTableBody table={table} styledTableProps={props} />
+                                    <MemoizedTableBody table={table} styledTableProps={options} />
                                 ) : (
-                                    <TableBody table={table} styledTableProps={props} />
+                                    <TableBody table={table} styledTableProps={options} />
                                 )}
                             </>
                         ) : (
-                            <TableBody table={table} styledTableProps={props} />
+                            <TableBody table={table} styledTableProps={options} />
                         )}
                     </table>
                 </div>
-                <TableFooter table={table} styledTableProps={props} />
+                <TableFooter table={table} styledTableProps={options} />
             </div>
         </Wrapper>
+        </ShowFullTextProvider>
     )
 }
 

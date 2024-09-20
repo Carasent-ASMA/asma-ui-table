@@ -1,9 +1,8 @@
 import { type CellContext } from '@tanstack/react-table'
 import { EXPAND_COLUMN_ID } from '../../types'
-import { ChevronUpIcon } from 'src/shared-components/ChevronUpIcon'
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
 
-export function generateExpandColumn<TData>() {
+export function generateExpandColumn<TData>(isFixed: boolean, rowHeight?: number) {
     return {
         id: EXPAND_COLUMN_ID,
         minSize: 50,
@@ -17,12 +16,22 @@ export function generateExpandColumn<TData>() {
             const canExpand = cell.row.getCanExpand()
             return canExpand ? (
                 <span
-                    className='flex h-fit w-full outline-none focus:outline-none items-center justify-center'
+                    className='flex w-full outline-none focus:outline-none items-center justify-center'
                     onClick={() => cell.row.getToggleExpandedHandler()()}
+                    style={{ height: rowHeight ? rowHeight : 'auto' }}
                 >
-                    {isExpanded ? <ChevronUpIcon width={24} height={24} /> : <ChevronDownIcon width={24} height={24} />}
+                    <ChevronDownIcon
+                        width={24}
+                        height={24}
+                        style={{
+                            rotate: isExpanded ? '180deg' : '0deg',
+                            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                            transitionDuration: '500ms',
+                        }}
+                    />
                 </span>
             ) : null
         },
+        fixedLeft: isFixed,
     }
 }

@@ -2,28 +2,26 @@ import type { CellContext, HeaderContext } from '@tanstack/react-table'
 import { SELECT_COLUMN_ID } from '../../types'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
 
-export function selectColumn<TData>() {
+export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
     return {
         id: SELECT_COLUMN_ID,
-        minSize: 40,
-        maxSize: 40,
-        size: 40,
+        minSize: 52,
+        maxSize: 52,
+        size: 52,
         header: ({ table }: HeaderContext<TData, TData>) => {
             return (
-                <div className='w-[25px]'>
-                    <StyledCheckbox
-                        size='small'
-                        dataTest='cell-select-all'
-                        checked={table.getIsAllRowsSelected()}
-                        indeterminate={table.getIsSomeRowsSelected()}
-                        onChange={table.getToggleAllRowsSelectedHandler()}
-                    />
-                </div>
+                <StyledCheckbox
+                    size='small'
+                    dataTest='cell-select-all'
+                    checked={table.getIsAllRowsSelected()}
+                    indeterminate={table.getIsSomeRowsSelected()}
+                    onChange={table.getToggleAllRowsSelectedHandler()}
+                />
             )
         },
         cell: ({ cell }: CellContext<TData, TData>) => {
             return (
-                <div className='w-[25px]'>
+                <div className='w-[38px] h-[38px] flex items-center' style={{ height: rowHeight ? rowHeight : 'auto' }}>
                     <StyledCheckbox
                         size='small'
                         dataTest='cell-select'
@@ -35,5 +33,6 @@ export function selectColumn<TData>() {
                 </div>
             )
         },
+        fixedLeft: isFixed,
     }
 }

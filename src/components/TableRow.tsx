@@ -1,10 +1,11 @@
 import { flexRender, type Row } from '@tanstack/react-table'
 import { Fragment, useMemo, type CSSProperties } from 'react'
-import type { StyledTableProps } from '../types'
+import { type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useShowFullText } from './columns/showTextColumn'
 
 export function TableRow<
     TData extends {
@@ -65,6 +66,8 @@ export function TableRow<
         if (onRowClick && !selection) onRowClick(e, row)
     }
 
+    const { expandedRows } = useShowFullText()
+
     const cells = row.getVisibleCells()
     const fixedCells = useMemo(
         () =>
@@ -99,6 +102,7 @@ export function TableRow<
                 {fixedCells.map((cell) => {
                     const isActionsCell = cell.column.id === 'actions'
                     const isFixed = cell.column.columnDef.fixedLeft
+                    const isExpandedRow = expandedRows.has(row.original.id.toString())
 
                     return (
                         <td
@@ -119,10 +123,13 @@ export function TableRow<
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['fixed-cell-default-background']),
+                                !isExpandedRow && style['non_expanded_row'],
                             )}
-                            style={isFixed ? { left: cell.left } : {}}
+                            style={{
+                                left: isFixed ? cell.left : undefined,
+                            }}
                         >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                     )
                 })}

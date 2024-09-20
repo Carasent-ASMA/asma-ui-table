@@ -8,8 +8,9 @@ export function generateActionsColumn<TData>(options: {
     headerPin: boolean
     actions?: (row: Row<TData>) => (IAction<TData> | ICustomAction<TData>)[]
     customActionsNode?: (row: CellContext<TData, TData>) => ReactNode
+    rowHeight?: number
 }) {
-    const { headerPin, actions, customActionsNode } = options
+    const { headerPin, actions, customActionsNode, rowHeight } = options
 
     return {
         id: 'actions',
@@ -23,7 +24,10 @@ export function generateActionsColumn<TData>(options: {
         },
         cell: (cell: CellContext<TData, TData>) =>
             actions || customActionsNode ? (
-                <div className='flex items-center justify-end'>
+                <div 
+                    className='flex items-center justify-center'
+                    style={{ height: rowHeight ? rowHeight : 'auto' }}
+                >
                     {customActionsNode && <div className='mr-1'>{customActionsNode?.(cell)}</div>}
                     {actions && <RowActionMenu tableData={cell} actions={actions} />}
                 </div>

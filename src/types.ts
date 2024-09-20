@@ -23,6 +23,7 @@ declare module '@tanstack/react-table' {
         cellAlign?: 'left' | 'center' | 'right'
         headerAlign?: 'left' | 'center' | 'right'
         fixedLeft?: boolean
+        pinnedHeaderText?: string
     }
 
     interface ColumnDefBase<TData extends RowData, TValue = unknown> extends ColumnDefExtensions<TData, TValue> {
@@ -91,6 +92,7 @@ export type StyledTableProps<TData, TCustomData> = {
     enableResizing?: boolean
     enableDnd?: boolean
     customDndColumnProps?: ColumnDef<TData, unknown>
+    textExpandArrow?: boolean
 } & Omit<
     TTableOptions<TData>,
     'getCoreRowModel' | 'getExpandedRowModel' | 'getFilteredRowModel' | 'getSortedRowModel'
@@ -101,3 +103,12 @@ export const SELECT_COLUMN_ID = 'select'
 export const EXPAND_COLUMN_ID = 'expand-column-id'
 export const ACTIONS_COLUMN_ID = 'actions'
 export const DND_HANDLE_COLUMN_ID = 'dnd-handle'
+export const SHOW_FULL_TEXT_ID = 'show-full-text'
+
+export const INTERNAL_COLUMN_IDS = [
+    SELECT_COLUMN_ID,
+    EXPAND_COLUMN_ID,
+    ACTIONS_COLUMN_ID,
+    DND_HANDLE_COLUMN_ID,
+    SHOW_FULL_TEXT_ID,
+]

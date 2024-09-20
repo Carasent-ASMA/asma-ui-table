@@ -18,12 +18,9 @@ export const TableV2 = () => {
 
 // import { Typography } from '@mui/material'
 // import type { Meta } from '@storybook/react'
-// import { StyledButton } from '../../inputs/button/StyledButton'
-// import { StyledTable } from '../StyledTable'
 // import { useEffect, useRef, useState } from 'react'
 // import { type Table as TanstackTable } from '@tanstack/react-table'
 // import { makeData, makeParticipantsData, type Participant, type Person } from './helpers/makeData'
-// import { PeopleIcon } from '../../icons'
 // import { cloneDeep } from 'lodash-es'
 // import { useStyledTableColumns } from './components/styled-table/useTableColumns'
 // import clsx from 'clsx'
@@ -31,6 +28,8 @@ export const TableV2 = () => {
 // import { RenderSubRows } from './components/styled-table/RenderSubRows'
 // import { getRowActions } from './components/styled-table/getRowActions'
 // import style from './StyledTableStories.module.scss'
+// import { StyledTable } from 'src/components/StyledTableIndex'
+// import { StyledButton } from 'src/shared-components/button'
 
 // const meta = {
 //     title: 'Tables/Table',
@@ -192,7 +191,6 @@ export const TableV2 = () => {
 //                 noRowsOverlay={
 //                     <div className='flex h-full w-full items-center justify-center'>
 //                         <div className='flex flex-col items-center'>
-//                             <PeopleIcon />
 //                             No recipients found
 //                         </div>
 //                     </div>

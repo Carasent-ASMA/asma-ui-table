@@ -1,10 +1,10 @@
 import { flexRender, type Header } from '@tanstack/react-table'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import clsx from 'clsx'
 import style from '../StyledTable.module.scss'
 import { DropUpIcon } from 'src/shared-components/DropUpIcon'
 import { DropDownIcon } from 'src/shared-components/DropDownIcon'
-import { ACTIONS_COLUMN_ID, EXPAND_COLUMN_ID, SELECT_COLUMN_ID, type StyledTableProps } from 'src/types'
+import { INTERNAL_COLUMN_IDS, type StyledTableProps } from 'src/types'
 import { getTableHeaderStyle } from 'src/helpers/getTableHeaderStyle'
 
 export function TableHeaderCell<
@@ -26,8 +26,8 @@ export function TableHeaderCell<
     hasFixedLeftColumn: boolean
 }) {
     const { hideHeader = false, enableResizing = false } = styledTableProps
-
     const ref = useRef<HTMLTableCellElement | null>(null)
+    const [isResizing, setIsResizing] = useState(false)
 
     return (
         <th
@@ -54,27 +54,39 @@ export function TableHeaderCell<
                     header.column.getCanSort() && style['sortable-column'],
                     header.column.columnDef.className,
                 )}
-                onClick={header.column.getToggleSortingHandler()}
+                onClick={(e) => {
+                    const sortingHandler = header.column.getToggleSortingHandler()
+                    if (!isResizing && sortingHandler) {
+                        sortingHandler(e)
+                    }
+                    setIsResizing(false)
+                }}
             >
                 {flexRender(header.column.columnDef.header, header.getContext())}
                 {{
                     asc: <DropUpIcon className={style['sort-icon']} />,
                     desc: <DropDownIcon className={style['sort-icon']} />,
                 }[header.column.getIsSorted() as string] ?? null}
-                {tableCanResize &&
-                    header.column.getCanResize() &&
-                    ![SELECT_COLUMN_ID, EXPAND_COLUMN_ID, ACTIONS_COLUMN_ID].includes(header.column.id) && (
-                        <div
-                            {...{
-                                onDoubleClick: () => header.column.resetSize(),
-                                onMouseDown: header.getResizeHandler(),
-                                onTouchStart: header.getResizeHandler(),
-                                className: `${style['resizer']} ${
-                                    header.column.getIsResizing() ? style['isResizing'] : ''
-                                }`,
-                            }}
-                        />
-                    )}
+                {tableCanResize && header.column.getCanResize() && !INTERNAL_COLUMN_IDS.includes(header.column.id) && (
+                    <div
+                        {...{
+                            onDoubleClick: () => header.column.resetSize(),
+                            onMouseDown: (e) => {
+                                e.stopPropagation()
+                                setIsResizing(true)
+                                header.getResizeHandler()(e)
+                            },
+                            onTouchStart: (e) => {
+                                e.stopPropagation()
+                                setIsResizing(true)
+                                header.getResizeHandler()(e)
+                            },
+                            className: `${style['resizer']} ${
+                                header.column.getIsResizing() ? style['isResizing'] : ''
+                            }`,
+                        }}
+                    />
+                )}
             </div>
         </th>
     )
