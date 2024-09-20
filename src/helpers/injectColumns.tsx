@@ -1,9 +1,16 @@
 import { selectColumn } from '../components/columns/selectColumn'
 import { generateExpandColumn } from '../components/columns/expandColumn'
 import { generateActionsColumn } from '../components/columns/action-column/actionColumn'
-import { DND_HANDLE_COLUMN_ID, EXPAND_COLUMN_ID, SELECT_COLUMN_ID, SHOW_FULL_TEXT_ID, type StyledTableProps } from '../types'
+import {
+    DND_HANDLE_COLUMN_ID,
+    EXPAND_COLUMN_ID,
+    SELECT_COLUMN_ID,
+    SHOW_FULL_TEXT_ID,
+    type StyledTableProps,
+} from '../types'
 import { generateDndHandleColumn } from 'src/components/columns/dndHandleColumn'
 import { generateShowFullTextColumn } from 'src/components/columns/showTextColumn'
+import { generateEmptyColumn } from 'src/components/columns/emptyColumn'
 
 export const injectColumns = <
     TData extends {
@@ -24,9 +31,10 @@ export const injectColumns = <
         customDndColumnProps,
         rowHeight,
         textExpandArrow,
+        enableResizing,
     } = props
 
-   const isFixed = columns.some(column => column.fixedLeft === true)
+    const isFixed = columns.some((column) => column.fixedLeft === true)
 
     if (!columns.find((col) => col.id === 'actions') && (actions || customActionsNode || headerPin)) {
         columns.push(
@@ -34,7 +42,7 @@ export const injectColumns = <
                 headerPin,
                 actions,
                 customActionsNode,
-                rowHeight
+                rowHeight,
             }),
         )
     }
@@ -50,5 +58,11 @@ export const injectColumns = <
     }
     if (enableRowSelection && !columns.find((col) => col.id === SELECT_COLUMN_ID)) {
         columns.unshift(selectColumn(isFixed, rowHeight))
+    }
+
+    /* that temporary solution fixes issue with invisible last column when we are using table with fixed columns */
+    /* TODO: find better solution for this issue */
+    if (isFixed && !enableResizing) {
+        columns.push(generateEmptyColumn())
     }
 }

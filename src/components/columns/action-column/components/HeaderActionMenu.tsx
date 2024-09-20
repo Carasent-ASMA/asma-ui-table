@@ -9,7 +9,7 @@ import { SELECT_COLUMN_ID } from 'src/types'
 export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderContext<TData, TData> }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
     return (
-        <div className='flex absolute-center items-center justify-center '>
+        <div className='flex absolute-center items-center justify-center'>
             <div className='h-[30px] flex items-center justify-center cursor-pointer' onClick={handleOpen}>
                 <PinIcon className='text-delta-500 hover:text-delta-600 min-w-[20px] min-h-[20px]' />
             </div>

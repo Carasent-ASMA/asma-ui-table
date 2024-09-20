@@ -55,8 +55,8 @@ export const TableV3 = () => {
                 data={data}
                 columns={columns}
                 actions={() => [{ label: 'Delete', disabled: true }]}
-                // enableColumnResizing={true}
-                // columnResizeMode='onChange'
+                enableColumnResizing={true}
+                columnResizeMode='onChange'
                 // expandArrow={true}
                 // getRowCanExpand={() => true}
                 defaultColumn={{
@@ -73,7 +73,7 @@ export const TableV3 = () => {
                 // rowHeight={60}
                 pageSize={20}
                 onRowClick={() => console.log('rowClick')}
-                enableResizing={true}
+                // enableResizing={true}
             />
         </div>
     )
@@ -116,13 +116,13 @@ const useColumns = () => {
             }
         }
 
-        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 7 }, (_, index) =>
+        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 15 }, (_, index) =>
             createColumn({
                 id: `col${index + 1}`,
                 headerText: `Header ${index + 1}`,
                 size: index === 0 ? 200 : 140,
                 maxSize: 500,
-                fixedLeft: false,
+                fixedLeft: index === 0,
             }),
         )
 
