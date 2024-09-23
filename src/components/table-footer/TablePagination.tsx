@@ -8,7 +8,6 @@ import { ChevronUpIcon } from 'src/shared-components/ChevronUpIcon'
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
 import { ChevronRightIcon } from 'src/shared-components/ChevronRightIcon'
 import style from './TablePagination.module.scss'
-
 import { ChevronLeftIcon } from 'src/shared-components/ChevronLeftIcon'
 import { CheckIcon } from 'src/shared-components/CheckIcon'
 import { StyledButton } from 'src/shared-components/button'
@@ -29,9 +28,10 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
             ?.scrollIntoView({ block: 'center', inline: 'start' })
     }
 
-    const pagesLength = table.getPageCount()
+    const pagesLength = table.getPageCount() || 1
     const currentPage = table.getState().pagination.pageIndex + 1
     const pages = Array.from({ length: pagesLength }, (_value, index) => index + 1)
+
     return (
         <div ref={tablePagination} className={style['table-pagination']}>
             <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
