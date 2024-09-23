@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import style from '../StyledTable.module.scss'
 import { DropUpIcon } from 'src/shared-components/DropUpIcon'
 import { DropDownIcon } from 'src/shared-components/DropDownIcon'
-import { INTERNAL_COLUMN_IDS, type StyledTableProps } from 'src/types'
+import { ACTIONS_COLUMN_ID, INTERNAL_COLUMN_IDS, type StyledTableProps } from 'src/types'
 import { getTableHeaderStyle } from 'src/helpers/getTableHeaderStyle'
 
 export function TableHeaderCell<
@@ -18,16 +18,21 @@ export function TableHeaderCell<
     tableCanResize = false,
     left,
     hasFixedLeftColumn,
+    tableWidth,
 }: {
     styledTableProps: StyledTableProps<TData, TCustomData>
     header: Header<TData, unknown>
     tableCanResize: boolean
     left: number
     hasFixedLeftColumn: boolean
+    tableWidth: number | null
 }) {
     const { hideHeader = false, enableResizing = false } = styledTableProps
     const ref = useRef<HTMLTableCellElement | null>(null)
     const [isResizing, setIsResizing] = useState(false)
+
+    const hasActionsColumn = header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID)
+    const lastColumn = header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)]
 
     return (
         <th
@@ -43,7 +48,7 @@ export function TableHeaderCell<
                 header.column.columnDef.fixedLeft === true && style['t-cell__fixed'],
             )}
             style={{
-                ...getTableHeaderStyle({ enableResizing, header, element: ref.current }),
+                ...getTableHeaderStyle({ enableResizing, header, element: ref.current, tableWidth }),
                 ...(header.column.columnDef.fixedLeft && { left }),
             }}
         >
@@ -67,26 +72,29 @@ export function TableHeaderCell<
                     asc: <DropUpIcon className={style['sort-icon']} />,
                     desc: <DropDownIcon className={style['sort-icon']} />,
                 }[header.column.getIsSorted() as string] ?? null}
-                {tableCanResize && header.column.getCanResize() && !INTERNAL_COLUMN_IDS.includes(header.column.id) && (
-                    <div
-                        {...{
-                            onDoubleClick: () => header.column.resetSize(),
-                            onMouseDown: (e) => {
-                                e.stopPropagation()
-                                setIsResizing(true)
-                                header.getResizeHandler()(e)
-                            },
-                            onTouchStart: (e) => {
-                                e.stopPropagation()
-                                setIsResizing(true)
-                                header.getResizeHandler()(e)
-                            },
-                            className: `${style['resizer']} ${
-                                header.column.getIsResizing() ? style['isResizing'] : ''
-                            }`,
-                        }}
-                    />
-                )}
+                {tableCanResize &&
+                    (!enableResizing ? header.id !== lastColumn?.id : true) &&
+                    header.column.getCanResize() &&
+                    !INTERNAL_COLUMN_IDS.includes(header.column.id) && (
+                        <div
+                            {...{
+                                onDoubleClick: () => header.column.resetSize(),
+                                onMouseDown: (e) => {
+                                    e.stopPropagation()
+                                    setIsResizing(true)
+                                    header.getResizeHandler()(e)
+                                },
+                                onTouchStart: (e) => {
+                                    e.stopPropagation()
+                                    setIsResizing(true)
+                                    header.getResizeHandler()(e)
+                                },
+                                className: `${style['resizer']} ${
+                                    header.column.getIsResizing() ? style['isResizing'] : ''
+                                }`,
+                            }}
+                        />
+                    )}
             </div>
         </th>
     )

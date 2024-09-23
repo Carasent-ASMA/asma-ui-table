@@ -6,7 +6,7 @@ import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
@@ -93,6 +93,34 @@ export const StyledTable = <
     injectColumns(options)
     const { table } = useStyledTable(options)
 
+    const tableRef = useRef<HTMLTableElement | null>(null)
+    const [tableWidth, setTableWidth] = useState<number | null>(null)
+
+    useEffect(() => {
+        const tableElement = tableRef.current
+        if (!tableElement) {
+            return
+        }
+
+        const updateWidth = (type: 'setup' | 'resize') => {
+            const width = tableElement.getBoundingClientRect().width
+            if (type === 'setup') {
+                setTableWidth(width)
+            } else if (width < Number(tableWidth) && type === 'resize') {
+                setTableWidth(width)
+            }
+        }
+
+        const resizeObserver = new ResizeObserver(() => updateWidth('resize'))
+        resizeObserver.observe(tableElement)
+
+        updateWidth('setup')
+
+        return () => {
+            resizeObserver.unobserve(tableElement)
+        }
+    }, [tableRef, tableWidth])
+
     const columnSizeVars = useMemo(() => {
         if (!options.enableColumnResizing) return
 
@@ -112,37 +140,39 @@ export const StyledTable = <
 
     return (
         <ShowFullTextProvider>
-        <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
-            <div className={style['asma-ui-table-styled-table']}>
-                <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
-                    <table
-                        className={style['styled-table']}
-                        style={{
-                            ...columnSizeVars,
-                            //width: table.getTotalSize(),
-                        }}
-                    >
-                        <TableHeader
-                            table={table}
-                            styledTableProps={options}
-                            tableCanResize={!!options.enableColumnResizing}
-                        />
-                        {columnSizeVars ? (
-                            <>
-                                {table.getState().columnSizingInfo.isResizingColumn ? (
-                                    <MemoizedTableBody table={table} styledTableProps={options} />
-                                ) : (
-                                    <TableBody table={table} styledTableProps={options} />
-                                )}
-                            </>
-                        ) : (
-                            <TableBody table={table} styledTableProps={options} />
-                        )}
-                    </table>
+            <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
+                <div className={style['asma-ui-table-styled-table']}>
+                    <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
+                        <table
+                            ref={tableRef}
+                            className={style['styled-table']}
+                            style={{
+                                ...columnSizeVars,
+                                // width: table.getTotalSize(),
+                            }}
+                        >
+                            <TableHeader
+                                table={table}
+                                styledTableProps={options}
+                                tableCanResize={!!options.enableColumnResizing}
+                                tableWidth={tableWidth}
+                            />
+                            {columnSizeVars ? (
+                                <>
+                                    {table.getState().columnSizingInfo.isResizingColumn ? (
+                                        <MemoizedTableBody table={table} styledTableProps={options} />
+                                    ) : (
+                                        <TableBody table={table} styledTableProps={options} />
+                                    )}
+                                </>
+                            ) : (
+                                <TableBody table={table} styledTableProps={options} />
+                            )}
+                        </table>
+                    </div>
+                    <TableFooter table={table} styledTableProps={options} />
                 </div>
-                <TableFooter table={table} styledTableProps={options} />
-            </div>
-        </Wrapper>
+            </Wrapper>
         </ShowFullTextProvider>
     )
 }

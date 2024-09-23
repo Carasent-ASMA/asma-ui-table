@@ -1,28 +1,50 @@
 import type { Header } from '@tanstack/react-table'
-import { last } from 'lodash-es'
+import { ACTIONS_COLUMN_ID } from 'src/types'
 
 export const getTableHeaderStyle = <TData>(props: {
     enableResizing: boolean
     header: Header<TData, unknown>
     element: HTMLTableCellElement | null
+    tableWidth: number | null
 }) => {
-    const { header, enableResizing, element } = props
+    const { header, enableResizing, tableWidth /* element */ } = props
 
     let columnWidth: number | string = header.getSize()
 
+    const totalSize = header.headerGroup.headers.reduce((sum, currentHeader) => {
+        return sum + currentHeader.getSize()
+    }, 0)
+
+    const hasActionsColumn = header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID)
+    const lastColumn = header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)]
+
+    const lastColumnWidth = Number(lastColumn?.getSize())
+
     if (!enableResizing) {
-        // setup size, if user predefined it in column builder
+        // setup SIZE, if user predefined it in column builder
         if (columnWidth) {
             columnWidth = `${columnWidth}px`
         }
 
-        // last column, except actions
-        const hasActionsColumn = last(header.headerGroup.headers)?.id === 'actions'
-        const lastUserColumn =
-            header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)]
-        //  setup full width for last user created column
-        if (lastUserColumn?.id === header.id || !columnWidth) {
-            columnWidth = '100%'
+        // setup full width for last user created column
+        if (lastColumn && lastColumn.id === header.id) {
+            let size
+
+            if (tableWidth) {
+                size = Math.floor(tableWidth) - totalSize + lastColumnWidth
+            } else {
+                size = '100%'
+            }
+
+            const minSize = header.column.columnDef.minSize || 0
+
+            if (typeof size === 'string') {
+                columnWidth = size
+            } else if (size > minSize) {
+                columnWidth = `${size}px`
+            } else {
+                columnWidth = `${minSize}px`
+            }
         }
 
         return {
@@ -32,21 +54,14 @@ export const getTableHeaderStyle = <TData>(props: {
         }
     }
 
-    // *
-    //  styles for Resizing table
+    // *******************************//
+    //  styles for Resizing table    //
+    // ***************************** //
 
-    // const enableResizing = header.column.columnDef.enableResizing
-    const width = header.column.columnDef.size
-    const minWidth = header.column.columnDef.minSize
-    const maxWidth = header.column.columnDef.maxSize
-
-    // if (!!maxWidth && maxWidth < currentWidthFromDom) {
-    //     currentWidthFromDom = maxWidth
-    // }
-
+    // the column MinSize && MaxSize set by the user has the highest priority
     return {
-        width,
-        maxWidth,
-        minWidth,
+        width: columnWidth || header.column.columnDef.size,
+        maxWidth: header.column.columnDef.maxSize || columnWidth,
+        minWidth: header.column.columnDef.minSize || columnWidth,
     }
 }

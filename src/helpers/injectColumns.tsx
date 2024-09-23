@@ -10,7 +10,6 @@ import {
 } from '../types'
 import { generateDndHandleColumn } from 'src/components/columns/dndHandleColumn'
 import { generateShowFullTextColumn } from 'src/components/columns/showTextColumn'
-import { generateEmptyColumn } from 'src/components/columns/emptyColumn'
 
 export const injectColumns = <
     TData extends {
@@ -31,7 +30,6 @@ export const injectColumns = <
         customDndColumnProps,
         rowHeight,
         textExpandArrow,
-        enableResizing,
     } = props
 
     const isFixed = columns.some((column) => column.fixedLeft === true)
@@ -58,11 +56,5 @@ export const injectColumns = <
     }
     if (enableRowSelection && !columns.find((col) => col.id === SELECT_COLUMN_ID)) {
         columns.unshift(selectColumn(isFixed, rowHeight))
-    }
-
-    /* that temporary solution fixes issue with invisible last column when we are using table with fixed columns */
-    /* TODO: find better solution for this issue */
-    if (isFixed && !enableResizing) {
-        columns.push(generateEmptyColumn())
     }
 }

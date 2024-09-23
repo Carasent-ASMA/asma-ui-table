@@ -252,7 +252,7 @@
             &.t-cell__actions {
                 position: sticky;
                 right: 0;
-                background-color: #fcfcfd;
+                background-color: var(--colors-gray-10);
 
                 &.shadowed {
                     box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);

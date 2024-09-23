@@ -13,10 +13,12 @@ export function TableHeader<
     table,
     styledTableProps,
     tableCanResize,
+    tableWidth,
 }: {
     table: Table<TData>
     styledTableProps: StyledTableProps<TData, TCustomData>
-    tableCanResize: boolean
+    tableCanResize: boolean,
+    tableWidth: number | null
 }) {
     const { stickyHeader = false, hideHeader = false } = styledTableProps
 
@@ -54,6 +56,7 @@ export function TableHeader<
                                     tableCanResize={tableCanResize}
                                     left={isFixed ? left : 0}
                                     hasFixedLeftColumn={hasFixedLeftColumn}
+                                    tableWidth={tableWidth}
                                 />
                             )
                         })}

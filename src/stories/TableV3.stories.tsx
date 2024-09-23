@@ -60,7 +60,7 @@ export const TableV3 = () => {
                 // expandArrow={true}
                 // getRowCanExpand={() => true}
                 defaultColumn={{
-                    maxSize: 600,
+                    maxSize: 1000,
                 }}
                 textExpandArrow={true}
                 //focusable
@@ -91,7 +91,8 @@ const useColumns = () => {
             const { id, headerText, fixedLeft } = data
 
             return {
-                enableResizing: id === 'col1' ? false : true,
+                // enableResizing: id === 'col1' ? false : true,
+                // enableResizing: true,
                 accessorFn: (row: IFixedTest) => row.text,
                 id,
                 header: () => <div className='truncate'>{headerText}</div>,
@@ -103,26 +104,27 @@ const useColumns = () => {
                             {id === 'col1' && (
                                 // if you want Checkbox to be visible -> Use <p> instead of <div>
                                 <div className='mt-1'>
-                                    <StyledCheckbox dataTest='' disabled={true} />
+                                    <StyledCheckbox dataTest='test' disabled={true} />
                                 </div>
                             )}
                         </div>
                     )
                 },
-                minSize: 100,
+                minSize: 200,
                 maxSize: data.maxSize,
-                size: id === 'col1' ? data.size : undefined,
+                // size: id === 'col1' ? data.size : undefined,
+                size: data.size,
                 fixedLeft,
             }
         }
 
-        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 15 }, (_, index) =>
+        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 5 }, (_, index) =>
             createColumn({
                 id: `col${index + 1}`,
                 headerText: `Header ${index + 1}`,
-                size: index === 0 ? 200 : 140,
-                maxSize: 500,
-                fixedLeft: index === 0,
+                size: index === 0 ? 320 : 180,
+                maxSize: 800,
+                fixedLeft: false,
             }),
         )
 
