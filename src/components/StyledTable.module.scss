@@ -9,9 +9,15 @@
     @apply w-full;
 
     .table-wrapper {
+        position: relative;
         overflow: auto;
         width: 100%;
     }
+
+    .table-wrapper-fetching {
+        overflow: hidden;
+    }
+
     .styled-table {
         display: table;
         margin: 0;
@@ -34,6 +40,7 @@
         top: 50%;
         left: 50%;
         z-index: 10;
+        color: var(--colors-gama-500);
     }
 
     .t-row {

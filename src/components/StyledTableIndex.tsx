@@ -5,7 +5,6 @@ import { useStyledTable } from '../hooks/useStyledTable'
 import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
-import clsx from 'clsx'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
@@ -13,6 +12,8 @@ import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } f
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
 import { ShowFullTextProvider } from './columns/showTextColumn'
+import { cn } from 'src/helpers/cn'
+import { Fetching } from './Fetching'
 
 const DndContextCustom = <TData extends { id: string | number }>({
     data,
@@ -138,11 +139,16 @@ export const StyledTable = <
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
+    const fetching = !!(data.length > 0) && props.loading
+
     return (
         <ShowFullTextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
                 <div className={style['asma-ui-table-styled-table']}>
-                    <div className={clsx(style['table-wrapper'], className)} style={{ height }}>
+                    <div
+                        className={cn(style['table-wrapper'], fetching && style['table-wrapper-fetching'], className)}
+                        style={{ height }}
+                    >
                         <table
                             ref={tableRef}
                             className={style['styled-table']}
@@ -157,6 +163,8 @@ export const StyledTable = <
                                 tableCanResize={!!options.enableColumnResizing}
                                 tableWidth={tableWidth}
                             />
+                            <Fetching fetching={!!fetching} />
+
                             {columnSizeVars ? (
                                 <>
                                     {table.getState().columnSizingInfo.isResizingColumn ? (

@@ -17,12 +17,10 @@ export function TableHeader<
 }: {
     table: Table<TData>
     styledTableProps: StyledTableProps<TData, TCustomData>
-    tableCanResize: boolean,
+    tableCanResize: boolean
     tableWidth: number | null
 }) {
     const { stickyHeader = false, hideHeader = false } = styledTableProps
-
-    if (styledTableProps.loading) return null
 
     const hasFixedLeftColumn = table
         .getHeaderGroups()

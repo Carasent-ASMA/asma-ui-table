@@ -3,7 +3,6 @@ import type { StyledTableProps } from '../types'
 import { TableSkeleton } from './TableSkeleton'
 import { TableRows } from './TableRows'
 import { TableNoRowsOverlay } from './TableNoRowsOverlay'
-import { LoadingIcon } from 'src/shared-components/LoadingIcon'
 import style from './StyledTable.module.scss'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
@@ -17,8 +16,6 @@ export function TableBody<
 
     return (
         <tbody className={style['tbody']}>
-            {!!(data.length > 0) && loading && <LoadingIcon className={style['loading-icon']} width={50} height={50} />}
-
             {data.length === 0 && loading ? (
                 <TableSkeleton colSpan={columns.length} />
             ) : data.length > 0 ? (
