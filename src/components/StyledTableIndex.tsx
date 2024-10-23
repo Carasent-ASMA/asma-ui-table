@@ -107,7 +107,7 @@ export const StyledTable = <
             const width = tableElement.getBoundingClientRect().width
             if (type === 'setup') {
                 setTableWidth(width)
-            } else if (width < Number(tableWidth) && type === 'resize') {
+            } else if (width !== Number(tableWidth) && type === 'resize') {
                 setTableWidth(width)
             }
         }

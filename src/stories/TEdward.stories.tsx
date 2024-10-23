@@ -7,7 +7,7 @@ import { type Table } from '@tanstack/react-table'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
 
 const meta: Meta<typeof StyledTable> = {
-    title: '*/TableV3',
+    title: '*/TEdward',
     component: StyledTable,
     tags: [],
     argTypes: {},
@@ -21,10 +21,11 @@ interface IFixedTest {
     text: string
 }
 
-export const TableV3 = () => {
+export const TEdward = () => {
     const columns = useColumns()
     const [data, setData] = useState(() =>
-        Array.from({ length: 30 }, (_, index) => ({
+        /* change length to get more rows */
+        Array.from({ length: 0 }, (_, index) => ({
             id: `row${index + 1}`,
             text: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit repudiandae earum reiciendis cum ad ipsa dolorum consequatur quam minus tenetur quaerat similique inventore, aut saepe? Optio perspiciatis molestias eligendi numquam.`,
         })),
@@ -50,7 +51,7 @@ export const TableV3 = () => {
                 stickyHeader={true}
                 tableInstanceRef={tableRef}
                 setData={(callback) => setData(callback(data))}
-                className='h-[calc(100vh-140px)]'
+                className='w-full h-[calc(100vh-140px)]'
                 locale='en'
                 data={data}
                 columns={columns}
@@ -67,13 +68,20 @@ export const TableV3 = () => {
                 footer={(table) => getFooter(table, tableRef)}
                 enableRowSelection={true}
                 initialState={{ columnVisibility: { ...columnVisibility } }}
-                state={{ rowSelection, columnVisibility }}
+                state={{ rowSelection, columnVisibility /* globalFilter */ }}
+                // enableGlobalFilter
+                // onGlobalFilterChange={setGlobalFilter}
                 onRowSelectionChange={(e) => setRowSelection(e)}
                 onColumnVisibilityChange={setColumnVisibility}
                 // rowHeight={60}
                 pageSize={20}
                 onRowClick={() => console.log('rowClick')}
                 // enableResizing={true}
+                noRowsOverlay={
+                    <div className='flex h-full w-full items-center justify-center'>
+                        <div className='flex flex-col items-center'>No content</div>
+                    </div>
+                }
             />
         </div>
     )
@@ -118,7 +126,7 @@ const useColumns = () => {
             }
         }
 
-        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 5 }, (_, index) =>
+        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 4 }, (_, index) =>
             createColumn({
                 id: `col${index + 1}`,
                 headerText: `Header ${index + 1}`,
