@@ -20,12 +20,13 @@ export function RowActionMenu<TData>({
     const allActions = actions(tableData.row)
 
     return (
-        <div className='flex justify-center items-center w-[42px]'>
+        <div className='flex justify-center items-center'>
             {allActions.length ? (
                 <>
                     <StyledButton
                         dataTest=''
                         variant='text'
+                        size="small"
                         onClick={(e) => {
                             e.stopPropagation()
                             e.preventDefault()

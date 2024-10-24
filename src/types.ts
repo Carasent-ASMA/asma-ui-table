@@ -93,6 +93,7 @@ export type StyledTableProps<TData, TCustomData> = {
     enableDnd?: boolean
     customDndColumnProps?: ColumnDef<TData, unknown>
     textExpandArrow?: boolean
+    customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
 } & Omit<
     TTableOptions<TData>,
     'getCoreRowModel' | 'getExpandedRowModel' | 'getFilteredRowModel' | 'getSortedRowModel'

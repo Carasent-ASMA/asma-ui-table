@@ -25,7 +25,7 @@ export const TEdward = () => {
     const columns = useColumns()
     const [data, setData] = useState(() =>
         /* change length to get more rows */
-        Array.from({ length: 0 }, (_, index) => ({
+        Array.from({ length: 15 }, (_, index) => ({
             id: `row${index + 1}`,
             text: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit repudiandae earum reiciendis cum ad ipsa dolorum consequatur quam minus tenetur quaerat similique inventore, aut saepe? Optio perspiciatis molestias eligendi numquam.`,
         })),
@@ -82,6 +82,14 @@ export const TEdward = () => {
                         <div className='flex flex-col items-center'>No content</div>
                     </div>
                 }
+                customActionsNode={() => 
+                    <StyledButton dataTest={''} size='small' variant='text'>
+                        {'Share'}
+                    </StyledButton>
+                }
+                customActionsColumnProps={{
+                    size: 110,
+                }}
             />
         </div>
     )
@@ -126,13 +134,13 @@ const useColumns = () => {
             }
         }
 
-        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 4 }, (_, index) =>
+        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 15 }, (_, index) =>
             createColumn({
                 id: `col${index + 1}`,
                 headerText: `Header ${index + 1}`,
                 size: index === 0 ? 320 : 180,
                 maxSize: 800,
-                fixedLeft: false,
+                fixedLeft: index === 0,
             }),
         )
 
