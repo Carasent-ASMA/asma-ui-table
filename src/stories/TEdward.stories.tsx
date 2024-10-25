@@ -82,13 +82,13 @@ export const TEdward = () => {
                         <div className='flex flex-col items-center'>No content</div>
                     </div>
                 }
-                customActionsNode={() => 
-                    <StyledButton dataTest={''} size='small' variant='text'>
-                        {'Share'}
-                    </StyledButton>
-                }
+                // customActionsNode={() => 
+                //     <StyledButton dataTest={''} size='small' variant='text'>
+                //         {'Share'}
+                //     </StyledButton>
+                // }
                 customActionsColumnProps={{
-                    size: 110,
+                    size: 140,
                 }}
             />
         </div>
@@ -111,11 +111,11 @@ const useColumns = () => {
                 // enableResizing: true,
                 accessorFn: (row: IFixedTest) => row.text,
                 id,
-                header: () => <div className='truncate'>{headerText}</div>,
+                header: () => <div className={`${id === 'col2' ? 'pl-4' : ''} truncate`}>{headerText}</div>,
                 pinnedHeaderText: headerText,
                 cell: (info) => {
                     return (
-                        <div className='flex items-start gap-[2px]'>
+                        <div className={`flex items-start gap-[2px] ${id === 'col2' ? 'pl-4' : ''}`}>
                             <div className='py-[14px]'>{info.row.original.text}</div>
                             {id === 'col1' && (
                                 // if you want Checkbox to be visible -> Use <p> instead of <div>
