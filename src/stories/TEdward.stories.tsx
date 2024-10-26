@@ -55,7 +55,6 @@ export const TEdward = () => {
                 locale='en'
                 data={data}
                 columns={columns}
-                actions={() => [{ label: 'Delete', disabled: true }]}
                 enableColumnResizing={true}
                 columnResizeMode='onChange'
                 // expandArrow={true}
@@ -82,13 +81,22 @@ export const TEdward = () => {
                         <div className='flex flex-col items-center'>No content</div>
                     </div>
                 }
-                // customActionsNode={() => 
-                //     <StyledButton dataTest={''} size='small' variant='text'>
-                //         {'Share'}
-                //     </StyledButton>
-                // }
+                actions={() => [{ label: 'Delete', disabled: true }]}
+                customActionsNode={() => (
+                    <StyledButton dataTest={''} size='small' variant='text'>
+                        {'Share'}
+                    </StyledButton>
+                )}
                 customActionsColumnProps={{
-                    size: 140,
+                    size: 220,
+                    cell: (info) => (
+                        <div className='flex items-center justify-center' style={{ height: 48 }}>
+                            <div className='border border-solid border-gray-700 p-2 rounded-md flex gap-1'>
+                                <span>{info.row.original.id}</span>
+                                <span>{'Override actions'}</span>
+                            </div>
+                        </div>
+                    ),
                 }}
             />
         </div>

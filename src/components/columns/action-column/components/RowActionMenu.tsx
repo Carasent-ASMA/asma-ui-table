@@ -26,7 +26,6 @@ export function RowActionMenu<TData>({
                     <StyledButton
                         dataTest=''
                         variant='text'
-                        size="small"
                         onClick={(e) => {
                             e.stopPropagation()
                             e.preventDefault()
