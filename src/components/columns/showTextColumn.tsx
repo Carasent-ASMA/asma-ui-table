@@ -57,11 +57,16 @@ function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData,
     const { expandedRows, toggleExpand } = useShowFullText()
     const isExpanded = expandedRows.has(info.row.id)
 
+    const canRenderSubRows = info.row.getCanExpand()
+
     return (
         <div
             className='flex w-full items-center justify-center'
             style={{ height: rowHeight ? rowHeight : 'auto' }}
-            onClick={() => toggleExpand(info.row.id)}
+            onClick={() => {
+                if (canRenderSubRows) info.row.getToggleExpandedHandler()()
+                toggleExpand(info.row.id)
+            }}
             onMouseDown={(e) => {
                 e.preventDefault()
                 e.stopPropagation()

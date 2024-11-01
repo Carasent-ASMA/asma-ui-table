@@ -4,25 +4,35 @@ import { useTableSubRowsColumns } from './useTableSubRowsColumns'
 import { StyledTable } from '../../../components/StyledTableIndex'
 import { cloneDeep } from 'lodash-es'
 
-export const RenderSubRows: React.FC<{ subRows: Participant[] }> = ({ subRows }) => {
+export const RenderSubRows: React.FC<{ subRows: Participant[]; rowHeight: number }> = ({ subRows, rowHeight }) => {
     const { columns } = useTableSubRowsColumns()
     const [rowSelection, setRowSelection] = useState({})
 
     if (!subRows) return null
 
     return (
-        <tr className='relative w-0 z-0' style={{ height: `${subRows.length * 60 + 2}px` }}>
-            <td className='absolute top-0 left-0  right-0 border-y-none flex h-full'>
+        <tr
+            className='relative w-0 z-1 h-full'
+            style={{
+                height: `${
+                    subRows.length * rowHeight + (subRows.length * 2 - subRows.length * 0.4) /* border */
+                }px`,
+            }}
+        >
+            <td className='absolute top-[-3px] left-0 right-0 border-none flex h-full'>
                 <div className='w-full p-0 m-0'>
-                    <StyledTable
+                    <StyledTable<Participant>
                         data={subRows}
                         columns={columns}
                         hideHeader
                         rowHeight={60}
                         initialState={{
-                            columnVisibility: { select: true, fullName: true },
+                            columnVisibility: {
+                                select: true,
+                                fullName: true,
+                            },
                         }}
-                        // enableRowSelection={true}
+                        enableResizing
                         state={{
                             rowSelection,
                         }}
@@ -35,6 +45,7 @@ export const RenderSubRows: React.FC<{ subRows: Participant[] }> = ({ subRows })
                                 onClick: () => console.info('original:', cloneDeep(subRow.original)),
                             },
                         ]}
+                        hideFooter
                     />
                 </div>
             </td>

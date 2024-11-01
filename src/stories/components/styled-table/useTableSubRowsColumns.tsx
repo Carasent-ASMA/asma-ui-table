@@ -63,7 +63,67 @@ export const useTableSubRowsColumns = () => {
                     return <div>{proxy.fullName}</div>
                 },
                 minSize: 100,
-                size: NaN,
+                size: 150,
+            },
+            {
+                accessorFn: (row) => row.role,
+                id: 'role',
+                enableSorting: false,
+                header: 'Role',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.role}</div>
+                },
+                minSize: 100,
+                size: 120,
+            },
+            {
+                accessorFn: (row) => row.cash,
+                id: 'cash',
+                enableSorting: false,
+                header: 'Cash',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.cash}</div>
+                },
+                minSize: 100,
+                size: 100,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
+                minSize: 100,
+                size: 100,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status1',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
+                minSize: 100,
+                size: 100,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status2',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
+                minSize: 100,
+                size: 100,
             },
         ],
         [],

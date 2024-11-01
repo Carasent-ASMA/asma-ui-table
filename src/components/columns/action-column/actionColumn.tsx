@@ -35,7 +35,7 @@ export function generateActionsColumn<TData>(options: {
                     {actions && <RowActionMenu tableData={cell} actions={actions} />}
                 </div>
             ) : null,
-        size: 50,
+        size: 60,
         ...customActionsColumnProps,
     }
 }

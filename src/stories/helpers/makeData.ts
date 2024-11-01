@@ -16,6 +16,9 @@ export type Participant = {
     fullName: string
     activityId: string
     addedAt: string
+    role: string
+    status: string
+    cash: string
 }
 
 const range = (len: number) => {
@@ -67,6 +70,9 @@ export function makeParticipantsData(...lens: number[]): Participant[] {
                 fullName: faker.person.fullName(),
                 activityId: faker.number.int({ min: 1, max: 20000 }).toString(),
                 addedAt: faker.date.past().toISOString(),
+                role: faker.helpers.arrayElement(['Admin', 'User', 'Guest']),
+                cash: faker.number.int({ min: 1, max: 20000 }).toString(),
+                status: faker.helpers.arrayElement(['active', 'inactive', 'pending']),
             }
         })
     }

@@ -42,7 +42,7 @@ export const injectColumns = <
                 actions,
                 customActionsNode,
                 rowHeight,
-                customActionsColumnProps
+                customActionsColumnProps,
             }),
         )
     }
