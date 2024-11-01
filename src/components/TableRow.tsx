@@ -129,21 +129,21 @@ export function TableRow<
                                 left: isFixed ? cell.left : undefined,
                             }}
                         >
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                     )
                 })}
             </tr>
-            {row.getIsExpanded() && (
-                <>
-                    {customSubRowData &&
-                        renderSubRows &&
-                        renderSubRows({
-                            rows: customSubRowData.get(row.original.id.toString()) ?? [],
-                            row: row.original,
-                        })}
-                </>
-            )}
+                {row.getIsExpanded() && (
+                   <>
+                        {customSubRowData &&
+                            renderSubRows &&
+                            renderSubRows({
+                                rows: customSubRowData.get(row.original.id.toString()) ?? [],
+                                row: row.original,
+                            })}
+                    </>
+                )}
         </Fragment>
     )
 }

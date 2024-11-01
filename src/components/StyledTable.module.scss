@@ -140,7 +140,7 @@
         .action-cell {
             height: 100%;
             position: sticky;
-            right: 0px;
+            right: -1px;
             z-index: 1;
             // cell selected
             &.selected {
@@ -258,7 +258,7 @@
 
             &.t-cell__actions {
                 position: sticky;
-                right: 0;
+                right: -1;
                 background-color: var(--colors-gray-10);
 
                 &.shadowed {

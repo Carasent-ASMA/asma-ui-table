@@ -83,7 +83,7 @@ export const TableV2 = () => {
 
     useEffect(() => {
         data.forEach((row) => {
-            const participants = makeParticipantsData(3)
+            const participants = makeParticipantsData(6)
             setParticipants((prev) => new Map(prev.set(row.id, participants)))
         })
     }, [data])

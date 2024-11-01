@@ -122,8 +122,44 @@ export const useTableSubRowsColumns = () => {
                     const proxy = info.row.original
                     return <div>{proxy.status}</div>
                 },
+                minSize: 200,
+                size: 200,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status3',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
+                minSize: 200,
+                size: 200,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status4',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
+                minSize: 200,
+                size: 200,
+            },
+            {
+                accessorFn: (row) => row.status,
+                id: 'status5',
+                enableSorting: false,
+                header: 'Status',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return <div>{proxy.status}</div>
+                },
                 minSize: 100,
-                size: 100,
+                size: 200,
             },
         ],
         [],

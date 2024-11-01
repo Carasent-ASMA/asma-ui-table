@@ -88,7 +88,7 @@ export const StyledTable = <
         setData?: (callback: (data: TData[]) => TData[]) => void
     },
 ) => {
-    const options = { ...props, rowHeight: props.rowHeight || 48 }
+    const options = { ...props, rowHeight: props.rowHeight ? props.rowHeight - 1.6 : 38.4 } /* 1.6 - border */
     const { className, height, data, enableDnd, setData } = options
 
     injectColumns(options)
