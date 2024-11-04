@@ -20,7 +20,7 @@ export function TableHeader<
     tableCanResize: boolean
     tableWidth: number | null
 }) {
-    const { stickyHeader = false, hideHeader = false } = styledTableProps
+    const { stickyHeader = false } = styledTableProps
 
     const hasFixedLeftColumn = table
         .getHeaderGroups()
@@ -28,7 +28,7 @@ export function TableHeader<
 
     return (
         <thead
-            className={clsx(style['table-header'], hideHeader && style['hide-table-header'])}
+            className={clsx(style['table-header'])}
             style={
                 (stickyHeader && {
                     position: 'sticky',

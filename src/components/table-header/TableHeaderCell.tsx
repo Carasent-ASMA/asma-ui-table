@@ -41,6 +41,7 @@ export function TableHeaderCell<
             colSpan={header.colSpan}
             className={clsx(
                 style['t-cell'],
+                hideHeader && style['hide-header'],
                 // *
                 //  sticky actions
                 header.column.id === 'actions' && style['t-cell__actions'],

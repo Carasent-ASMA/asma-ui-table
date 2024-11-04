@@ -12,17 +12,16 @@ export const RenderSubRows: React.FC<{ subRows: Participant[]; rowHeight: number
 
     return (
         <tr
-            className='relative top-[-3px]'
+            className='relative top-0'
             style={{
-                height: `${subRows.length * rowHeight}px`,
+                height: `${subRows.length * (rowHeight + 0.8)}px`,
             }}
         >
-            <td className='absolute top-0 left-0 right-0 flex overflow-hidden h-[calc(100%+3px)] border-b border-solid border-b-delta-300'>
+            <td className='absolute top-0 left-0 right-0 flex overflow-hidden h-full border-b border-solid border-b-delta-300 p-0'>
                 <div className='w-full p-0 m-0'>
                     <StyledTable<Participant>
                         data={subRows}
                         columns={columns}
-                        hideHeader
                         rowHeight={rowHeight}
                         initialState={{
                             columnVisibility: {
@@ -45,6 +44,7 @@ export const RenderSubRows: React.FC<{ subRows: Participant[]; rowHeight: number
                             },
                         ]}
                         hideFooter
+                        hideHeader
                     />
                 </div>
             </td>

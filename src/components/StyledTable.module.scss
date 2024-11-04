@@ -76,29 +76,10 @@
             .fixed-cell {
                 background-color: var(--colors-gama-50);
             }
-
-            // t-cell on parent focus
-            .t-cell {
-                border-top: 0.5px solid var(--colors-gama-500);
-                border-bottom: 0.5px solid var(--colors-gama-500);
-                &:first-child {
-                    border-left: 0.5px solid var(--colors-gama-500);
-                }
-                &:last-child {
-                    border-right: 0.5px solid var(--colors-gama-500);
-                }
-            }
         }
 
         &:focus-visible {
             outline: none;
-        }
-
-        &:last-child {
-            border-bottom-color: transparent;
-        }
-        &:first-child {
-            border-top-color: transparent;
         }
 
         .t-cell {
@@ -113,7 +94,7 @@
             padding-right: 5px;
             padding-top: 0;
             padding-bottom: 0;
-            border-top: 0.5px solid transparent;
+            // border-top: 0.5px solid transparent;
             border-bottom: 0.5px solid var(--colors-delta-300);
 
             &.non_expanded_row {
@@ -193,16 +174,6 @@
         }
     }
 
-    .hide-table-header {
-        height: 0px;
-        opacity: 0;
-    }
-    .show-table-header {
-        position: relative;
-        height: 32px;
-        opacity: 1;
-    }
-
     .sortable-column {
         cursor: pointer;
         user-select: none;
@@ -236,6 +207,16 @@
         }
     }
 
+    .hide-table-header {
+        height: 0px;
+        opacity: 0;
+    }
+    .show-table-header {
+        position: relative;
+        height: 32px;
+        opacity: 1;
+    }
+
     .table-header {
         display: table-header-group;
         z-index: 49;
@@ -255,10 +236,14 @@
             padding: 0 5px;
             border-top: 0.5px solid var(--colors-delta-300);
             border-bottom: 0.5px solid var(--colors-delta-300);
+            
+            &.hide-header {
+                border: none;
+            }
 
             &.t-cell__actions {
                 position: sticky;
-                right: -1;
+                right: 0;
                 background-color: var(--colors-gray-10);
 
                 &.shadowed {

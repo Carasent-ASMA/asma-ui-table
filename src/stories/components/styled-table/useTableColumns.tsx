@@ -22,7 +22,11 @@ export const useStyledTableColumns = () => {
                     return <CheckIcon color='#7a899e' width='20' />
                 },
                 cell() {
-                    return <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
+                    return (
+                        <div className='py-[22px]'>
+                            <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
+                        </div>
+                    )
                 },
                 minSize: 30,
                 size: 30,
@@ -35,7 +39,7 @@ export const useStyledTableColumns = () => {
                 cell: (info) => {
                     const proxy = info.row.original
                     return (
-                        <div className='flex items-center gap-5'>
+                        <div className='flex items-center gap-5 py-[20px]'>
                             <div className='text-sm text-black'>{proxy.firstName}</div>
                         </div>
                     )
@@ -49,7 +53,7 @@ export const useStyledTableColumns = () => {
                 cell: (info) => {
                     const proxy = info.row.original
                     return (
-                        <div className='flex items-center gap-5'>
+                        <div className='flex items-center gap-5 py-[20px]'>
                             <div className='text-sm text-black'>{proxy.lastName}</div>
                         </div>
                     )
@@ -61,12 +65,12 @@ export const useStyledTableColumns = () => {
                 id: 'multiheight-description',
                 header: 'About Me',
                 cell: () => {
-                    return <div style={{
-                        overflow: 'inherit',
-                        textOverflow: 'inherit',
-                        whiteSpace: 'inherit',
-                        paddingBlock: 10,
-                    }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed similique incidunt excepturi adipisci veritatis nemo et harum.</div>
+                    return (
+                        <div className='py-5'>
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed
+                            similique incidunt excepturi adipisci veritatis nemo et harum.
+                        </div>
+                    )
                     // return <PersonDescriptionDiv cellContext={info} />
                 },
                 minSize: 100,
@@ -76,12 +80,12 @@ export const useStyledTableColumns = () => {
                 id: 'description',
                 header: 'About',
                 cell: () => {
-                    return <div style={{
-                        overflow: 'inherit',
-                        textOverflow: 'inherit',
-                        whiteSpace: 'inherit',
-                        paddingBlock: 10,
-                    }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed similique incidunt excepturi adipisci veritatis nemo et harum.</div>
+                    return (
+                        <div className='py-5'>
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quas exercitationem sed
+                            similique incidunt excepturi adipisci veritatis nemo et harum.
+                        </div>
+                    )
                     // return <PersonDescription cellContext={info} />
                 },
                 minSize: 100,
@@ -94,7 +98,7 @@ export const useStyledTableColumns = () => {
                 cell: (info) => {
                     const proxy = info.row.original
                     return (
-                        <div className='flex items-center gap-5'>
+                        <div className='flex items-center gap-5 py-5'>
                             <div className='text-sm text-black'>{proxy.lastName}</div>
                         </div>
                     )
