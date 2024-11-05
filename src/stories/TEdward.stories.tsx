@@ -35,6 +35,7 @@ export const TEdward = () => {
         return loadColumnVisibilityInitState({ select: true })
     })
     const [rowSelection, setRowSelection] = useState({})
+    const [globalFilter, setGlobalFilter] = useState<string>('')
 
     useEffect(() => {
         localStorage.setItem('tableV3columnVisibility', JSON.stringify(columnVisibility))
@@ -47,11 +48,17 @@ export const TEdward = () => {
 
     return (
         <div className='border-2 border-solid border-black rounded-lg pl-8 pr-6 pt-8 pb-4 flex flex-col gap-2'>
+            <input
+                value={globalFilter ?? ''}
+                onChange={(e) => setGlobalFilter(String(e.target.value))}
+                className='p-2 font-lg shadow border border-block max-w-[200px]'
+                placeholder='Search'
+            />
             <StyledTable<IFixedTest, IFixedTest>
                 stickyHeader={true}
                 tableInstanceRef={tableRef}
                 setData={(callback) => setData(callback(data))}
-                className='w-full h-[calc(100vh-140px)]'
+                className='w-full h-[calc(100vh-190px)]'
                 locale='en'
                 data={data}
                 columns={columns}
@@ -67,37 +74,37 @@ export const TEdward = () => {
                 footer={(table) => getFooter(table, tableRef)}
                 enableRowSelection={true}
                 initialState={{ columnVisibility: { ...columnVisibility } }}
-                state={{ rowSelection, columnVisibility /* globalFilter */ }}
-                // enableGlobalFilter
-                // onGlobalFilterChange={setGlobalFilter}
+                state={{ rowSelection, columnVisibility, globalFilter }}
+                enableGlobalFilter
+                onGlobalFilterChange={setGlobalFilter}
                 onRowSelectionChange={(e) => setRowSelection(e)}
                 onColumnVisibilityChange={setColumnVisibility}
                 // rowHeight={60}
                 pageSize={20}
                 onRowClick={() => console.log('rowClick')}
-                // enableResizing={true}
+                enableResizing={true}
                 noRowsOverlay={
                     <div className='flex h-full w-full items-center justify-center'>
                         <div className='flex flex-col items-center'>No content</div>
                     </div>
                 }
                 actions={() => [{ label: 'Delete', disabled: true }]}
-                customActionsNode={() => (
-                    <StyledButton dataTest={''} size='small' variant='text'>
-                        {'Share'}
-                    </StyledButton>
-                )}
-                customActionsColumnProps={{
-                    size: 220,
-                    cell: (info) => (
-                        <div className='flex items-center justify-center' style={{ height: 48 }}>
-                            <div className='border border-solid border-gray-700 p-2 rounded-md flex gap-1'>
-                                <span>{info.row.original.id}</span>
-                                <span>{'Override actions'}</span>
-                            </div>
-                        </div>
-                    ),
-                }}
+                // customActionsNode={() => (
+                //     <StyledButton dataTest={''} size='small' variant='text'>
+                //         {'Share'}
+                //     </StyledButton>
+                // )}
+                // customActionsColumnProps={{
+                //     size: 220,
+                //     // cell: (info) => (
+                //     //     <div className='flex items-center justify-center' style={{ height: 48 }}>
+                //     //         <div className='border border-solid border-gray-700 p-2 rounded-md flex gap-1'>
+                //     //             <span>{info.row.original.id}</span>
+                //     //             <span>{'Override actions'}</span>
+                //     //         </div>
+                //     //     </div>
+                //     // ),
+                // }}
             />
         </div>
     )
@@ -149,6 +156,7 @@ const useColumns = () => {
                 size: index === 0 ? 320 : 180,
                 maxSize: 800,
                 fixedLeft: index === 0,
+                // fixedLeft: false,
             }),
         )
 

@@ -236,14 +236,16 @@
             padding: 0 5px;
             border-top: 0.5px solid var(--colors-delta-300);
             border-bottom: 0.5px solid var(--colors-delta-300);
-            
+
             &.hide-header {
                 border: none;
             }
 
             &.t-cell__actions {
+                height: 100%;
                 position: sticky;
-                right: 0;
+                right: -1px;
+                z-index: 1;
                 background-color: var(--colors-gray-10);
 
                 &.shadowed {

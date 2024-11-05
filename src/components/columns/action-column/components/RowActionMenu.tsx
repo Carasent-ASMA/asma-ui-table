@@ -22,10 +22,11 @@ export function RowActionMenu<TData>({
     return (
         <div className='flex justify-center items-center'>
             {allActions.length ? (
-                <>
+                <div className='w-[50px] flex items-center justify-center'>
                     <StyledButton
                         dataTest=''
                         variant='text'
+                        size='small'
                         onClick={(e) => {
                             e.stopPropagation()
                             e.preventDefault()
@@ -90,7 +91,7 @@ export function RowActionMenu<TData>({
                             return null
                         })}
                     </Popover>
-                </>
+                </div>
             ) : null}
         </div>
     )
