@@ -79,6 +79,7 @@ export type StyledTableProps<TData, TCustomData> = {
     noRowsOverlay?: ReactElement
     tableInstanceRef?: React.MutableRefObject<Table<TData> | null>
     className?: string
+    tableClassName?: string
     rowHeight?: number
     tdClassName?: string
     focusable?: boolean

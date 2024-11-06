@@ -89,7 +89,7 @@ export const StyledTable = <
     },
 ) => {
     const options = { ...props, rowHeight: props.rowHeight || 48 }
-    const { className, height, data, enableDnd, setData } = options
+    const { className, tableClassName, height, data, enableDnd, setData } = options
 
     injectColumns(options)
     const { table } = useStyledTable(options)
@@ -144,7 +144,7 @@ export const StyledTable = <
     return (
         <ShowFullTextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
-                <div className={style['asma-ui-table-styled-table']}>
+                <div className={cn(style['asma-ui-table-styled-table'], tableClassName)}>
                     <div
                         className={cn(style['table-wrapper'], fetching && style['table-wrapper-fetching'], className)}
                         style={{ height }}
