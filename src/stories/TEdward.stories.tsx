@@ -95,15 +95,7 @@ export const TEdward = () => {
                 //     </StyledButton>
                 // )}
                 // customActionsColumnProps={{
-                //     size: 220,
-                //     // cell: (info) => (
-                //     //     <div className='flex items-center justify-center' style={{ height: 48 }}>
-                //     //         <div className='border border-solid border-gray-700 p-2 rounded-md flex gap-1'>
-                //     //             <span>{info.row.original.id}</span>
-                //     //             <span>{'Override actions'}</span>
-                //     //         </div>
-                //     //     </div>
-                //     // ),
+                //     size: 120,
                 // }}
             />
         </div>
