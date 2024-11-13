@@ -5,7 +5,7 @@ import { useStyledTable } from '../hooks/useStyledTable'
 import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
@@ -97,19 +97,18 @@ export const StyledTable = <
     const tableRef = useRef<HTMLTableElement | null>(null)
     const [tableWidth, setTableWidth] = useState<number | null>(null)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const tableElement = tableRef.current
-        if (!tableElement) {
-            return
-        }
+        if (!tableElement) return
 
         const updateWidth = (type: 'setup' | 'resize') => {
             const width = tableElement.getBoundingClientRect().width
-            if (type === 'setup') {
-                setTableWidth(width)
-            } else if (width !== Number(tableWidth) && type === 'resize') {
-                setTableWidth(width)
-            }
+            setTableWidth((prevWidth) => {
+                if (type === 'setup' || width !== prevWidth) {
+                    return width
+                }
+                return prevWidth
+            })
         }
 
         const resizeObserver = new ResizeObserver(() => updateWidth('resize'))
@@ -120,7 +119,7 @@ export const StyledTable = <
         return () => {
             resizeObserver.unobserve(tableElement)
         }
-    }, [tableRef, tableWidth])
+    }, [])
 
     const columnSizeVars = useMemo(() => {
         if (!options.enableColumnResizing) return
