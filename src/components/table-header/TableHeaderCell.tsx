@@ -1,11 +1,12 @@
 import { flexRender, type Header } from '@tanstack/react-table'
-import { useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import clsx from 'clsx'
 import style from '../StyledTable.module.scss'
 import { DropUpIcon } from 'src/shared-components/DropUpIcon'
 import { DropDownIcon } from 'src/shared-components/DropDownIcon'
 import { ACTIONS_COLUMN_ID, INTERNAL_COLUMN_IDS, type StyledTableProps } from 'src/types'
 import { getTableHeaderStyle } from 'src/helpers/getTableHeaderStyle'
+import { useRootContext } from 'src/context/RootContext'
 
 export function TableHeaderCell<
     TData extends {
@@ -29,10 +30,16 @@ export function TableHeaderCell<
 }) {
     const { hideHeader = false, enableResizing = false } = styledTableProps
     const ref = useRef<HTMLTableCellElement | null>(null)
-    const [isResizing, setIsResizing] = useState(false)
+    const { isResizing, enableResizingFlag, disableResizingFlag } = useRootContext()
 
-    const hasActionsColumn = header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID)
-    const lastColumn = header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)]
+    const hasActionsColumn = useMemo(
+        () => header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID),
+        [header.headerGroup.headers],
+    )
+    const lastColumn = useMemo(
+        () => header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)],
+        [header.headerGroup.headers, hasActionsColumn],
+    )
 
     return (
         <th
@@ -65,7 +72,7 @@ export function TableHeaderCell<
                     if (!isResizing && sortingHandler) {
                         sortingHandler(e)
                     }
-                    setIsResizing(false)
+                    disableResizingFlag()
                 }}
             >
                 {flexRender(header.column.columnDef.header, header.getContext())}
@@ -82,13 +89,19 @@ export function TableHeaderCell<
                                 onDoubleClick: () => header.column.resetSize(),
                                 onMouseDown: (e) => {
                                     e.stopPropagation()
-                                    setIsResizing(true)
+                                    enableResizingFlag()
                                     header.getResizeHandler()(e)
+                                    window.addEventListener('mouseup', () =>
+                                        handleMouseUp({ styledTableProps, header }),
+                                    )
                                 },
                                 onTouchStart: (e) => {
                                     e.stopPropagation()
-                                    setIsResizing(true)
+                                    enableResizingFlag()
                                     header.getResizeHandler()(e)
+                                    window.addEventListener('mouseup', () =>
+                                        handleMouseUp({ styledTableProps, header }),
+                                    )
                                 },
                                 className: `${style['resizer']} ${
                                     header.column.getIsResizing() ? style['isResizing'] : ''
@@ -99,4 +112,32 @@ export function TableHeaderCell<
             </div>
         </th>
     )
+}
+
+function handleMouseUp<TData, TCustomData = Record<string, unknown>>({
+    styledTableProps,
+    header,
+}: {
+    styledTableProps: StyledTableProps<TData, TCustomData>
+    header: Header<TData, unknown>
+}) {
+    if (styledTableProps.uniqueKey) {
+        const localStorageKey = styledTableProps.uniqueKey
+
+        const storedDimensions = localStorage.getItem(localStorageKey)
+        let parsedDimensions: Record<string, number> = {}
+
+        if (storedDimensions) {
+            try {
+                parsedDimensions = JSON.parse(storedDimensions)
+            } catch (error) {
+                console.warn('Failed to parse stored dimensions. Resetting.')
+                parsedDimensions = {}
+            }
+        }
+
+        parsedDimensions[header.column.id] = header.column.getSize()
+
+        localStorage.setItem(localStorageKey, JSON.stringify(parsedDimensions))
+    }
 }

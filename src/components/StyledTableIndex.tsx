@@ -11,9 +11,9 @@ import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
-import { ShowFullTextProvider } from './columns/showTextColumn'
 import { cn } from 'src/helpers/cn'
 import { Fetching } from './Fetching'
+import { RootContextProvider } from 'src/context/RootContext'
 
 const DndContextCustom = <TData extends { id: string | number }>({
     data,
@@ -141,7 +141,7 @@ export const StyledTable = <
     const fetching = !!(data.length > 0) && props.loading
 
     return (
-        <ShowFullTextProvider>
+        <RootContextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
                 <div className={cn(style['asma-ui-table-styled-table'], tableClassName)}>
                     <div
@@ -180,7 +180,7 @@ export const StyledTable = <
                     <TableFooter table={table} styledTableProps={options} />
                 </div>
             </Wrapper>
-        </ShowFullTextProvider>
+        </RootContextProvider>
     )
 }
 

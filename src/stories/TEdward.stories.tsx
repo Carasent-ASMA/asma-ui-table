@@ -89,6 +89,8 @@ export const TEdward = () => {
                     </div>
                 }
                 actions={() => [{ label: 'Delete', disabled: true }]}
+                /** uniqueKey ex: `name` + `customer_id` + `user_id` */
+                uniqueKey={`${'TableEdward'}_${'customer_5asd1'}_${'user_o1239s'}`}
                 // customActionsNode={() => (
                 //     <StyledButton dataTest={''} size='small' variant='text'>
                 //         {'Share'}
@@ -112,6 +114,7 @@ const useColumns = () => {
             fixedLeft?: boolean
         }): ColumnDef<IFixedTest> => {
             const { id, headerText, fixedLeft } = data
+            const tableDimensions = localStorage.getItem('TableEdward') 
 
             return {
                 // enableResizing: id === 'col1' ? false : true,
@@ -136,12 +139,12 @@ const useColumns = () => {
                 minSize: 200,
                 maxSize: data.maxSize,
                 // size: id === 'col1' ? data.size : undefined,
-                size: data.size,
+                size: tableDimensions ? JSON.parse(tableDimensions)[id] : data.size,
                 fixedLeft,
             }
         }
 
-        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 15 }, (_, index) =>
+        const columns: ColumnDef<IFixedTest>[] = Array.from({ length: 6 }, (_, index) =>
             createColumn({
                 id: `col${index + 1}`,
                 headerText: `Header ${index + 1}`,

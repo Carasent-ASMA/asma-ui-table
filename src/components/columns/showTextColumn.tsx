@@ -1,41 +1,6 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react'
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
+import { useRootContext } from 'src/context/RootContext'
 import { SHOW_FULL_TEXT_ID, type CellContext } from 'src/types'
-
-interface ShowFullTextContextType {
-    expandedRows: Set<string>
-    toggleExpand: (id: string) => void
-}
-
-const ShowFullTextContext = createContext<ShowFullTextContextType | undefined>(undefined)
-
-export const ShowFullTextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
-
-    const toggleExpand = (id: string) => {
-        setExpandedRows((prev) => {
-            const newExpandedRows = new Set(prev)
-            if (newExpandedRows.has(id)) {
-                newExpandedRows.delete(id)
-            } else {
-                newExpandedRows.add(id)
-            }
-            return newExpandedRows
-        })
-    }
-
-    return (
-        <ShowFullTextContext.Provider value={{ expandedRows, toggleExpand }}>{children}</ShowFullTextContext.Provider>
-    )
-}
-
-export const useShowFullText = () => {
-    const context = useContext(ShowFullTextContext)
-    if (context === undefined) {
-        throw new Error('useShowFullText must be used within a ShowFullTextProvider')
-    }
-    return context
-}
 
 export function generateShowFullTextColumn<TData>(isFixed: boolean, rowHeight?: number) {
     return {
@@ -54,7 +19,7 @@ export function generateShowFullTextColumn<TData>(isFixed: boolean, rowHeight?: 
 }
 
 function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData, TData>; rowHeight?: number }) {
-    const { expandedRows, toggleExpand } = useShowFullText()
+    const { expandedRows, toggleExpand } = useRootContext()
     const isExpanded = expandedRows.has(info.row.id)
 
     const canRenderSubRows = info.row.getCanExpand()

@@ -5,7 +5,7 @@ import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useShowFullText } from './columns/showTextColumn'
+import { useRootContext } from 'src/context/RootContext'
 
 export function TableRow<
     TData extends {
@@ -47,6 +47,8 @@ export function TableRow<
         position: 'relative',
     }
 
+    const { expandedRows, isResizing, disableResizingFlag } = useRootContext()
+
     const onMouseUp = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
         if (
             (e.target as HTMLDivElement).classList.contains('MuiModal-backdrop') ||
@@ -63,10 +65,9 @@ export function TableRow<
 
         const selection = window.getSelection()?.type === 'Range'
 
-        if (onRowClick && !selection) onRowClick(e, row)
+        if (onRowClick && !selection && !isResizing) onRowClick(e, row)
+        disableResizingFlag()
     }
-
-    const { expandedRows } = useShowFullText()
 
     const cells = row.getVisibleCells()
     const fixedCells = useMemo(
@@ -134,16 +135,16 @@ export function TableRow<
                     )
                 })}
             </tr>
-                {row.getIsExpanded() && (
-                   <>
-                        {customSubRowData &&
-                            renderSubRows &&
-                            renderSubRows({
-                                rows: customSubRowData.get(row.original.id.toString()) ?? [],
-                                row: row.original,
-                            })}
-                    </>
-                )}
+            {row.getIsExpanded() && (
+                <>
+                    {customSubRowData &&
+                        renderSubRows &&
+                        renderSubRows({
+                            rows: customSubRowData.get(row.original.id.toString()) ?? [],
+                            row: row.original,
+                        })}
+                </>
+            )}
         </Fragment>
     )
 }
