@@ -1,5 +1,5 @@
 import { flexRender, type Row } from '@tanstack/react-table'
-import { Fragment, useMemo, type CSSProperties } from 'react'
+import { Fragment, useMemo, type CSSProperties, useEffect } from 'react'
 import { type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
@@ -32,6 +32,7 @@ export function TableRow<
         tdClassName,
         customSubRowData,
         renderSubRows,
+        defaultExpanded,
     } = styledTableProps
 
     const { transform, transition, setNodeRef, isDragging } = useSortable({
@@ -47,7 +48,14 @@ export function TableRow<
         position: 'relative',
     }
 
-    const { expandedRows, isResizing, disableResizingFlag } = useRootContext()
+    const { expandedRows, isResizing, disableResizingFlag, toggleExpand } = useRootContext()
+
+    useEffect(() => {
+        if (defaultExpanded && row.getCanExpand() && !row.getIsExpanded()) {
+            toggleExpand(row.id)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const onMouseUp = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
         if (

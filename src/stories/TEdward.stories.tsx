@@ -114,7 +114,7 @@ const useColumns = () => {
             fixedLeft?: boolean
         }): ColumnDef<IFixedTest> => {
             const { id, headerText, fixedLeft } = data
-            const tableDimensions = localStorage.getItem('TableEdward') 
+            const tableDimensions = localStorage.getItem('TableEdward')
 
             return {
                 // enableResizing: id === 'col1' ? false : true,

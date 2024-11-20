@@ -75,6 +75,7 @@ export type StyledTableProps<TData, TCustomData> = {
     customSubRowData?: Map<string, TCustomData[]>
     headerPin?: boolean
     expandArrow?: boolean
+    defaultExpanded?: boolean
     loading?: boolean
     noRowsOverlay?: ReactElement
     tableInstanceRef?: React.MutableRefObject<Table<TData> | null>
