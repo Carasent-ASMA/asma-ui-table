@@ -49,7 +49,7 @@
         "tw-configs/**/*.json",
         "src/**/*.ts",
         "src/**/*.tsx",
-        "src/**/*.scss",
+        "src/*.scss",
         "**/*.module.scss",
         "vite.config.ts",
         "package.json",

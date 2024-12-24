@@ -90,7 +90,30 @@ export const TEdward = () => {
                 }
                 actions={() => [{ label: 'Delete', disabled: true }]}
                 /** uniqueKey ex: `name` + `customer_id` + `user_id` */
-                uniqueKey={`${'TableEdward'}_${'customer_5asd1'}_${'user_o1239s'}`}
+                uniqueKey={'TableEdward'}
+                customActionsNode={(cell) => (
+                    <StyledButton
+                        size='small'
+                        dataTest='custom-button-action'
+                        onMouseDown={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                        }}
+                        onMouseUp={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                        }}
+                    >
+                        {cell.row.original.id}
+                    </StyledButton>
+                )}
+                customActionsColumnProps={{
+                    size: 120
+                }}
                 // customActionsNode={() => (
                 //     <StyledButton dataTest={''} size='small' variant='text'>
                 //         {'Share'}

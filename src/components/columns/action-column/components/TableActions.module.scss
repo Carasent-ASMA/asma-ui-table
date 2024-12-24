@@ -1,0 +1,29 @@
+.actions-header {
+    width: 40px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.pin-indicator {
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    background-color: var(--colors-gama-400);
+    border-radius: 50%;
+    top: 2px;
+    right: 6px;
+}
+
+.pin-icon {
+    color: var(--colors-delta-500);
+    min-width: 20px;
+    min-height: 20px;
+
+    &:hover {
+        color: var(--colors-delta-500);
+    }
+}

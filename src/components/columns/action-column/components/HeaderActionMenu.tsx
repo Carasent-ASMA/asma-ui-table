@@ -4,14 +4,22 @@ import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import { PinIcon } from 'src/shared-components/PinIcon'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
 import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
-import { SELECT_COLUMN_ID } from 'src/types'
+import { INTERNAL_COLUMN_IDS, SELECT_COLUMN_ID } from 'src/types'
+
+import styles from './TableActions.module.scss'
 
 export function HeaderActionMenu<TData>({ headerData }: { headerData: HeaderContext<TData, TData> }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
+
+    const isAnyColumnHidden = headerData.table
+        .getAllLeafColumns()
+        .some((col) => col.getCanHide() && !col.getIsVisible() && !INTERNAL_COLUMN_IDS.includes(col.id))
+
     return (
         <div className='flex absolute-center items-center justify-end w-full'>
-            <div className='h-[30px] w-[50px] flex items-center justify-center cursor-pointer' onClick={handleOpen}>
-                <PinIcon className='text-delta-500 hover:text-delta-600 min-w-[20px] min-h-[20px]' />
+            <div className={styles['actions-header']} onClick={handleOpen}>
+                <PinIcon className={styles['pin-icon']} />
+                {isAnyColumnHidden && <div className={styles['pin-indicator']}></div>}
             </div>
             <Popover
                 anchorEl={anchorEl}

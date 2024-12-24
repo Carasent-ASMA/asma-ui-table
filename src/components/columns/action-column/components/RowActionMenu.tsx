@@ -20,7 +20,7 @@ export function RowActionMenu<TData>({
     const allActions = actions(tableData.row)
 
     return (
-        <div className='flex justify-center items-center w-[50px]'>
+        <div className='flex justify-center items-center w-[40px]'>
             {allActions.length ? (
                 <div className='flex items-center justify-center'>
                     <StyledButton

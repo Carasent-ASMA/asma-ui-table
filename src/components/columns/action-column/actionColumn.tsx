@@ -26,7 +26,7 @@ export function generateActionsColumn<TData>(options: {
         cell: (cell: CellContext<TData, TData>) =>
             actions || customActionsNode ? (
                 <div
-                    className={'flex items-center justify-end'}
+                    className={'flex items-center justify-end gap-x-1'}
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
                 >
                     {customActionsNode && <div>{customActionsNode?.(cell)}</div>}
