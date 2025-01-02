@@ -8,7 +8,7 @@ export function TableRows<
     },
     TCustomData = Record<string, unknown>,
 >({ styledTableProps, table }: { styledTableProps: StyledTableProps<TData, TCustomData>; table: Table<TData> }) {
-    const rows = styledTableProps.hideFooter ? table.getCoreRowModel().rows : table.getRowModel().rows
+    const rows = styledTableProps.hideFooter ? table.getExpandedRowModel().rows : table.getRowModel().rows
 
     return (
         <>
