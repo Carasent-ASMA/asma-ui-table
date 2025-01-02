@@ -53,7 +53,15 @@ export const useStyledTableColumns = () => {
                 cell: (info) => {
                     const proxy = info.row.original
                     return (
-                        <div className='flex items-center gap-5 py-[20px]'>
+                        <div
+                            className='flex items-center gap-5 py-[20px]'
+                            style={{
+                                paddingLeft: `${info.row.depth * 2}rem`,
+                            }}
+                        >
+                            {info.row.getCanExpand() && (
+                                <button onClick={info.row.getToggleExpandedHandler()}>expand here</button>
+                            )}
                             <div className='text-sm text-black'>{proxy.lastName}</div>
                         </div>
                     )

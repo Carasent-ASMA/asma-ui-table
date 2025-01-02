@@ -76,7 +76,7 @@ export const TableV2 = () => {
     useEffect(() => {
         setLoading(true)
         setTimeout(() => {
-            setData(makeData(1000))
+            setData(makeData(100, 5))
             setLoading(false)
         }, 1500)
     }, [])
@@ -118,6 +118,7 @@ export const TableV2 = () => {
             </div>
             <StyledTable<Person, Participant>
                 // data={data.splice(0, 49)}
+                // hideFooter
                 enableColumnResizing={true}
                 columnResizeMode='onChange'
                 defaultColumn={{
@@ -168,7 +169,7 @@ export const TableV2 = () => {
                     columnVisibility: columnsVisibility,
                 }}
                 customActionsColumnProps={{
-                    size: 160
+                    size: 160,
                 }}
                 state={{
                     globalFilter,
@@ -190,6 +191,7 @@ export const TableV2 = () => {
                 onColumnVisibilityChange={(e) => {
                     setColumnsVisibility(e)
                 }}
+                // getSubRows={(row) => row.subRows}
                 renderSubRows={(data) => <RenderSubRows subRows={data.rows} rowHeight={60} />}
                 getRowClassName={(row) => clsx(row.original.progress > 50 && style['high-progress'])}
                 noRowsOverlay={
@@ -205,7 +207,6 @@ export const TableV2 = () => {
                 footer={(table) => {
                     return <div>columns - {table.getAllColumns().length}</div>
                 }}
-                // hideFooter
             />
         </div>
     )
