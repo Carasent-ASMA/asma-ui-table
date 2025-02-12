@@ -11,10 +11,20 @@ export function TableFooter<
 >({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
     if (styledTableProps.hideFooter) return null
 
+    const paginationAlignLeft = styledTableProps.paginationAlignLeft;
+
     return (
-        <div className={style['table-footer']}>
-            {styledTableProps.footer?.(table)}
+        <div className={style['table-footer']}
+             style={
+                 (paginationAlignLeft && {
+                     justifyContent: 'flex-start'
+                 }) ||
+                 {}
+             }
+         >
+            {!paginationAlignLeft && styledTableProps.footer?.(table)}
             <TablePagination table={table} locale={styledTableProps.locale || 'en'} />
+            {paginationAlignLeft && styledTableProps.footer?.(table)}
         </div>
     )
 }
