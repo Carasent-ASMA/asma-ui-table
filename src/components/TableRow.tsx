@@ -98,7 +98,7 @@ export function TableRow<
                 className={clsx(
                     style['t-row'],
                     loading && style['is-loading'],
-                    (row.getIsExpanded() || row.getIsSelected()) && style['selected'],
+                    row.getIsSelected() && style['selected'],
                     getRowClassName?.(row),
                 )}
                 style={{
