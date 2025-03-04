@@ -3,6 +3,7 @@ import { TableHeaderCell } from './TableHeaderCell'
 import style from '../StyledTable.module.scss'
 import type { StyledTableProps } from 'src/types'
 import { cn } from 'src/helpers/cn'
+import type { CSSProperties } from 'react'
 
 export function TableHeader<
     TData extends {
@@ -20,22 +21,27 @@ export function TableHeader<
     tableCanResize: boolean
     tableWidth: number | null
 }) {
-    const { stickyHeader = false } = styledTableProps
+    const { stickyHeader = false, tableHeaderRef, tableHeaderStyle = {} } = styledTableProps
 
     const hasFixedLeftColumn = table
         .getHeaderGroups()
         .some((group) => group.headers.some((header) => header.column.columnDef.fixedLeft === true))
 
+    const styles: CSSProperties = stickyHeader
+        ? {
+              ...tableHeaderStyle,
+              position: 'sticky',
+              top: -0.2,
+          }
+        : {
+              ...tableHeaderStyle,
+          }
+
     return (
         <thead
             className={cn(style['table-header'], styledTableProps.tableHeaderClassName)}
-            style={
-                (stickyHeader && {
-                    position: 'sticky',
-                    top: -0.2,
-                }) ||
-                {}
-            }
+            style={styles}
+            ref={tableHeaderRef}
         >
             {table.getHeaderGroups().map((headerGroup) => {
                 return (

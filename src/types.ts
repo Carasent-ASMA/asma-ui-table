@@ -9,7 +9,7 @@ import type {
     SortingColumnDef,
     VisibilityColumnDef,
 } from '@tanstack/react-table'
-import type { MouseEvent, ReactElement, ReactNode } from 'react'
+import type { CSSProperties, MouseEvent, MutableRefObject, ReactElement, ReactNode } from 'react'
 
 declare module '@tanstack/react-table' {
     interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
@@ -82,6 +82,8 @@ export type StyledTableProps<TData, TCustomData> = {
     className?: string
     tableClassName?: string
     tableHeaderClassName?: string
+    tableHeaderRef?: MutableRefObject<HTMLTableSectionElement>
+    tableHeaderStyle?: CSSProperties
     rowHeight?: number
     tdClassName?: string
     focusable?: boolean
