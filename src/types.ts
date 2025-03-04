@@ -93,6 +93,7 @@ export type StyledTableProps<TData, TCustomData> = {
     renderSubRows?: (props: { rows: TCustomData[]; row: TData }) => ReactElement | null
     getRowSelectionIds?: (ids: string[]) => void
     hideHeader?: boolean
+    showRowCountSelect?: boolean
     pageSize?: number
     enableResizing?: boolean
     enableDnd?: boolean

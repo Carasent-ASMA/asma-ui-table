@@ -1,7 +1,7 @@
 import type { Table } from '@tanstack/react-table'
 import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import styleTable from '../StyledTable.module.scss'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import clsx from 'clsx'
 import { Popover, Tooltip } from '@mui/material'
 import { ChevronUpIcon } from 'src/shared-components/ChevronUpIcon'
@@ -12,8 +12,26 @@ import { ChevronLeftIcon } from 'src/shared-components/ChevronLeftIcon'
 import { CheckIcon } from 'src/shared-components/CheckIcon'
 import { StyledButton } from 'src/shared-components/button'
 
-export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no'; table: Table<TData> }) {
+const amountOfRows = [10, 20, 50]
+
+export function TablePagination<TData>({
+    table,
+    pageSize,
+    showRowSelect,
+    locale,
+}: {
+    locale: 'en' | 'no'
+    pageSize: number
+    showRowSelect: boolean
+    table: Table<TData>
+}) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
+    const {
+        anchorEl: anchorElRows,
+        open: openRows,
+        handleClose: handleCloseRows,
+        handleOpen: handleOpenRows,
+    } = useToggleMenuVisibility()
     const tablePagination = useRef<HTMLDivElement | null>(null)
     const isNo = locale === 'no'
 
@@ -30,10 +48,75 @@ export function TablePagination<TData>({ table, locale }: { locale: 'en' | 'no';
 
     const pagesLength = table.getPageCount() || 1
     const currentPage = table.getState().pagination.pageIndex + 1
-    const pages = Array.from({ length: pagesLength }, (_value, index) => index + 1)
+    const pages = useMemo(() => Array.from({ length: pagesLength }, (_, index) => index + 1), [pagesLength])
+
+    const amountOfRowsOptions = useMemo(() => {
+        const optionsSet = new Set([...amountOfRows, pageSize])
+        return Array.from(optionsSet).sort((a, b) => a - b)
+    }, [pageSize])
 
     return (
         <div ref={tablePagination} className={style['table-pagination']}>
+            {showRowSelect && (
+                <>
+                    <StyledButton
+                        dataTest='table-rows-count-button'
+                        variant='outlined'
+                        style={{ minWidth: '90px' }}
+                        onClick={(e) => handleOpenRows(e)}
+                        endIcon={
+                            openRows ? (
+                                <ChevronUpIcon height={24} width={24} />
+                            ) : (
+                                <ChevronDownIcon height={24} width={24} />
+                            )
+                        }
+                    >
+                        {pageSize} {isNo ? 'rader' : 'rows'}
+                    </StyledButton>
+
+                    <Popover
+                        open={openRows}
+                        anchorEl={anchorElRows}
+                        onClose={handleCloseRows}
+                        anchorOrigin={{
+                            vertical: -5,
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <div className={style['table-pagination__pages-list']}>
+                            {amountOfRowsOptions.map((size) => {
+                                return (
+                                    <div
+                                        className={clsx(
+                                            style['table-pagination__pages-list__page'],
+                                            pageSize === size && 'page-selected',
+                                        )}
+                                        key={size}
+                                        onClick={() => {
+                                            table.setPageSize(size)
+                                            handleCloseRows()
+                                            // scrollToTop()
+                                        }}
+                                    >
+                                        {pageSize === size && (
+                                            <CheckIcon className={style['check-icon']} height={24} width={24} />
+                                        )}
+                                        <span>
+                                            {size} {isNo ? 'rader' : 'rows'}
+                                        </span>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </Popover>
+                </>
+            )}
+
             <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
                 <div>
                     <StyledButton
