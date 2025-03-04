@@ -1,8 +1,8 @@
 import { type Table } from '@tanstack/react-table'
-import clsx from 'clsx'
 import { TableHeaderCell } from './TableHeaderCell'
 import style from '../StyledTable.module.scss'
 import type { StyledTableProps } from 'src/types'
+import { cn } from 'src/helpers/cn'
 
 export function TableHeader<
     TData extends {
@@ -28,7 +28,7 @@ export function TableHeader<
 
     return (
         <thead
-            className={clsx(style['table-header'])}
+            className={cn(style['table-header'], styledTableProps.tableHeaderClassName)}
             style={
                 (stickyHeader && {
                     position: 'sticky',
