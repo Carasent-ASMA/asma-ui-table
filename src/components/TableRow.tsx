@@ -121,13 +121,13 @@ export function TableRow<
                                 tdClassName,
                                 isActionsCell && style['action-cell'],
                                 isActionsCell && someFixed && style['shadowed'],
-                                isActionsCell && (row.getIsExpanded() || row.getIsSelected()) && style['selected'],
+                                isActionsCell && row.getIsSelected() && style['selected'],
                                 isActionsCell &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['action-cell-default-background']),
                                 isFixed && style['fixed-cell'],
-                                isFixed && (row.getIsExpanded() || row.getIsSelected()) && style['selected'],
+                                isFixed && row.getIsSelected() && style['selected'],
                                 isFixed &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
