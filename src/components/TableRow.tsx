@@ -1,6 +1,6 @@
 import { flexRender, type Row } from '@tanstack/react-table'
 import { Fragment, useMemo, type CSSProperties, useEffect } from 'react'
-import { type StyledTableProps } from '../types'
+import { ACTIONS_COLUMN_ID, type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
@@ -78,16 +78,15 @@ export function TableRow<
         disableResizingFlag()
     }
 
-    const cells = row.getVisibleCells()
-    const fixedCells = useMemo(
-        () =>
-            cells.map((cell, index) => ({
-                ...cell,
-                left: cells.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
-            })),
-        [cells],
+    const positionedCells = row.getVisibleCells().map((cell, index, allCells) => ({
+        ...cell,
+        left: allCells.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
+    }))
+
+    const fixedColumns = useMemo(
+        () => positionedCells.filter(({ column }) => column.columnDef.fixedLeft),
+        [positionedCells],
     )
-    const someFixed = useMemo(() => fixedCells.some((cell) => cell.column.columnDef.fixedLeft === true), [fixedCells])
 
     return (
         <Fragment key={row.id}>
@@ -109,9 +108,10 @@ export function TableRow<
                 ref={setNodeRef}
                 onMouseUp={onMouseUp}
             >
-                {fixedCells.map((cell) => {
-                    const isActionsCell = cell.column.id === 'actions'
+                {positionedCells.map((cell) => {
+                    const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
                     const isFixed = cell.column.columnDef.fixedLeft
+                    const isLastFixedCell = cell.id === fixedColumns.at(-1)?.id
                     const isExpandedRow = expandedRows.has(row.original.id.toString())
 
                     return (
@@ -121,19 +121,21 @@ export function TableRow<
                                 style['t-cell'],
                                 tdClassName,
                                 isActionsCell && style['action-cell'],
-                                isActionsCell && Boolean(actions) && someFixed && style['shadowed'],
+                                isActionsCell && Boolean(actions) && fixedColumns.length && style['shadowed'],
                                 isActionsCell && row.getIsSelected() && style['selected'],
                                 isActionsCell &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['action-cell-default-background']),
+
                                 isFixed && style['fixed-cell'],
+                                isLastFixedCell && style['shadowed'],
                                 isFixed && row.getIsSelected() && style['selected'],
                                 isFixed &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['fixed-cell-default-background']),
-                                !isExpandedRow && style['non_expanded_row'],
+                                isExpandedRow && style['expanded_row'],
                             )}
                             style={{
                                 left: isFixed ? cell.left : undefined,
