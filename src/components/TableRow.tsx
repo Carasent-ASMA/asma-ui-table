@@ -33,6 +33,7 @@ export function TableRow<
         customSubRowData,
         renderSubRows,
         defaultExpanded,
+        actions,
     } = styledTableProps
 
     const { transform, transition, setNodeRef, isDragging } = useSortable({
@@ -120,7 +121,7 @@ export function TableRow<
                                 style['t-cell'],
                                 tdClassName,
                                 isActionsCell && style['action-cell'],
-                                isActionsCell && someFixed && style['shadowed'],
+                                isActionsCell && Boolean(actions) && someFixed && style['shadowed'],
                                 isActionsCell && row.getIsSelected() && style['selected'],
                                 isActionsCell &&
                                     (getRowClassName?.(row)
