@@ -97,7 +97,7 @@
             // border-top: 0.5px solid transparent;
             border-bottom: 0.5px solid var(--colors-delta-300);
 
-            &.non_expanded_row {
+            &:not(.expanded_row) {
                 vertical-align: middle;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -137,10 +137,12 @@
             position: sticky;
             left: 0;
             z-index: 1;
-            box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
             // cell selected
             &.selected {
                 background-color: var(--colors-gama-50);
+            }
+            &.shadowed {
+                box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
             }
         }
 

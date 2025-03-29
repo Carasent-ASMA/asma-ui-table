@@ -174,7 +174,7 @@ const useColumns = () => {
                 headerText: `Header ${index + 1}`,
                 size: index === 0 ? 320 : 180,
                 maxSize: 800,
-                fixedLeft: index === 0,
+                fixedLeft: index === 0 || index === 1,
                 // fixedLeft: false,
             }),
         )
