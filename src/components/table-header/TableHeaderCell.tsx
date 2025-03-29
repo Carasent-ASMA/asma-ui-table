@@ -28,7 +28,7 @@ export function TableHeaderCell<
     hasFixedLeftColumn: boolean
     tableWidth: number | null
 }) {
-    const { hideHeader = false, enableResizing = false } = styledTableProps
+    const { actions, hideHeader = false, enableResizing = false } = styledTableProps
     const ref = useRef<HTMLTableCellElement | null>(null)
     const { isResizing, enableResizingFlag, disableResizingFlag } = useRootContext()
 
@@ -51,8 +51,8 @@ export function TableHeaderCell<
                 hideHeader && style['hide-header'],
                 // *
                 //  sticky actions
-                header.column.id === 'actions' && style['t-cell__actions'],
-                hasFixedLeftColumn && header.column.id === 'actions' && style['shadowed'],
+                header.column.id === ACTIONS_COLUMN_ID && style['t-cell__actions'],
+                hasFixedLeftColumn && Boolean(actions) && header.column.id === ACTIONS_COLUMN_ID && style['shadowed'],
                 header.column.columnDef.fixedLeft === true && style['t-cell__fixed'],
             )}
             style={{
