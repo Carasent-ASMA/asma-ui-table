@@ -29,6 +29,7 @@ export function TableRow<
         onRowClick,
         expandArrow,
         enableDnd,
+        disableDndForRow,
         tdClassName,
         customSubRowData,
         renderSubRows,
@@ -36,9 +37,11 @@ export function TableRow<
         actions,
     } = styledTableProps
 
+    const disabledDnd = disableDndForRow?.(row)
+
     const { transform, transition, setNodeRef, isDragging } = useSortable({
         id: row.original.id,
-        disabled: !enableDnd,
+        disabled: !enableDnd || disabledDnd,
     })
 
     const dndStyle: CSSProperties = {
@@ -105,7 +108,7 @@ export function TableRow<
                     height: rowHeight ? `${rowHeight}px` : 'inherit',
                     ...(enableDnd && dndStyle),
                 }}
-                ref={setNodeRef}
+                ref={disabledDnd ? undefined : setNodeRef}
                 onMouseUp={onMouseUp}
             >
                 {positionedCells.map((cell) => {

@@ -5,6 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { StyledButton } from 'src/shared-components/button'
 import { type Table } from '@tanstack/react-table'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
+import { RowDragHandleCell } from 'src'
 
 const meta: Meta<typeof StyledTable> = {
     title: '*/TEdward',
