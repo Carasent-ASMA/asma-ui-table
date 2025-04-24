@@ -9,7 +9,7 @@ import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
 import { cn } from 'src/helpers/cn'
 import { Fetching } from './Fetching'
@@ -41,7 +41,11 @@ const DndContextCustom = <TData extends { id: string | number }>({
     }
 
     return (
-        <DndContext collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
+        <DndContext
+            collisionDetection={closestCenter}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+            onDragEnd={handleDragEnd}
+        >
             {children}
         </DndContext>
     )

@@ -98,6 +98,7 @@ export type StyledTableProps<TData, TCustomData> = {
     enableResizing?: boolean
     enableDnd?: boolean
     customDndColumnProps?: ColumnDef<TData, unknown>
+    disableDndForRow?: (row: Row<TData>) => boolean
     textExpandArrow?: boolean
     customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
     paginationAlignLeft?: boolean
