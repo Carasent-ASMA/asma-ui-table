@@ -80,7 +80,7 @@ export const TEdward = () => {
                 onGlobalFilterChange={setGlobalFilter}
                 onRowSelectionChange={(e) => setRowSelection(e)}
                 onColumnVisibilityChange={setColumnVisibility}
-                rowHeight={60}
+                rowHeight={48}
                 pageSize={20}
                 onRowClick={() => console.log('rowClick')}
                 enableResizing={true}
