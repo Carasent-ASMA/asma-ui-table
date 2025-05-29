@@ -12,12 +12,12 @@ export function TableBody<
     },
     TCustomData = Record<string, unknown>,
 >({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
-    const { columns, data, loading, noRowsOverlay, enableDnd } = styledTableProps
+    const { columns, data, loading, noRowsOverlay, enableDnd, rowHeight } = styledTableProps
 
     return (
         <tbody className={style['tbody']}>
             {data.length === 0 && loading ? (
-                <TableSkeleton colSpan={columns.length} />
+                <TableSkeleton colSpan={columns.length} rowHeight={rowHeight} />
             ) : data.length > 0 ? (
                 <>
                     {enableDnd ? (

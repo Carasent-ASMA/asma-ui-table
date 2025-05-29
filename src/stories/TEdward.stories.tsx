@@ -5,7 +5,6 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { StyledButton } from 'src/shared-components/button'
 import { type Table } from '@tanstack/react-table'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
-import { RowDragHandleCell } from 'src'
 
 const meta: Meta<typeof StyledTable> = {
     title: '*/TEdward',
@@ -63,6 +62,7 @@ export const TEdward = () => {
                 locale='en'
                 data={data}
                 columns={columns}
+                // loading={true}
                 enableColumnResizing={true}
                 columnResizeMode='onChange'
                 // expandArrow={true}
@@ -80,7 +80,7 @@ export const TEdward = () => {
                 onGlobalFilterChange={setGlobalFilter}
                 onRowSelectionChange={(e) => setRowSelection(e)}
                 onColumnVisibilityChange={setColumnVisibility}
-                // rowHeight={60}
+                rowHeight={48}
                 pageSize={20}
                 onRowClick={() => console.log('rowClick')}
                 enableResizing={true}
