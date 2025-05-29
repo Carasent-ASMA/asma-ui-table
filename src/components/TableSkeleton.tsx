@@ -1,11 +1,13 @@
 import { Skeleton } from '@mui/material'
 import { Fragment, type FunctionComponent } from 'react'
 
+import styles from './TableSkeleton.module.scss'
+
 export const TableSkeleton = (({ colSpan, rowHeight = 48 }) => (
     <Fragment>
         {Array.from({ length: 10 }).map((_, index) => (
             <tr key={index}>
-                <td colSpan={colSpan} height={rowHeight} className={'last:pb-0 first:pt-2 pb-2'}>
+                <td colSpan={colSpan} height={rowHeight} className={styles['skeleton-row']}>
                     <Skeleton
                         key={index}
                         variant={'rectangular'}
