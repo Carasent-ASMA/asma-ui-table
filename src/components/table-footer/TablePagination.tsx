@@ -2,15 +2,14 @@ import type { Table } from '@tanstack/react-table'
 import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import styleTable from '../StyledTable.module.scss'
 import { useMemo, useRef, useCallback } from 'react'
-import clsx from 'clsx'
-import { Popover, Tooltip, type PopoverOrigin } from '@mui/material'
-import { ChevronUpIcon } from 'src/shared-components/ChevronUpIcon'
+import { Popover, type PopoverOrigin } from '@mui/material'
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
 import { ChevronRightIcon } from 'src/shared-components/ChevronRightIcon'
 import style from './TablePagination.module.scss'
 import { ChevronLeftIcon } from 'src/shared-components/ChevronLeftIcon'
-import { CheckIcon } from 'src/shared-components/CheckIcon'
 import { StyledButton } from 'src/shared-components/button'
+import { StyledTooltip } from 'src/shared-components/tooltip'
+import { StyledMenuItem } from 'src/shared-components/menu-item'
 
 const amountOfRows = [10, 20, 50]
 
@@ -83,16 +82,16 @@ export function TablePagination<TData>({
             {showRowSelect && (
                 <>
                     <StyledButton
-                        dataTest='table-rows-count-button'
-                        variant='outlined'
-                        style={{ minWidth: '90px' }}
+                        dataTest={'table-rows-count-button'}
+                        variant={'outlined'}
+                        size={'large'}
                         onClick={handleOpenRows}
                         endIcon={
-                            openRows ? (
-                                <ChevronUpIcon height={24} width={24} />
-                            ) : (
-                                <ChevronDownIcon height={24} width={24} />
-                            )
+                            <ChevronDownIcon
+                                className={`${openRows ? 'rotate-180' : 'rotate-0'} transition-transform duration-300`}
+                                height={24}
+                                width={24}
+                            />
                         }
                     >
                         {pageSize} {isNo ? 'rader' : 'rows'}
@@ -101,105 +100,123 @@ export function TablePagination<TData>({
                     <Popover
                         open={openRows}
                         anchorEl={anchorElRows}
+                        slotProps={{
+                            paper: {
+                                sx: {
+                                    width: anchorElRows ? anchorElRows.clientWidth : undefined,
+                                    maxHeight: 288,
+                                    overflowY: 'auto',
+                                },
+                            },
+                        }}
                         onClose={handleCloseRows}
                         anchorOrigin={popoverOrigin.anchorOrigin}
                         transformOrigin={popoverOrigin.transformOrigin}
+                        classes={{ paper: 'border border-solid border-delta-200 py-2' }}
                     >
-                        <div className={style['table-pagination__pages-list']}>
-                            {amountOfRowsOptions.map((size) => (
-                                <div
-                                    key={size}
-                                    className={clsx(
-                                        style['table-pagination__pages-list__page'],
-                                        pageSize === size && 'page-selected',
-                                    )}
-                                    onClick={() => handleRowsChange(size)}
-                                >
-                                    {pageSize === size && (
-                                        <CheckIcon className={style['check-icon']} height={24} width={24} />
-                                    )}
-                                    <span>
-                                        {size} {isNo ? 'rader' : 'rows'}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                        {amountOfRowsOptions.map((size) => (
+                            <StyledMenuItem
+                                key={size}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    e.preventDefault()
+
+                                    handleRowsChange(size)
+                                }}
+                                selected={pageSize === size}
+                            >
+                                <span className={'text-delta-700 text-sm font-normal'}>
+                                    {size} {isNo ? 'rader' : 'rows'}
+                                </span>
+                            </StyledMenuItem>
+                        ))}
                     </Popover>
                 </>
             )}
 
-            <Tooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
+            <StyledTooltip title={isNo ? 'Nåværende side' : 'Current Page'}>
                 <div>
                     <StyledButton
-                        dataTest=''
-                        variant='outlined'
-                        style={{ minWidth: '140px' }}
+                        dataTest={'current-page-button'}
+                        variant={'outlined'}
+                        size={'large'}
                         onClick={handleOpen}
                         endIcon={
-                            open ? <ChevronUpIcon height={24} width={24} /> : <ChevronDownIcon height={24} width={24} />
+                            <ChevronDownIcon
+                                className={`${open ? 'rotate-180' : 'rotate-0'} transition-transform duration-300`}
+                                height={24}
+                                width={24}
+                            />
                         }
                     >
                         {isNo ? 'Side' : 'Page'} {currentPage} {isNo ? 'av' : 'of'} {pagesLength}
                     </StyledButton>
                 </div>
-            </Tooltip>
+            </StyledTooltip>
             <Popover
                 open={open}
                 anchorEl={anchorEl}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            width: anchorEl ? anchorEl.clientWidth : undefined,
+                            maxHeight: 288,
+                            overflowY: 'auto',
+                        },
+                    },
+                }}
                 onClose={handleClose}
                 anchorOrigin={popoverOrigin.anchorOrigin}
                 transformOrigin={popoverOrigin.transformOrigin}
+                classes={{ paper: 'border border-solid border-delta-200 py-2' }}
             >
-                <div className={style['table-pagination__pages-list']}>
-                    {pages.map((page) => (
-                        <div
-                            key={page}
-                            className={clsx(
-                                style['table-pagination__pages-list__page'],
-                                currentPage === page && 'page-selected',
-                            )}
-                            onClick={() => handlePageChange(page)}
-                        >
-                            {currentPage === page && (
-                                <CheckIcon className={style['check-icon']} height={24} width={24} />
-                            )}
-                            <span>
-                                {isNo ? 'Side' : 'Page'} {page}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+                {pages.map((page) => (
+                    <StyledMenuItem
+                        key={page}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+
+                            handlePageChange(page)
+                        }}
+                        selected={page === currentPage}
+                    >
+                        <span className={'text-delta-700 text-sm font-normal'}>
+                            {isNo ? 'Side' : 'Page'} {page}
+                        </span>
+                    </StyledMenuItem>
+                ))}
             </Popover>
-            <Tooltip title={currentPage === 1 ? '' : isNo ? 'Forrige side' : 'Previous Page'}>
+            <StyledTooltip title={currentPage === 1 ? '' : isNo ? 'Forrige side' : 'Previous Page'}>
                 <div>
                     <StyledButton
-                        dataTest=''
-                        variant='outlined'
+                        dataTest={'prev-page-button'}
+                        variant={'outlined'}
                         onClick={() => {
                             table.previousPage()
                             scrollToTop()
                         }}
+                        size={'large'}
                         disabled={!table.getCanPreviousPage()}
-                        style={{ minWidth: 40, width: 40 }}
                         startIcon={<ChevronLeftIcon height={24} width={24} />}
                     />
                 </div>
-            </Tooltip>
-            <Tooltip title={currentPage === pagesLength ? '' : isNo ? 'Neste side' : 'Next Page'}>
+            </StyledTooltip>
+            <StyledTooltip title={currentPage === pagesLength ? '' : isNo ? 'Neste side' : 'Next Page'}>
                 <div>
                     <StyledButton
-                        dataTest=''
-                        variant='outlined'
+                        dataTest={'next-page-button'}
+                        variant={'outlined'}
                         onClick={() => {
                             table.nextPage()
                             scrollToTop()
                         }}
+                        size={'large'}
                         disabled={!table.getCanNextPage()}
-                        style={{ minWidth: 40, width: 40 }}
                         startIcon={<ChevronRightIcon height={24} width={24} />}
                     />
                 </div>
-            </Tooltip>
+            </StyledTooltip>
         </div>
     )
 }
