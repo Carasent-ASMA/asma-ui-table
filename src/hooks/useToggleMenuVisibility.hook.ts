@@ -2,14 +2,15 @@ import { useState, useCallback } from 'react'
 
 export const useToggleMenuVisibility = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | SVGSVGElement | null>(null)
-    const open = Boolean(anchorEl)
+    const [open, setOpen] = useState(false)
 
     const handleOpen = useCallback((event: React.MouseEvent<HTMLElement | SVGSVGElement>) => {
         setAnchorEl(event.currentTarget)
+        setOpen(true)
     }, [])
 
     const handleClose = useCallback(() => {
-        setAnchorEl(null)
+        setOpen(false)
     }, [])
 
     return { open, handleClose, handleOpen, anchorEl }
