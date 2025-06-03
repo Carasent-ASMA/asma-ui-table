@@ -108,7 +108,10 @@ export function TablePagination<TData>({
                         onClose={handleCloseRows}
                         anchorOrigin={popoverOrigin.anchorOrigin}
                         transformOrigin={popoverOrigin.transformOrigin}
-                        classes={{ paper: 'border border-solid border-delta-200 py-2' }}
+                        classes={{
+                            paper: 'border border-solid border-delta-200 py-2',
+                            root: 'max-h-[280px]',
+                        }}
                     >
                         {amountOfRowsOptions.map((size) => (
                             <StyledMenuItem
@@ -160,7 +163,10 @@ export function TablePagination<TData>({
                 onClose={handleClose}
                 anchorOrigin={popoverOrigin.anchorOrigin}
                 transformOrigin={popoverOrigin.transformOrigin}
-                classes={{ paper: 'border border-solid border-delta-200 py-2' }}
+                classes={{
+                    paper: 'border border-solid border-delta-200 py-2',
+                    root: 'max-h-[280px]',
+                }}
             >
                 {pages.map((page) => (
                     <StyledMenuItem
