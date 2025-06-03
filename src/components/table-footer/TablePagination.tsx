@@ -102,16 +102,17 @@ export function TablePagination<TData>({
                         anchorEl={anchorElRows}
                         slotProps={{
                             paper: {
-                                sx: { width: anchorElRows ? anchorElRows.clientWidth : undefined },
+                                sx: {
+                                    width: anchorElRows ? anchorElRows.clientWidth : undefined,
+                                    maxHeight: 288,
+                                    overflowY: 'auto',
+                                },
                             },
                         }}
                         onClose={handleCloseRows}
                         anchorOrigin={popoverOrigin.anchorOrigin}
                         transformOrigin={popoverOrigin.transformOrigin}
-                        classes={{
-                            paper: 'border border-solid border-delta-200 py-2',
-                            root: 'max-h-[280px]',
-                        }}
+                        classes={{ paper: 'border border-solid border-delta-200 py-2' }}
                     >
                         {amountOfRowsOptions.map((size) => (
                             <StyledMenuItem
@@ -157,16 +158,17 @@ export function TablePagination<TData>({
                 anchorEl={anchorEl}
                 slotProps={{
                     paper: {
-                        sx: { width: anchorEl ? anchorEl.clientWidth : undefined },
+                        sx: {
+                            width: anchorEl ? anchorEl.clientWidth : undefined,
+                            maxHeight: 288,
+                            overflowY: 'auto',
+                        },
                     },
                 }}
                 onClose={handleClose}
                 anchorOrigin={popoverOrigin.anchorOrigin}
                 transformOrigin={popoverOrigin.transformOrigin}
-                classes={{
-                    paper: 'border border-solid border-delta-200 py-2',
-                    root: 'max-h-[280px]',
-                }}
+                classes={{ paper: 'border border-solid border-delta-200 py-2' }}
             >
                 {pages.map((page) => (
                     <StyledMenuItem
