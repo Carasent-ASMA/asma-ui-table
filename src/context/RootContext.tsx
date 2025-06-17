@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, type FunctionComponent, type PropsWithChildren } from 'react'
 
 interface RootContextType {
     expandedRows: Set<string>
@@ -10,7 +10,7 @@ interface RootContextType {
 
 const RootContext = createContext<RootContextType | undefined>(undefined)
 
-export const RootContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const RootContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const [isResizing, setIsResizing] = useState(false)
 
@@ -20,28 +20,31 @@ export const RootContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     const toggleExpand = (id: string) => {
         setExpandedRows((prev) => {
             const newExpandedRows = new Set(prev)
-            if (newExpandedRows.has(id)) {
-                newExpandedRows.delete(id)
-            } else {
-                newExpandedRows.add(id)
-            }
+
+            if (newExpandedRows.has(id)) newExpandedRows.delete(id)
+            else newExpandedRows.add(id)
+
             return newExpandedRows
         })
     }
 
-    return (
-        <RootContext.Provider
-            value={{ expandedRows, toggleExpand, enableResizingFlag, disableResizingFlag, isResizing }}
-        >
-            {children}
-        </RootContext.Provider>
-    )
+    const context = {
+        expandedRows,
+        toggleExpand,
+        enableResizingFlag,
+        disableResizingFlag,
+        isResizing,
+    } satisfies RootContextType
+
+    return <RootContext.Provider value={context}>{children}</RootContext.Provider>
 }
 
 export const useRootContext = () => {
     const context = useContext(RootContext)
-    if (context === undefined) {
+
+    if (!context) {
         throw new Error('useRootContext must be used within a RootContextProvider')
     }
+
     return context
 }
