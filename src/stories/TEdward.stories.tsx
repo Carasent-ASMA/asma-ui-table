@@ -81,8 +81,8 @@ export const TEdward = () => {
                 onRowSelectionChange={(e) => setRowSelection(e)}
                 onColumnVisibilityChange={setColumnVisibility}
                 rowHeight={48}
-                pageSize={1}
-                onRowClick={() => console.log('rowClick')}
+                pageSize={20}
+                //onRowClick={() => console.log('rowClick')}
                 enableResizing={true}
                 paginationAlignLeft={true}
                 noRowsOverlay={

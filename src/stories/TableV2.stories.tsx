@@ -209,7 +209,7 @@ export const TableV2 = () => {
                     </div>
                 }
                 rowHeight={60}
-                pageSize={1}
+                pageSize={20}
                 // getRowId={(row: Person, _index: number, parent?: Row<Person>) =>
                 //     parent ? `abrakadabra${_index}` : _index.toString()
                 // }

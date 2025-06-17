@@ -35,6 +35,7 @@ export function TableRow<
         renderSubRows,
         defaultExpanded,
         actions,
+        textExpandArrow,
     } = styledTableProps
 
     const disabledDnd = disableDndForRow?.(row)
@@ -77,7 +78,12 @@ export function TableRow<
 
         const selection = window.getSelection()?.type === 'Range'
 
-        if (onRowClick && !selection && !isResizing) onRowClick(e, row)
+        const isIdle = !selection && !isResizing
+        const hasRowClickHandler = onRowClick instanceof Function
+
+        if (!hasRowClickHandler && textExpandArrow && isIdle) toggleExpand(row.id)
+        else if (hasRowClickHandler && isIdle) onRowClick(e, row)
+
         disableResizingFlag()
     }
 
@@ -110,6 +116,13 @@ export function TableRow<
                 }}
                 ref={disabledDnd ? undefined : setNodeRef}
                 onMouseUp={onMouseUp}
+                onMouseDown={(e) => {
+                    const hasRowClickHandler = onRowClick instanceof Function
+
+                    if (e.detail > 1 && !hasRowClickHandler && textExpandArrow) {
+                        e.preventDefault()
+                    }
+                }}
             >
                 {positionedCells.map((cell) => {
                     const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
