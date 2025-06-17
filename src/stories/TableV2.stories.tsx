@@ -30,6 +30,7 @@ import { getRowActions } from './components/styled-table/getRowActions'
 import style from './StyledTableStories.module.scss'
 import { StyledTable } from 'src/components/StyledTableIndex'
 import { StyledButton } from 'src/shared-components/button'
+import { RowDragHandleCell } from 'src'
 
 const meta = {
     title: '*/TableV2',
@@ -119,6 +120,13 @@ export const TableV2 = () => {
             <StyledTable<Person, Participant>
                 // data={data.splice(0, 49)}
                 // hideFooter
+                //enableDnd
+                //disableDndForRow={() => true}
+                //customDndColumnProps={{
+                //    cell({ row }) {
+                //        return <RowDragHandleCell disabled rowId={row.id} />
+                //    },
+                //}}
                 enableColumnResizing={true}
                 columnResizeMode='onChange'
                 defaultColumn={{
