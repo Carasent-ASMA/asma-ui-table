@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import type { Arguments } from '@dnd-kit/sortable/dist/hooks/useSortable'
+import clsx from 'clsx'
 import type { FC } from 'react'
 import { DotsHorizontalIcon } from 'src/shared-components/DotsHorizontalIcon'
 import { DND_HANDLE_COLUMN_ID, type CellContext, type ColumnDef } from 'src/types'
@@ -31,7 +32,11 @@ export const RowDragHandleCell: FC<
                 height: rowHeight ? rowHeight : 'auto',
             }}
         >
-            <DotsHorizontalIcon width={24} height={24} className='text-delta-800' />
+            <DotsHorizontalIcon
+                width={24}
+                height={24}
+                className={clsx(rest.disabled ? 'text-delta-300 cursor-not-allowed' : 'text-delta-800 cursor-grab')}
+            />
         </div>
     )
 }
