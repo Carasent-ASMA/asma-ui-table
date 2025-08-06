@@ -152,6 +152,11 @@
         }
     }
 
+    .t-row.single-selection {
+        outline: 2px solid var(--colors-gama-300) !important;
+        outline-offset: -2px;
+    }
+
     .t-row.is-loading {
         opacity: 0.5;
     }

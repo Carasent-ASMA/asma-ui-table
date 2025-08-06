@@ -7,12 +7,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useRootContext } from 'src/context/RootContext'
 
-export function TableRow<
-    TData extends {
-        id: string | number
-    },
-    TCustomData = Record<string, unknown>,
->({
+export function TableRow<TData extends { id: string | number }, TCustomData = Record<string, unknown>>({
     styledTableProps,
     row,
     index,
@@ -36,6 +31,9 @@ export function TableRow<
         defaultExpanded,
         actions,
         textExpandArrow,
+        enableMultiRowSelection,
+        enableRowSelection,
+        singleSelectionRow,
     } = styledTableProps
 
     const disabledDnd = disableDndForRow?.(row)
@@ -87,15 +85,18 @@ export function TableRow<
         disableResizingFlag()
     }
 
-    const positionedCells = row.getVisibleCells().map((cell, index, allCells) => ({
+    const positionedCells = row.getVisibleCells().map((cell, idx, allCells) => ({
         ...cell,
-        left: allCells.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
+        left: allCells.slice(0, idx).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
     }))
 
     const fixedColumns = useMemo(
         () => positionedCells.filter(({ column }) => column.columnDef.fixedLeft),
         [positionedCells],
     )
+
+    const spaceForCheckmark = !enableMultiRowSelection && !enableRowSelection && singleSelectionRow
+    const singleSelection = row.getIsSelected() && spaceForCheckmark
 
     return (
         <Fragment key={row.id}>
@@ -108,6 +109,7 @@ export function TableRow<
                     style['t-row'],
                     loading && style['is-loading'],
                     row.getIsSelected() && style['selected'],
+                    singleSelection && style['single-selection'],
                     getRowClassName?.(row),
                 )}
                 style={{
@@ -124,12 +126,14 @@ export function TableRow<
                     }
                 }}
             >
-                {positionedCells.map((cell) => {
+                {positionedCells.map((cell, idx) => {
                     const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
                     const isFixed = cell.column.columnDef.fixedLeft
                     const isLastFixedCell = cell.id === fixedColumns.at(-1)?.id
                     const isExpandedRow = expandedRows.has(row.original.id.toString())
+                    const isFirstCell = idx === 0
 
+                    // If first cell, always reserve space for the checkmark (even if not selected)
                     return (
                         <td
                             key={cell.id}
@@ -152,12 +156,38 @@ export function TableRow<
                                         ? getRowClassName?.(row)
                                         : style['fixed-cell-default-background']),
                                 isExpandedRow && style['expanded_row'],
+                                singleSelection && style['single-selection'],
                             )}
                             style={{
                                 left: isFixed ? cell.left : undefined,
                             }}
                         >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    minWidth: isFirstCell ? 32 : undefined,
+                                    position: 'relative',
+                                }}
+                            >
+                                {isFirstCell && singleSelection && (
+                                    <span
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                        }}
+                                    >
+                                        <Checkmark />
+                                    </span>
+                                )}
+                                <span style={{ marginLeft: isFirstCell && spaceForCheckmark ? 30 : 0, width: '100%' }}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </span>
+                            </div>
                         </td>
                     )
                 })}
@@ -175,3 +205,15 @@ export function TableRow<
         </Fragment>
     )
 }
+
+export const Checkmark = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        width='20'
+        height='20'
+        viewBox='0 2 22 22'
+        style={{ color: 'var(--colors-gama-500)' }}
+    >
+        <path fill='currentColor' d='M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z' />
+    </svg>
+)

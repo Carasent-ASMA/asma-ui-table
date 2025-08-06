@@ -102,6 +102,7 @@ export type StyledTableProps<TData, TCustomData> = {
     textExpandArrow?: boolean
     customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
     paginationAlignLeft?: boolean
+    singleSelectionRow?: boolean
     /**
      * @info A unique identifier for the table. This name is used to store the table's state in localStorage,
      * ensuring that the table state is persisted across sessions for the specific table instance.

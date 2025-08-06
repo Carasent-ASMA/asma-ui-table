@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import type { Meta } from '@storybook/react'
 import { StyledTable } from '../components/StyledTableIndex'
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, Row } from '@tanstack/react-table'
 import { StyledButton } from 'src/shared-components/button'
 import { type Table } from '@tanstack/react-table'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
@@ -20,7 +20,9 @@ interface IFixedTest {
     id: string
     text: string
 }
-
+type IRowSelection = {
+    [key: string]: boolean
+}
 export const TEdward = () => {
     const columns = useColumns()
     const [data, setData] = useState(() =>
@@ -34,7 +36,7 @@ export const TEdward = () => {
     const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(() => {
         return loadColumnVisibilityInitState({ select: true })
     })
-    const [rowSelection, setRowSelection] = useState({})
+    const [rowSelection, setRowSelection] = useState<IRowSelection>({})
     const [globalFilter, setGlobalFilter] = useState<string>('')
 
     useEffect(() => {
@@ -45,6 +47,25 @@ export const TEdward = () => {
         const rows = Object.keys(tableRef?.current?.getSelectedRowModel().rowsById || {})
         console.info(rows)
     }, [rowSelection])
+
+    const handleRowClick = async (row: Row<IFixedTest>) => {
+        const updatedRowSelection: IRowSelection = {}
+        const isSelected = !!rowSelection[row.id]
+
+        if (!isSelected) {
+            updatedRowSelection[row.id] = true
+            setRowSelection(updatedRowSelection)
+        } else {
+            setRowSelection(updatedRowSelection)
+        }
+    }
+
+    useEffect(() => {
+        tableRef.current?.setColumnVisibility((old) => ({
+            ...old,
+            select: true,
+        }))
+    }, [])
 
     return (
         <div className='border-2 border-solid border-black rounded-lg pl-8 pr-6 pt-8 pb-4 flex flex-col gap-2'>
@@ -62,18 +83,13 @@ export const TEdward = () => {
                 locale='en'
                 data={data}
                 columns={columns}
-                // loading={true}
                 enableColumnResizing={true}
                 columnResizeMode='onChange'
-                // expandArrow={true}
-                // getRowCanExpand={() => true}
                 defaultColumn={{
                     maxSize: 1000,
                 }}
-                textExpandArrow={true}
-                //focusable
                 footer={(table) => getFooter(table, tableRef)}
-                enableRowSelection={true}
+                // enableRowSelection={true}
                 initialState={{ columnVisibility: { ...columnVisibility } }}
                 state={{ rowSelection, columnVisibility, globalFilter }}
                 enableGlobalFilter
@@ -82,7 +98,6 @@ export const TEdward = () => {
                 onColumnVisibilityChange={setColumnVisibility}
                 rowHeight={48}
                 pageSize={20}
-                //onRowClick={() => console.log('rowClick')}
                 enableResizing={true}
                 paginationAlignLeft={true}
                 noRowsOverlay={
@@ -90,40 +105,11 @@ export const TEdward = () => {
                         <div className='flex flex-col items-center'>No content</div>
                     </div>
                 }
-                //actions={() => [{ label: 'Delete', disabled: true }]}
-                /** uniqueKey ex: `name` + `customer_id` + `user_id` */
                 uniqueKey={'TableEdward'}
-                // customActionsNode={(cell) => (
-                //     <StyledButton
-                //         size='small'
-                //         dataTest='custom-button-action'
-                //         onMouseDown={(e) => {
-                //             e.stopPropagation()
-                //             e.preventDefault()
-                //         }}
-                //         onMouseUp={(e) => {
-                //             e.stopPropagation()
-                //             e.preventDefault()
-                //         }}
-                //         onClick={(e) => {
-                //             e.stopPropagation()
-                //             e.preventDefault()
-                //         }}
-                //     >
-                //         {cell.row.original.id}
-                //     </StyledButton>
-                // )}
-                // customActionsColumnProps={{
-                //     size: 120
-                // }}
-                // customActionsNode={() => (
-                //     <StyledButton dataTest={''} size='small' variant='text'>
-                //         {'Share'}
-                //     </StyledButton>
-                // )}
-                // customActionsColumnProps={{
-                //     size: 120,
-                // }}
+                headerPin={false}
+                enableMultiRowSelection={false}
+                onRowClick={(_e, row) => handleRowClick(row)}
+                singleSelectionRow={true}
             />
         </div>
     )
@@ -165,7 +151,6 @@ const useColumns = () => {
                 maxSize: data.maxSize,
                 // size: id === 'col1' ? data.size : undefined,
                 size: tableDimensions ? JSON.parse(tableDimensions)[id] : data.size,
-                fixedLeft,
             }
         }
 
