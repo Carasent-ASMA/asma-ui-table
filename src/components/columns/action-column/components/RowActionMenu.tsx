@@ -5,7 +5,7 @@ import { DotsVerticalIcon } from 'src/shared-components/DotsVerticalIcon'
 
 import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 import { isCustomAction, type IAction, type ICustomAction } from 'src/types'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { StyledButton } from 'src/shared-components/button'
 
 export function RowActionMenu<TData>({
@@ -19,9 +19,13 @@ export function RowActionMenu<TData>({
 
     const allActions = actions(tableData.row)
 
+    const allHidden = useMemo(() => {
+        return allActions.every((a) => ('component' in a ? false : a.hide))
+    }, [allActions])
+
     return (
         <div className='flex justify-center items-center w-[40px]'>
-            {allActions.length ? (
+            {allActions.length && !allHidden ? (
                 <div className='flex items-center justify-center'>
                     <StyledButton
                         dataTest=''
