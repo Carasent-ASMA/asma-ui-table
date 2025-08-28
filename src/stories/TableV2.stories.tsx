@@ -143,6 +143,10 @@ export const TableV2 = () => {
                     return row.original.progress > 50
                         ? getRowActions(row)
                         : [
+                              {
+                                  label: 'Test action',
+                                  hide: true,
+                              },
                               //   {
                               //       label: 'Toggle sub row',
                               //       className: 'text-amber-700',
