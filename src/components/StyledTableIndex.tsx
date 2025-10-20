@@ -147,17 +147,13 @@ export const StyledTable = <
     return (
         <RootContextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
-                <div className={cn(style['asma-ui-table-styled-table'], tableClassName)}>
-                    <div
-                        className={cn(style['table-wrapper'], fetching && style['table-wrapper-fetching'], className)}
-                        style={{ height }}
-                    >
+                <div className={cn(style['asma-ui-table-styled-table'], tableClassName)} style={{ height }}>
+                    <div className={cn(style['table-wrapper'], fetching && style['table-wrapper-fetching'], className)}>
                         <table
                             ref={tableRef}
                             className={style['styled-table']}
                             style={{
                                 ...columnSizeVars,
-                                // width: table.getTotalSize(),
                             }}
                         >
                             <TableHeader
