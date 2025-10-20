@@ -68,49 +68,56 @@ export const TEdward = () => {
     }, [])
 
     return (
-        <div className='border-2 border-solid border-black rounded-lg pl-8 pr-6 pt-8 pb-4 flex flex-col gap-2'>
+        <div
+            className={
+                'border-2 border-solid border-black rounded-lg pl-8 pr-6 pt-8 pb-4 flex flex-col gap-2 h-[800px]'
+            }
+        >
             <input
                 value={globalFilter ?? ''}
                 onChange={(e) => setGlobalFilter(String(e.target.value))}
                 className='p-2 font-lg shadow border border-block max-w-[200px]'
                 placeholder='Search'
             />
-            <StyledTable<IFixedTest, IFixedTest>
-                stickyHeader={true}
-                tableInstanceRef={tableRef}
-                setData={(callback) => setData(callback(data))}
-                className='w-full h-[calc(100vh-190px)]'
-                locale='en'
-                data={data}
-                columns={columns}
-                enableColumnResizing={true}
-                columnResizeMode='onChange'
-                defaultColumn={{
-                    maxSize: 1000,
-                }}
-                footer={(table) => getFooter(table, tableRef)}
-                // enableRowSelection={true}
-                initialState={{ columnVisibility: { ...columnVisibility } }}
-                state={{ rowSelection, columnVisibility, globalFilter }}
-                enableGlobalFilter
-                onGlobalFilterChange={setGlobalFilter}
-                onRowSelectionChange={(e) => setRowSelection(e)}
-                onColumnVisibilityChange={setColumnVisibility}
-                rowHeight={48}
-                pageSize={20}
-                enableResizing={true}
-                paginationAlignLeft={true}
-                noRowsOverlay={
-                    <div className='flex h-full w-full items-center justify-center'>
-                        <div className='flex flex-col items-center'>No content</div>
-                    </div>
-                }
-                uniqueKey={'TableEdward'}
-                headerPin={false}
-                enableMultiRowSelection={false}
-                onRowClick={(_e, row) => handleRowClick(row)}
-                singleSelectionRow={true}
-            />
+            <div className={'w-full h-full min-h-0'}>
+                <StyledTable<IFixedTest, IFixedTest>
+                    stickyHeader={true}
+                    tableInstanceRef={tableRef}
+                    setData={(callback) => setData(callback(data))}
+                    className={'w-full h-full'}
+                    height={'100%'}
+                    locale='en'
+                    data={data}
+                    columns={columns}
+                    enableColumnResizing={true}
+                    columnResizeMode='onChange'
+                    defaultColumn={{
+                        maxSize: 1000,
+                    }}
+                    footer={(table) => getFooter(table, tableRef)}
+                    // enableRowSelection={true}
+                    initialState={{ columnVisibility: { ...columnVisibility } }}
+                    state={{ rowSelection, columnVisibility, globalFilter }}
+                    enableGlobalFilter
+                    onGlobalFilterChange={setGlobalFilter}
+                    onRowSelectionChange={(e) => setRowSelection(e)}
+                    onColumnVisibilityChange={setColumnVisibility}
+                    rowHeight={48}
+                    pageSize={20}
+                    enableResizing={true}
+                    paginationAlignLeft={true}
+                    noRowsOverlay={
+                        <div className='flex h-full w-full items-center justify-center'>
+                            <div className='flex flex-col items-center'>No content</div>
+                        </div>
+                    }
+                    uniqueKey={'TableEdward'}
+                    headerPin={false}
+                    enableMultiRowSelection={false}
+                    onRowClick={(_e, row) => handleRowClick(row)}
+                    singleSelectionRow={true}
+                />
+            </div>
         </div>
     )
 }
@@ -124,7 +131,7 @@ const useColumns = () => {
             maxSize?: number
             fixedLeft?: boolean
         }): ColumnDef<IFixedTest> => {
-            const { id, headerText, fixedLeft } = data
+            const { id, headerText } = data
             const tableDimensions = localStorage.getItem('TableEdward')
 
             return {
