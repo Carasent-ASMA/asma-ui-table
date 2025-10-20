@@ -7,11 +7,14 @@
     }
 
     @apply w-full;
+    display: flex;
+    flex-direction: column;
 
     .table-wrapper {
         position: relative;
         overflow: auto;
         width: 100%;
+        flex-grow: 1;
     }
 
     .table-wrapper-fetching {
@@ -283,5 +286,6 @@
         padding-top: 16px;
         align-items: center;
         justify-content: flex-end;
+        flex-shrink: 0;
     }
 }
