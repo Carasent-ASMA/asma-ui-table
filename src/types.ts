@@ -1,21 +1,44 @@
-import type { CellContext, ColumnMeta, HeaderContext, Row, TableOptions, Table, ColumnDef } from '@tanstack/react-table'
-import type { AccessorFn, ColumnDefTemplate } from '@tanstack/react-table'
 import type {
     ColumnPinningColumnDef,
     ColumnSizingColumnDef,
-    FiltersColumnDef,
     GroupingColumnDef,
     RowData,
     SortingColumnDef,
     VisibilityColumnDef,
+    AccessorFn,
+    ColumnDefTemplate,
+    CellContext,
+    ColumnMeta,
+    HeaderContext,
+    Row,
+    TableOptions,
+    Table,
+    ColumnDef,
 } from '@tanstack/react-table'
+export type * from '@tanstack/react-table'
+
 import type { CSSProperties, MouseEvent, MutableRefObject, ReactElement, ReactNode } from 'react'
+import type {
+    ExpandedRow,
+    ExpandedRowsInstance,
+    ExpandedRowsOptions,
+    ExpandedRowsTableState,
+} from './custom-features/expand-rows'
 
 declare module '@tanstack/react-table' {
+    interface TableState extends ExpandedRowsTableState {}
+
+    interface TableOptionsResolved<TData extends RowData> extends ExpandedRowsOptions {}
+
+    interface Row<TData extends RowData> extends ExpandedRow {}
+
+    interface Table<TData extends RowData> extends ExpandedRowsInstance {}
+
     interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
         extends VisibilityColumnDef,
             ColumnPinningColumnDef,
-            FiltersColumnDef<TData>,
+            // TODO find out what if replacement is needed
+            // FiltersColumnDef<TData>,
             SortingColumnDef<TData>,
             GroupingColumnDef<TData, TValue>,
             ColumnSizingColumnDef {
@@ -64,8 +87,6 @@ type IHideFooter = {
 
 type TFooter<TData> = IFooter<TData> | IHideFooter
 type TTableOptions<TData> = TableOptions<TData>
-
-export type * from '@tanstack/react-table'
 
 export type StyledTableProps<TData, TCustomData> = {
     locale?: 'no' | 'en'

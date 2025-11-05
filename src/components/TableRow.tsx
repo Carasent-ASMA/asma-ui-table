@@ -51,11 +51,11 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         position: 'relative',
     }
 
-    const { expandedRows, isResizing, disableResizingFlag, toggleExpand } = useRootContext()
+    const { isResizing, disableResizingFlag } = useRootContext()
 
     useEffect(() => {
         if (defaultExpanded && row.getCanExpand() && !row.getIsExpanded()) {
-            toggleExpand(row.id)
+            row.toggleExpand()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -79,8 +79,9 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         const isIdle = !selection && !isResizing
         const hasRowClickHandler = onRowClick instanceof Function
 
-        if (!hasRowClickHandler && textExpandArrow && isIdle) toggleExpand(row.id)
-        else if (hasRowClickHandler && isIdle) onRowClick(e, row)
+        if (!hasRowClickHandler && textExpandArrow && isIdle) {
+            row.toggleExpand()
+        } else if (hasRowClickHandler && isIdle) onRowClick(e, row)
 
         disableResizingFlag()
     }
@@ -130,7 +131,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                     const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
                     const isFixed = cell.column.columnDef.fixedLeft
                     const isLastFixedCell = cell.id === fixedColumns.at(-1)?.id
-                    const isExpandedRow = expandedRows.has(row.original.id.toString())
+                    const isExpandedRow = row.isExpanded()
                     const isFirstCell = idx === 0
 
                     // If first cell, always reserve space for the checkmark (even if not selected)

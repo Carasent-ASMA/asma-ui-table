@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, type FunctionComponent, type PropsWithChildren } from 'react'
 
 interface RootContextType {
-    expandedRows: Set<string>
-    toggleExpand: (id: string) => void
     enableResizingFlag: () => void
     disableResizingFlag: () => void
     isResizing: boolean
@@ -11,26 +9,12 @@ interface RootContextType {
 const RootContext = createContext<RootContextType | undefined>(undefined)
 
 export const RootContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const [isResizing, setIsResizing] = useState(false)
 
     const enableResizingFlag = () => setIsResizing(true)
     const disableResizingFlag = () => setIsResizing(false)
 
-    const toggleExpand = (id: string) => {
-        setExpandedRows((prev) => {
-            const newExpandedRows = new Set(prev)
-
-            if (newExpandedRows.has(id)) newExpandedRows.delete(id)
-            else newExpandedRows.add(id)
-
-            return newExpandedRows
-        })
-    }
-
     const context = {
-        expandedRows,
-        toggleExpand,
         enableResizingFlag,
         disableResizingFlag,
         isResizing,

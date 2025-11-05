@@ -8,6 +8,7 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table'
 import { SELECT_COLUMN_ID, type StyledTableProps } from '../types'
+import { ExpandedRowsFeature } from 'src/custom-features/expand-rows'
 
 export const useStyledTable = <
     TData extends {
@@ -19,6 +20,7 @@ export const useStyledTable = <
 ) => {
     const { columns, data, initialState, pageSize, enableRowSelection, tableInstanceRef, ...rest } = props
     const table = useReactTable({
+        _features: [ExpandedRowsFeature],
         columns,
         data,
         initialState: {

@@ -22,6 +22,5 @@ export const useFetchTemplates = () => {
 
         getDatadata()
     }, [])
-    console.log('data', data)
     return { data }
 }

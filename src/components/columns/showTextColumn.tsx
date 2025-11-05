@@ -1,5 +1,4 @@
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
-import { useRootContext } from 'src/context/RootContext'
 import { SHOW_FULL_TEXT_ID, type CellContext } from 'src/types'
 
 export function generateShowFullTextColumn<TData>(isFixed: boolean, rowHeight?: number) {
@@ -19,9 +18,6 @@ export function generateShowFullTextColumn<TData>(isFixed: boolean, rowHeight?: 
 }
 
 function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData, TData>; rowHeight?: number }) {
-    const { expandedRows, toggleExpand } = useRootContext()
-    const isExpanded = expandedRows.has(info.row.id)
-
     const canRenderSubRows = info.row.getCanExpand()
 
     return (
@@ -30,7 +26,7 @@ function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData,
             style={{ height: rowHeight ? rowHeight : 'auto' }}
             onClick={() => {
                 if (canRenderSubRows) info.row.getToggleExpandedHandler()()
-                toggleExpand(info.row.id)
+                info.row.toggleExpand()
             }}
             onMouseDown={(e) => {
                 e.preventDefault()
@@ -43,7 +39,7 @@ function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData,
         >
             <div
                 style={{
-                    rotate: isExpanded ? '180deg' : '0deg',
+                    rotate: info.row.isExpanded() ? '180deg' : '0deg',
                     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
                     transitionDuration: '500ms',
                 }}
