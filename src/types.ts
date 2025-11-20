@@ -24,6 +24,7 @@ import type {
     ExpandedRowsOptions,
     ExpandedRowsTableState,
 } from './custom-features/expand-rows'
+import type { TooltipProps } from '@mui/material'
 
 declare module '@tanstack/react-table' {
     interface TableState extends ExpandedRowsTableState {}
@@ -62,6 +63,8 @@ export interface IAction<TData> {
     className?: string
     disabled?: boolean
     hide?: boolean
+    tooltipTitle?: string
+    tooltipPlacement?: TooltipProps['placement']
     onClick?: (row: Row<TData>) => void
 }
 

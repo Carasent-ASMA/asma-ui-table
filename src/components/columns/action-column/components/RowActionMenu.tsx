@@ -7,6 +7,7 @@ import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 import { isCustomAction, type IAction, type ICustomAction } from 'src/types'
 import React, { useMemo } from 'react'
 import { StyledButton } from 'src/shared-components/button'
+import { StyledTooltip } from 'src/shared-components/tooltip'
 
 export function RowActionMenu<TData>({
     tableData,
@@ -71,24 +72,32 @@ export function RowActionMenu<TData>({
 
                             if (!action.hide) {
                                 return (
-                                    <StyledMenuItem
-                                        key={index}
-                                        className={action.className}
-                                        disabled={action.disabled}
-                                        onClick={() => {
-                                            action.onClick?.(tableData.row)
-                                        }}
-                                        onMouseDown={(e) => {
-                                            e.stopPropagation()
-                                            e.preventDefault()
-                                        }}
-                                        onMouseUp={(e) => {
-                                            e.stopPropagation()
-                                            e.preventDefault()
-                                        }}
+                                    <StyledTooltip
+                                        title={action?.tooltipTitle}
+                                        arrow
+                                        placement={action?.tooltipPlacement || 'left'}
                                     >
-                                        {action.label}
-                                    </StyledMenuItem>
+                                        <span>
+                                            <StyledMenuItem
+                                                key={index}
+                                                className={action.className}
+                                                disabled={action.disabled}
+                                                onClick={() => {
+                                                    action.onClick?.(tableData.row)
+                                                }}
+                                                onMouseDown={(e) => {
+                                                    e.stopPropagation()
+                                                    e.preventDefault()
+                                                }}
+                                                onMouseUp={(e) => {
+                                                    e.stopPropagation()
+                                                    e.preventDefault()
+                                                }}
+                                            >
+                                                {action.label}
+                                            </StyledMenuItem>
+                                        </span>
+                                    </StyledTooltip>
                                 )
                             }
 
