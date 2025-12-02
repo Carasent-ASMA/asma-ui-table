@@ -98,6 +98,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
 
     const spaceForCheckmark = !enableMultiRowSelection && !enableRowSelection && singleSelectionRow
     const singleSelection = row.getIsSelected() && spaceForCheckmark
+    const hasRowClickHandler = onRowClick instanceof Function
 
     return (
         <Fragment key={row.id}>
@@ -120,8 +121,6 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                 ref={disabledDnd ? undefined : setNodeRef}
                 onMouseUp={onMouseUp}
                 onMouseDown={(e) => {
-                    const hasRowClickHandler = onRowClick instanceof Function
-
                     if (e.detail > 1 && !hasRowClickHandler && textExpandArrow) {
                         e.preventDefault()
                     }
@@ -140,6 +139,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                             key={cell.id}
                             className={clsx(
                                 style['t-cell'],
+                                hasRowClickHandler && 'cursor-pointer',
                                 tdClassName,
                                 isActionsCell && style['action-cell'],
                                 isActionsCell && Boolean(actions) && fixedColumns.length && style['shadowed'],

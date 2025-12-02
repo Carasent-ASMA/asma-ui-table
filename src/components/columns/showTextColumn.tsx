@@ -42,6 +42,7 @@ function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData,
                     rotate: info.row.isExpanded() ? '180deg' : '0deg',
                     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
                     transitionDuration: '500ms',
+                    cursor: 'pointer',
                 }}
             >
                 <ChevronDownIcon width={20} height={20} color='var(--colors-gray-700)' />
