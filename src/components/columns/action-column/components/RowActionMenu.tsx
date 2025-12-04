@@ -73,13 +73,13 @@ export function RowActionMenu<TData>({
                             if (!action.hide) {
                                 return (
                                     <StyledTooltip
+                                        key={index}
                                         title={action?.tooltipTitle}
                                         arrow
                                         placement={action?.tooltipPlacement || 'left'}
                                     >
                                         <span>
                                             <StyledMenuItem
-                                                key={index}
                                                 className={action.className}
                                                 disabled={action.disabled}
                                                 onClick={() => {
