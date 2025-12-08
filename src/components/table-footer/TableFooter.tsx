@@ -9,7 +9,7 @@ export function TableFooter<
     },
     TCustomData = Record<string, unknown>,
 >({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
-    if (styledTableProps.hideFooter) return null
+    if (styledTableProps.hideFooter || styledTableProps.data.length === 0) return null
 
     const paginationAlignLeft = styledTableProps.paginationAlignLeft
 
