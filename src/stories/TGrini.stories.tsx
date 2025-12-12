@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Meta } from '@storybook/react'
 import { StyledTable } from '../components/StyledTableIndex'
 import { useFetchTemplates } from './service/useFetchTemplates'
 import { useColumns } from './components/styled-flex-table/useColumns'
 import type { ITemplate } from './service/types'
 import { generateActions } from './components/styled-flex-table/generateActions'
-import { cloneDeep } from 'lodash-es'
+import { StyledButton } from 'src/shared-components/button'
+import type { Table } from '@tanstack/react-table'
 
 const meta = {
     title: '*/TGrini',
@@ -23,10 +24,39 @@ export const TGrini = () => {
 
     const [globalFilter, setGlobalFilter] = useState('')
     const [rowSelection, setRowSelection] = useState({})
+    const [randomRowId, setRandomRowId] = useState(data[0]?.id?.toString())
+    const tableRef = useRef<Table<ITemplate>>(null)
+
+    useEffect(() => {
+        setRandomRowId(data[0]?.id?.toString())
+    }, [columns.length])
 
     return (
         <div className='mx-auto max-w-[1200px] flex flex-col gap-10'>
+            <div className='flex items-center gap-x-2 justify-end'>
+                <StyledButton
+                    dataTest='test-2'
+                    variant='text'
+                    disabled={!data}
+                    onClick={() => {
+                        if (!data || data.length === 0) return
+                        const randomIndex = Math.floor(Math.random() * data.length)
+                        const randomId = data[randomIndex]?.id.toString()
+                        setRandomRowId(randomId)
+                    }}
+                >
+                    Reset
+                </StyledButton>
+                <StyledButton
+                    dataTest='test'
+                    variant='outlined'
+                    onClick={() => randomRowId && tableRef?.current?.focusRowById(randomRowId)}
+                >
+                    {`Go to ${randomRowId}`}
+                </StyledButton>
+            </div>
             <StyledTable<ITemplate, ITemplate>
+                tableInstanceRef={tableRef}
                 stickyHeader
                 enableResizing
                 className='h-[calc(100vh-130px)]'
@@ -41,9 +71,7 @@ export const TGrini = () => {
                 onRowSelectionChange={(e) => {
                     setRowSelection(e)
                 }}
-                onRowClick={(e, row) => {
-                    console.info('e', e, cloneDeep(row.original))
-                }}
+                onRowClick={(_, row) => row.toggleFocused()}
                 onGlobalFilterChange={setGlobalFilter}
                 noRowsOverlay={
                     <div className='flex h-full w-full items-center justify-center'>

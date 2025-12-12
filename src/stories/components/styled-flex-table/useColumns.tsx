@@ -18,6 +18,7 @@ export const useColumns = () => {
                 cell() {
                     return <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
                 },
+                fixedLeft: true,
                 minSize: 30,
                 maxSize: 30,
                 size: 30,
@@ -26,6 +27,7 @@ export const useColumns = () => {
                 accessorFn: (row) => row.title,
                 id: 'title',
                 header: 'Title',
+                fixedLeft: true,
                 headerAlign: 'center',
                 cell: (info) => {
                     const proxy = info.row.original

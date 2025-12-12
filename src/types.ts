@@ -25,15 +25,21 @@ import type {
     ExpandedRowsTableState,
 } from './custom-features/expand-rows'
 import type { TooltipProps } from '@mui/material'
+import type {
+    FocusedRowsOptions,
+    FocusedRowsTableState,
+    FocusedRow,
+    FocusedRowsInstance,
+} from './custom-features/focus-rows'
 
 declare module '@tanstack/react-table' {
-    interface TableState extends ExpandedRowsTableState {}
+    interface TableState extends ExpandedRowsTableState, FocusedRowsTableState {}
 
-    interface TableOptionsResolved<TData extends RowData> extends ExpandedRowsOptions {}
+    interface TableOptionsResolved<TData extends RowData> extends ExpandedRowsOptions, FocusedRowsOptions {}
 
-    interface Row<TData extends RowData> extends ExpandedRow {}
+    interface Row<TData extends RowData> extends ExpandedRow, FocusedRow {}
 
-    interface Table<TData extends RowData> extends ExpandedRowsInstance {}
+    interface Table<TData extends RowData> extends ExpandedRowsInstance, FocusedRowsInstance {}
 
     interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
         extends VisibilityColumnDef,
@@ -113,7 +119,10 @@ export type StyledTableProps<TData, TCustomData> = {
     focusable?: boolean
     stickyHeader?: boolean
     getRowClassName?: (row: Row<TData>) => string
-    onRowClick?: (e: MouseEvent<HTMLTableRowElement, globalThis.MouseEvent>, row: Row<TData>) => void
+    onRowClick?: (
+        e: MouseEvent<HTMLTableRowElement, globalThis.MouseEvent> | React.KeyboardEvent<HTMLTableRowElement>,
+        row: Row<TData>,
+    ) => void
     renderSubRows?: (props: { rows: TCustomData[]; row: TData }) => ReactElement | null
     getRowSelectionIds?: (ids: string[]) => void
     hideHeader?: boolean

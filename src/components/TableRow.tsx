@@ -17,7 +17,6 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     index: number
 }) {
     const {
-        focusable,
         loading,
         getRowClassName,
         rowHeight,
@@ -60,14 +59,9 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const onMouseUp = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
-        if (
-            (e.target as HTMLDivElement).classList.contains('MuiModal-backdrop') ||
-            (e.target as Node).nodeName === 'INPUT' ||
-            (e.target as Node).nodeName === 'BUTTON'
-        )
-            return
-
+    const onMouseUpAction = (
+        e: React.MouseEvent<HTMLTableRowElement, MouseEvent> | React.KeyboardEvent<HTMLTableRowElement>,
+    ) => {
         if (row.getCanExpand() && !expandArrow) {
             row.getToggleExpandedHandler()()
         }
@@ -81,9 +75,23 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
 
         if (!hasRowClickHandler && textExpandArrow && isIdle) {
             row.toggleExpand()
-        } else if (hasRowClickHandler && isIdle) onRowClick(e, row)
+        } else if (hasRowClickHandler && isIdle) {
+            onRowClick(e, row)
+            row.onChangeFocused(true)
+        }
 
         disableResizingFlag()
+    }
+
+    const onMouseUp = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
+        if (
+            (e.target as HTMLDivElement).classList.contains('MuiModal-backdrop') ||
+            (e.target as Node).nodeName === 'INPUT' ||
+            (e.target as Node).nodeName === 'BUTTON'
+        )
+            return
+
+        onMouseUpAction(e)
     }
 
     const positionedCells = row.getVisibleCells().map((cell, idx, allCells) => ({
@@ -103,17 +111,13 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     return (
         <Fragment key={row.id}>
             <tr
+                role='row'
+                aria-selected={row.getIsSelected() || row.isFocused() ? 'true' : 'false'}
+                tabIndex={row.isFocused() ? 0 : -1}
                 data-index={index}
                 data-test={row.id}
                 id={row.id}
-                tabIndex={focusable ? -1 : undefined}
-                className={clsx(
-                    style['t-row'],
-                    loading && style['is-loading'],
-                    row.getIsSelected() && style['selected'],
-                    singleSelection && style['single-selection'],
-                    getRowClassName?.(row),
-                )}
+                className={clsx(style['t-row'], loading && style['is-loading'], getRowClassName?.(row))}
                 style={{
                     height: rowHeight ? `${rowHeight}px` : 'inherit',
                     ...(enableDnd && dndStyle),
@@ -123,6 +127,22 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                 onMouseDown={(e) => {
                     if (e.detail > 1 && !hasRowClickHandler && textExpandArrow) {
                         e.preventDefault()
+                    }
+                }}
+                onKeyDown={(e) => {
+                    switch (e.key) {
+                        case 'Tab':
+                        case 'ArrowDown':
+                            row.focusNextRow()
+                            e.preventDefault()
+                            break
+                        case 'ArrowUp':
+                            row.focusPrevRow()
+                            e.preventDefault()
+                            break
+                        case 'Enter':
+                            onMouseUpAction(e)
+                            break
                     }
                 }}
             >
@@ -143,7 +163,6 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                                 tdClassName,
                                 isActionsCell && style['action-cell'],
                                 isActionsCell && Boolean(actions) && fixedColumns.length && style['shadowed'],
-                                isActionsCell && row.getIsSelected() && style['selected'],
                                 isActionsCell &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
@@ -151,13 +170,12 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
 
                                 isFixed && style['fixed-cell'],
                                 isLastFixedCell && style['shadowed'],
-                                isFixed && row.getIsSelected() && style['selected'],
+                                (row.getIsSelected() || row.isFocused()) && style['selected'],
                                 isFixed &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['fixed-cell-default-background']),
                                 isExpandedRow && style['expanded_row'],
-                                singleSelection && style['single-selection'],
                             )}
                             style={{
                                 left: isFixed ? cell.left : undefined,

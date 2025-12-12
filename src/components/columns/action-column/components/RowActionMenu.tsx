@@ -36,6 +36,7 @@ export function RowActionMenu<TData>({
                             e.stopPropagation()
                             e.preventDefault()
                             handleOpen(e)
+                            tableData.row.onChangeFocused(true)
                         }}
                         onMouseDown={(e) => {
                             e.stopPropagation()
@@ -51,8 +52,14 @@ export function RowActionMenu<TData>({
                     <Popover
                         open={open}
                         anchorEl={anchorEl}
-                        onClose={handleClose}
-                        onClick={handleClose}
+                        onClose={() => {
+                            handleClose()
+                            tableData.row.onChangeFocused(false)
+                        }}
+                        onClick={() => {
+                            handleClose()
+                            tableData.row.onChangeFocused(false)
+                        }}
                         anchorOrigin={{
                             horizontal: 'center',
                             vertical: 'bottom',
