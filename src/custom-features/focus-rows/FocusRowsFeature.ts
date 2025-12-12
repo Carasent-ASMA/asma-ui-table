@@ -62,18 +62,6 @@ export const FocusedRowsFeature: TableFeature = {
                 el.focus({ preventScroll: false })
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' })
             }
-            // const row = table.getRowModel().rows.find((r) => r.id === rowId)
-            // if (!row) return
-
-            // // Set the focused row
-            // table.setFocusedRow(() => rowId)
-
-            // // Focus DOM element
-            // const el = document.getElementById(rowId)
-            // if (el) {
-            //     el.focus({ preventScroll: false })
-            //     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            // }
         }
     },
 
