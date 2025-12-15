@@ -212,7 +212,7 @@ export const TableV2 = () => {
                         <div className='flex flex-col items-center'>No recipients found</div>
                     </div>
                 }
-                rowHeight={60}
+                rowHeight={48}
                 pageSize={20}
                 // getRowId={(row: Person, _index: number, parent?: Row<Person>) =>
                 //     parent ? `abrakadabra${_index}` : _index.toString()

@@ -170,12 +170,13 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
 
                                 isFixed && style['fixed-cell'],
                                 isLastFixedCell && style['shadowed'],
-                                (row.getIsSelected() || row.isFocused()) && style['selected'],
+                                row.getIsSelected() && style['selected'],
                                 isFixed &&
                                     (getRowClassName?.(row)
                                         ? getRowClassName?.(row)
                                         : style['fixed-cell-default-background']),
                                 isExpandedRow && style['expanded_row'],
+                                (singleSelection || row.isFocused()) && style['single-selection'],
                             )}
                             style={{
                                 left: isFixed ? cell.left : undefined,

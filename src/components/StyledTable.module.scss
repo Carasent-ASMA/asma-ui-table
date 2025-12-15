@@ -113,6 +113,9 @@
             }
             &.selected {
                 background-color: var(--colors-gama-25);
+            }
+            &.single-selection {
+                background-color: var(--colors-gama-25);
                 box-shadow: inset 0 2px 0 0 var(--colors-gama-400), /* top */ inset 0 -2px 0 0 var(--colors-gama-400); /* bottom */
                 &:last-child {
                     box-shadow: inset 0 2px 0 0 var(--colors-gama-400),
@@ -135,7 +138,7 @@
 
             &.shadowed {
                 box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
-                &.selected {
+                &.single-selection {
                     box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
                     &:last-child {
                         box-shadow: inset 0 2px 0 0 var(--colors-gama-400),
@@ -154,7 +157,7 @@
 
             &.shadowed {
                 box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
-                &.selected {
+                &.single-selection {
                     box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
                 }
             }
