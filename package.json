@@ -3,7 +3,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "version": "1.0.71",
+    "version": "1.0.72",
     "type": "module",
     "files": [
         "dist/**/*"
@@ -103,7 +103,6 @@
         "typescript": "^5.0.2",
         "typescript-plugin-css-modules": "^5.0.1",
         "vite": "^4.3.9",
-        "vite-plugin-css-injected-by-js": "^3.5.1",
         "vite-plugin-dts": "^3.1.1",
         "vite-tsconfig-paths": "^4.2.0"
     },
