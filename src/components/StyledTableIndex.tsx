@@ -105,14 +105,6 @@ export const StyledTable = <
         const tableElement = tableRef.current
         if (!tableElement) return
 
-        const handlePointerDown = (e: MouseEvent) => {
-            if (!tableElement.contains(e.target as Node)) {
-                table.setFocusedRow(null)
-            }
-        }
-
-        document.addEventListener('mousedown', handlePointerDown)
-
         const updateWidth = (type: 'setup' | 'resize') => {
             const width = tableElement.getBoundingClientRect().width
             setTableWidth((prevWidth) => {
@@ -130,7 +122,6 @@ export const StyledTable = <
 
         return () => {
             resizeObserver.unobserve(tableElement)
-            document.removeEventListener('mousedown', handlePointerDown)
         }
     }, [])
 
