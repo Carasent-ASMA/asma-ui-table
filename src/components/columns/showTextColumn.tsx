@@ -1,5 +1,4 @@
 import { ChevronDownIcon } from 'src/shared-components/ChevronDownIcon'
-import { StyledButton } from 'src/shared-components/button'
 import { SHOW_FULL_TEXT_ID, type CellContext } from 'src/types'
 
 export function generateShowFullTextColumn<TData>(isFixed: boolean, rowHeight?: number) {
@@ -22,35 +21,32 @@ function ShowFullTextCell<TData>({ info, rowHeight }: { info: CellContext<TData,
     const canRenderSubRows = info.row.getCanExpand()
 
     return (
-        <div className='flex w-full items-center justify-center' style={{ height: rowHeight ? rowHeight : 'auto' }}>
-            <StyledButton
-                dataTest='expand-row-button'
-                variant='textGray'
-                size='small'
-                onMouseDown={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                }}
-                onMouseUp={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                }}
-                onClick={() => {
-                    if (canRenderSubRows) info.row.getToggleExpandedHandler()()
-                    info.row.toggleExpand()
+        <div
+            className='flex w-full items-center justify-center'
+            style={{ height: rowHeight ? rowHeight : 'auto' }}
+            onClick={() => {
+                if (canRenderSubRows) info.row.getToggleExpandedHandler()()
+                info.row.toggleExpand()
+            }}
+            onMouseDown={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+            }}
+            onMouseUp={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+            }}
+        >
+            <div
+                style={{
+                    rotate: info.row.isExpanded() ? '180deg' : '0deg',
+                    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    transitionDuration: '500ms',
+                    cursor: 'pointer',
                 }}
             >
-                <ChevronDownIcon
-                    width={20}
-                    height={20}
-                    style={{
-                        rotate: info.row.isExpanded() ? '180deg' : '0deg',
-                        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                        transitionDuration: '500ms',
-                        cursor: 'pointer',
-                    }}
-                />
-            </StyledButton>
+                <ChevronDownIcon width={20} height={20} color='var(--colors-gray-700)' />
+            </div>
         </div>
     )
 }
