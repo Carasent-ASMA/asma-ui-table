@@ -3,7 +3,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "version": "1.0.75",
+    "version": "1.0.77",
     "type": "module",
     "files": [
         "dist/**/*",
@@ -32,6 +32,7 @@
         "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
         "version": "echo $npm_package_version",
         "lint:fix": "eslint --fix src/**/*.{jsx,ts,tsx}",
+        "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
         "prettier": "prettier --write src//**/*.{ts,tsx,scss} --config ./.prettierrc",
         "storybook": "storybook dev -p 6006",
         "storybook:no-browser": "storybook dev -p 6006 --no-open",

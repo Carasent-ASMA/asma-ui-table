@@ -2,7 +2,7 @@ import { type CellContext, type HeaderContext, type Row } from '@tanstack/react-
 import { RowActionMenu } from './components/RowActionMenu'
 import { HeaderActionMenu } from './components/HeaderActionMenu'
 import type { ReactNode } from 'react'
-import type { ColumnDef, IAction, ICustomAction } from 'src/types'
+import type { ColumnDef, IAction, ICustomAction, RowActionsState } from 'src/types'
 
 export function generateActionsColumn<TData>(options: {
     headerPin: boolean
@@ -10,8 +10,9 @@ export function generateActionsColumn<TData>(options: {
     customActionsNode?: (row: CellContext<TData, TData>) => ReactNode
     rowHeight?: number
     customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
+    rowActionsState?: (row: Row<TData>) => RowActionsState | undefined
 }) {
-    const { headerPin, actions, customActionsNode, rowHeight, customActionsColumnProps } = options
+    const { headerPin, actions, customActionsNode, rowHeight, customActionsColumnProps, rowActionsState } = options
 
     return {
         id: 'actions',
@@ -30,7 +31,7 @@ export function generateActionsColumn<TData>(options: {
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
                 >
                     {customActionsNode && <div>{customActionsNode?.(cell)}</div>}
-                    {actions && <RowActionMenu tableData={cell} actions={actions} />}
+                    {actions && <RowActionMenu tableData={cell} actions={actions} rowActionsState={rowActionsState} />}
                 </div>
             ) : null,
         size: 50,

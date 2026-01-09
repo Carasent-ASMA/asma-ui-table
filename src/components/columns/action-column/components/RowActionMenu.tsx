@@ -4,51 +4,80 @@ import { Popover } from '@mui/material'
 import { DotsVerticalIcon } from 'src/shared-components/DotsVerticalIcon'
 
 import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
-import { isCustomAction, type IAction, type ICustomAction } from 'src/types'
+import { isCustomAction, type IAction, type ICustomAction, type RowActionsState } from 'src/types'
 import React, { useMemo } from 'react'
 import { StyledButton } from 'src/shared-components/button'
 import { StyledTooltip } from 'src/shared-components/tooltip'
+import { CircleWarningOutlineIcon } from 'src/shared-components/CircleWarningOutlineIcon'
 
 export function RowActionMenu<TData>({
     tableData,
     actions,
+    rowActionsState,
 }: {
     tableData: CellContext<TData, TData>
     actions: (row: Row<TData>) => (IAction<TData> | ICustomAction<TData>)[]
+    rowActionsState?: (row: Row<TData>) => RowActionsState | undefined
 }) {
     const { anchorEl, open, handleClose, handleOpen } = useToggleMenuVisibility()
-
     const allActions = actions(tableData.row)
+    const state = rowActionsState?.(tableData.row) ?? { state: 'enabled' as const }
+    const locale = tableData.table.options.meta?.locale
+    const noActionsLabel = locale === 'no' ? 'Ingen handlinger tilgjengelig' : 'No actions available'
 
     const allHidden = useMemo(() => {
         return allActions.every((a) => ('component' in a ? false : a.hide))
     }, [allActions])
 
+    const hasVisibleActions = allActions.length > 0 && !allHidden
+    const showNoActions = state.state === 'enabled' && !hasVisibleActions
+
+    const shouldShowButton =
+        state.state !== 'hidden' && (hasVisibleActions || showNoActions || state.state === 'disabled')
+
+    if (!shouldShowButton) return <div className='flex justify-center items-center w-[40px]' />
+
+    const disabled = state.state === 'disabled'
+
+    const button = (
+        <StyledButton
+            dataTest=''
+            variant='text'
+            size='small'
+            disabled={disabled}
+            onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+
+                if (disabled) return
+
+                handleOpen(e)
+                tableData.row.onChangeFocused(true)
+            }}
+            onMouseDown={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+            }}
+            onMouseUp={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+            }}
+        >
+            <DotsVerticalIcon className={disabled ? 'text-delta-300' : 'text-delta-700'} width={20} height={20} />
+        </StyledButton>
+    )
+
     return (
         <div className='flex justify-center items-center w-[40px]'>
-            {allActions.length && !allHidden ? (
-                <div className='flex items-center justify-center'>
-                    <StyledButton
-                        dataTest=''
-                        variant='text'
-                        size='small'
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault()
-                            handleOpen(e)
-                            tableData.row.onChangeFocused(true)
-                        }}
-                        onMouseDown={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault()
-                        }}
-                        onMouseUp={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault()
-                        }}
-                    >
-                        <DotsVerticalIcon className='text-delta-800' width={20} height={20} />
-                    </StyledButton>
+            <div className='flex items-center justify-center'>
+                {state.state === 'disabled' ? (
+                    <StyledTooltip title={state.tooltipTitle} arrow placement={state.tooltipPlacement || 'top'}>
+                        <span className='cursor-not-allowed'>{button}</span>
+                    </StyledTooltip>
+                ) : (
+                    button
+                )}
+                {state.state === 'enabled' && (
                     <Popover
                         open={open}
                         anchorEl={anchorEl}
@@ -69,15 +98,22 @@ export function RowActionMenu<TData>({
                             horizontal: 'right',
                         }}
                     >
-                        {actions(tableData.row).map((action, index) => {
-                            if (isCustomAction(action)) {
-                                const CustomComponent = action.component(tableData.row, handleClose)
-                                return React.isValidElement(CustomComponent) ? (
-                                    <React.Fragment key={index}>{CustomComponent}</React.Fragment>
-                                ) : null
-                            }
+                        {showNoActions ? (
+                            <div className='flex items-center gap-2 p-3 text-delta-700'>
+                                <CircleWarningOutlineIcon width={20} height={20} />
+                                <span>{noActionsLabel}</span>
+                            </div>
+                        ) : (
+                            allActions.map((action, index) => {
+                                if (isCustomAction(action)) {
+                                    const CustomComponent = action.component(tableData.row, handleClose)
+                                    return React.isValidElement(CustomComponent) ? (
+                                        <React.Fragment key={index}>{CustomComponent}</React.Fragment>
+                                    ) : null
+                                }
 
-                            if (!action.hide) {
+                                if (action.hide) return null
+
                                 return (
                                     <StyledTooltip
                                         key={index}
@@ -106,13 +142,11 @@ export function RowActionMenu<TData>({
                                         </span>
                                     </StyledTooltip>
                                 )
-                            }
-
-                            return null
-                        })}
+                            })
+                        )}
                     </Popover>
-                </div>
-            ) : null}
+                )}
+            </div>
         </div>
     )
 }

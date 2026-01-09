@@ -55,6 +55,9 @@ declare module '@tanstack/react-table' {
         fixedLeft?: boolean
         pinnedHeaderText?: string
     }
+    interface TableMeta<TData extends RowData> {
+        locale?: 'no' | 'en'
+    }
 
     interface ColumnDefBase<TData extends RowData, TValue = unknown> extends ColumnDefExtensions<TData, TValue> {
         getUniqueValues?: AccessorFn<TData, unknown[]>
@@ -97,6 +100,11 @@ type IHideFooter = {
 type TFooter<TData> = IFooter<TData> | IHideFooter
 type TTableOptions<TData> = TableOptions<TData>
 
+export type RowActionsState =
+    | { state: 'hidden' }
+    | { state: 'disabled'; tooltipTitle?: string; tooltipPlacement?: TooltipProps['placement'] }
+    | { state: 'enabled' }
+
 export type StyledTableProps<TData, TCustomData> = {
     locale?: 'no' | 'en'
     height?: string | number
@@ -136,6 +144,8 @@ export type StyledTableProps<TData, TCustomData> = {
     customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
     paginationAlignLeft?: boolean
     singleSelectionRow?: boolean
+    rowActionsState?: (row: Row<TData>) => RowActionsState | undefined
+
     /**
      * @info A unique identifier for the table. This name is used to store the table's state in localStorage,
      * ensuring that the table state is persisted across sessions for the specific table instance.

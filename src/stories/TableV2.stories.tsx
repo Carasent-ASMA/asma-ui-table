@@ -1,21 +1,3 @@
-// import React from 'react'
-// import type { Meta } from '@storybook/react'
-// import { StyledTable } from '../components/StyledTableIndex'
-
-// const meta = {
-//     title: '*/TableV2',
-//     component: StyledTable,
-//     tags: [],
-//     argTypes: {},
-//     args: {},
-// } satisfies Meta<typeof StyledTable>
-
-// export default meta
-
-// export const TableV2 = () => {
-//     return <div className={'flex flex-col gap-5 max-w-lg mx-auto'}>Hey there</div>
-// }
-
 import { Typography } from '@mui/material'
 import type { Meta } from '@storybook/react'
 import { useEffect, useRef, useState } from 'react'
@@ -30,7 +12,6 @@ import { getRowActions } from './components/styled-table/getRowActions'
 import style from './StyledTableStories.module.scss'
 import { StyledTable } from 'src/components/StyledTableIndex'
 import { StyledButton } from 'src/shared-components/button'
-import { RowDragHandleCell } from 'src'
 
 const meta = {
     title: '*/TableV2',
@@ -153,6 +134,15 @@ export const TableV2 = () => {
                               //       onClick: () => row.getToggleExpandedHandler()(),
                               //   },
                           ]
+                }}
+                rowActionsState={(row) => {
+                    if (row.original.progress > 80) {
+                        return { state: 'disabled', tooltipTitle: 'Actions disabled for progress > 80' }
+                    }
+                    if (row.original.progress < 10) {
+                        return { state: 'hidden' }
+                    }
+                    return { state: 'enabled' }
                 }}
                 customActionsNode={(cell) => (
                     <StyledButton

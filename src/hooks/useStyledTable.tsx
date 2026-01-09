@@ -19,11 +19,12 @@ export const useStyledTable = <
 >(
     props: StyledTableProps<TData, TCustomData>,
 ) => {
-    const { columns, data, initialState, pageSize, enableRowSelection, tableInstanceRef, ...rest } = props
+    const { columns, data, initialState, pageSize, enableRowSelection, tableInstanceRef, locale, ...rest } = props
     const table = useReactTable({
         _features: [ExpandedRowsFeature, FocusedRowsFeature],
         columns,
         data,
+        meta: { locale: locale ?? 'en' },
         initialState: {
             pagination: { pageIndex: 0, pageSize: pageSize || 50 },
             columnVisibility: {
