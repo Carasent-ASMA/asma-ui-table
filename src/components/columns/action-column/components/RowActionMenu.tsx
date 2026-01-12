@@ -5,7 +5,7 @@ import { DotsVerticalIcon } from 'src/shared-components/DotsVerticalIcon'
 
 import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 import { isCustomAction, type IAction, type ICustomAction, type RowActionsState } from 'src/types'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { StyledButton } from 'src/shared-components/button'
 import { StyledTooltip } from 'src/shared-components/tooltip'
 import { CircleWarningOutlineIcon } from 'src/shared-components/CircleWarningOutlineIcon'
@@ -34,6 +34,14 @@ export function RowActionMenu<TData>({
 
     const shouldShowButton =
         state.state !== 'hidden' && (hasVisibleActions || showNoActions || state.state === 'disabled')
+
+    const [disabledTooltipOpen, setDisabledTooltipOpen] = useState(false)
+
+    useEffect(() => {
+        if (!disabledTooltipOpen) return
+        const t = window.setTimeout(() => setDisabledTooltipOpen(false), 1600)
+        return () => window.clearTimeout(t)
+    }, [disabledTooltipOpen])
 
     if (!shouldShowButton) return <div className='flex justify-center items-center w-[40px]' />
 
@@ -71,8 +79,28 @@ export function RowActionMenu<TData>({
         <div className='flex justify-center items-center w-[40px]'>
             <div className='flex items-center justify-center'>
                 {state.state === 'disabled' ? (
-                    <StyledTooltip title={state.tooltipTitle} arrow placement={state.tooltipPlacement || 'top'}>
-                        <span className='cursor-not-allowed'>{button}</span>
+                    <StyledTooltip
+                        title={state.tooltipTitle}
+                        arrow
+                        placement={state.tooltipPlacement || 'top'}
+                        open={disabledTooltipOpen}
+                        onOpen={() => setDisabledTooltipOpen(true)}
+                        onClose={() => setDisabledTooltipOpen(false)}
+                    >
+                        <span
+                            className='cursor-not-allowed'
+                            onTouchStart={(e) => {
+                                e.stopPropagation()
+                                e.preventDefault()
+                                setDisabledTooltipOpen(true)
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                e.preventDefault()
+                            }}
+                        >
+                            {button}
+                        </span>
                     </StyledTooltip>
                 ) : (
                     button
