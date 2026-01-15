@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useRootContext } from 'src/context/RootContext'
+import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
 
 export function TableRow<TData extends { id: string | number }, TCustomData = Record<string, unknown>>({
     styledTableProps,
@@ -51,6 +52,8 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     }
 
     const { isResizing, disableResizingFlag } = useRootContext()
+    
+    const isMobileView = useIsMobileView()
 
     useEffect(() => {
         if (defaultExpanded && row.getCanExpand() && !row.getIsExpanded()) {
@@ -148,7 +151,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             >
                 {positionedCells.map((cell, idx) => {
                     const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
-                    const isFixed = cell.column.columnDef.fixedLeft
+                    const isFixed = !isMobileView && cell.column.columnDef.fixedLeft
                     const isLastFixedCell = cell.id === fixedColumns.at(-1)?.id
                     const isExpandedRow = row.isExpanded()
                     const isFirstCell = idx === 0

@@ -22,8 +22,8 @@ export const mobileView = (windowWidth: number | undefined) => {
     /**
      * if return allways false it will breack mf widgets.
      */
-    if (!windowWidth) return window.innerWidth < 768
-    return windowWidth <= 768
+    if (!windowWidth) return window.innerWidth < 743
+    return windowWidth <= 743
 }
 
 export function useIsMobileView() {
