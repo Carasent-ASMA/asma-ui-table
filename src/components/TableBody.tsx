@@ -2,7 +2,6 @@ import { type Table } from '@tanstack/react-table'
 import type { StyledTableProps } from '../types'
 import { TableSkeleton } from './TableSkeleton'
 import { TableRows } from './TableRows'
-import { TableNoRowsOverlay } from './TableNoRowsOverlay'
 import style from './StyledTable.module.scss'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
@@ -12,7 +11,7 @@ export function TableBody<
     },
     TCustomData = Record<string, unknown>,
 >({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
-    const { columns, data, loading, noRowsOverlay, enableDnd, rowHeight } = styledTableProps
+    const { columns, data, loading, enableDnd, rowHeight } = styledTableProps
 
     return (
         <tbody className={style['tbody']}>
@@ -28,9 +27,7 @@ export function TableBody<
                         <TableRows table={table} styledTableProps={styledTableProps} />
                     )}
                 </>
-            ) : (
-                <TableNoRowsOverlay colSpan={columns.length} noRowsOverlay={noRowsOverlay} />
-            )}
+            ) : null }
         </tbody>
     )
 }

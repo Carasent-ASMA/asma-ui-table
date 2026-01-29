@@ -93,7 +93,7 @@ export const StyledTable = <
     },
 ) => {
     const options = { ...props, rowHeight: props.rowHeight || 48 }
-    const { className, tableClassName, height, data, enableDnd, setData } = options
+    const { className, tableClassName, height, noRowsOverlay, data, enableDnd, setData } = options
 
     injectColumns(options)
     const { table } = useStyledTable(options)
@@ -143,6 +143,7 @@ export const StyledTable = <
     }, [options.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
 
     const fetching = !!(data.length > 0) && props.loading
+    const showNoRowsOverlay = data.length === 0 && !props.loading
 
     return (
         <RootContextProvider>
@@ -176,6 +177,12 @@ export const StyledTable = <
                                 <TableBody table={table} styledTableProps={options} />
                             )}
                         </table>
+
+                        {showNoRowsOverlay && (
+                            <div className={style['no-rows-overlay-container']}>
+                                {noRowsOverlay}
+                            </div>
+                        )}
                     </div>
                     <TableFooter table={table} styledTableProps={options} />
                 </div>

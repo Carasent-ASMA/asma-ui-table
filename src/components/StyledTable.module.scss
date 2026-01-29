@@ -17,6 +17,19 @@
         flex-grow: 1;
     }
 
+    .no-rows-overlay-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 5;
+    }
+
     .table-wrapper-fetching {
         overflow: hidden;
     }
@@ -175,17 +188,6 @@
 
     .fixed-cell-default-background {
         background-color: white;
-    }
-
-    tr.no-rows-overlay {
-        height: 112px;
-
-        td {
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-            text-align: center;
-            vertical-align: middle;
-        }
     }
 
     .sortable-column {
