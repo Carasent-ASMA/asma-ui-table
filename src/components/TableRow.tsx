@@ -91,10 +91,11 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             (e.target as HTMLDivElement).classList.contains('MuiModal-backdrop') ||
             (e.target as Node).nodeName === 'INPUT' ||
             (e.target as Node).nodeName === 'BUTTON' ||
-            (e.target as Node).nodeName === 'LI'
-        )
+            (e.target as Node).nodeName === 'LI' ||
+            !!(e.target as HTMLElement).closest('li')
+        ) {
             return
-
+        }
         onMouseUpAction(e)
     }
 
