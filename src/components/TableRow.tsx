@@ -52,7 +52,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     }
 
     const { isResizing, disableResizingFlag } = useRootContext()
-    
+
     const isMobileView = useIsMobileView()
 
     useEffect(() => {
@@ -90,7 +90,8 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         if (
             (e.target as HTMLDivElement).classList.contains('MuiModal-backdrop') ||
             (e.target as Node).nodeName === 'INPUT' ||
-            (e.target as Node).nodeName === 'BUTTON'
+            (e.target as Node).nodeName === 'BUTTON' ||
+            (e.target as Node).nodeName === 'LI'
         )
             return
 
