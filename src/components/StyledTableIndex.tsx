@@ -14,6 +14,7 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { cn } from 'src/helpers/cn'
 import { Fetching } from './Fetching'
 import { RootContextProvider } from 'src/context/RootContext'
+import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
 
 const DndContextCustom = <TData extends { id: string | number }>({
     data,
@@ -145,6 +146,11 @@ export const StyledTable = <
     const fetching = !!(data.length > 0) && props.loading
     const showNoRowsOverlay = data.length === 0 && !props.loading
 
+    const stickyFooter = options.stickyFooter ?? false
+    const isMobileView = useIsMobileView()
+
+    const canShowStickyFooter = !isMobileView && stickyFooter
+
     return (
         <RootContextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
@@ -177,14 +183,22 @@ export const StyledTable = <
                                 <TableBody table={table} styledTableProps={options} />
                             )}
                         </table>
-
-                        {showNoRowsOverlay && (
-                            <div className={style['no-rows-overlay-container']}>
-                                {noRowsOverlay}
-                            </div>
+                        {!canShowStickyFooter && (
+                            <TableFooter
+                                table={table}
+                                styledTableProps={options}
+                                canShowStickyFooter={canShowStickyFooter}
+                            />
                         )}
+                        {showNoRowsOverlay && <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>}
                     </div>
-                    <TableFooter table={table} styledTableProps={options} />
+                    {canShowStickyFooter && (
+                        <TableFooter
+                            table={table}
+                            styledTableProps={options}
+                            canShowStickyFooter={canShowStickyFooter}
+                        />
+                    )}
                 </div>
             </Wrapper>
         </RootContextProvider>

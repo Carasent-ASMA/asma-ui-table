@@ -27,7 +27,7 @@ export function TableBody<
                         <TableRows table={table} styledTableProps={styledTableProps} />
                     )}
                 </>
-            ) : null }
+            ) : null}
         </tbody>
     )
 }

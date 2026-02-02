@@ -8,14 +8,26 @@ export function TableFooter<
         id: string | number
     },
     TCustomData = Record<string, unknown>,
->({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
+>({
+    table,
+    styledTableProps,
+    canShowStickyFooter,
+}: {
+    table: Table<TData>
+    styledTableProps: StyledTableProps<TData, TCustomData>
+    canShowStickyFooter: boolean
+}) {
     if (styledTableProps.hideFooter || styledTableProps.data.length === 0) return null
 
     const paginationAlignLeft = styledTableProps.paginationAlignLeft
 
+    const pageSize = table.getState().pagination.pageSize
+    const totalRows = table.getFilteredRowModel().rows.length
+    const shouldShowPagination = totalRows > pageSize
+
     return (
         <div
-            className={style['table-footer']}
+            className={canShowStickyFooter ? style['table-footer--sticky'] : style['table-footer--inline']}
             style={
                 (paginationAlignLeft && {
                     justifyContent: 'flex-start',
@@ -24,11 +36,13 @@ export function TableFooter<
             }
         >
             {!paginationAlignLeft && styledTableProps.footer?.(table)}
-            <TablePagination
-                table={table}
-                showRowSelect={!!styledTableProps.showRowCountSelect}
-                locale={styledTableProps.locale || 'en'}
-            />
+            {shouldShowPagination && (
+                <TablePagination
+                    table={table}
+                    showRowSelect={!!styledTableProps.showRowCountSelect}
+                    locale={styledTableProps.locale || 'en'}
+                />
+            )}
             {paginationAlignLeft && styledTableProps.footer?.(table)}
         </div>
     )
