@@ -283,7 +283,7 @@
         }
     }
 
-    .table-footer {
+    .table-footer--sticky{
         display: flex;
         width: 100%;
         gap: 8px;
@@ -294,4 +294,19 @@
         justify-content: flex-end;
         flex-shrink: 0;
     }
+    .table-footer--inline{
+        position: sticky;
+        left: 0; 
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+
+        padding: 12px 0; 
+        background: white;
+        border-top: 0.5px solid var(--colors-delta-200);
+    }
+
 }

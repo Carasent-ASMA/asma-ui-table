@@ -210,6 +210,7 @@ export const TableV2 = () => {
                 footer={(table) => {
                     return <div>columns - {table.getAllColumns().length}</div>
                 }}
+                stickyFooter
             />
         </div>
     )

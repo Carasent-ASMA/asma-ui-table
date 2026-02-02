@@ -50,7 +50,7 @@ export function TableHeader<
                 return (
                     <tr key={headerGroup.id}>
                         {headerGroup.headers.map((header, index) => {
-                            const isFixed = !isMobileView &&header.column.columnDef.fixedLeft
+                            const isFixed = !isMobileView && header.column.columnDef.fixedLeft
                             const left = headerGroup.headers
                                 .slice(0, index)
                                 .reduce((acc, col) => acc + (col.column.getSize() || 0), 0)
