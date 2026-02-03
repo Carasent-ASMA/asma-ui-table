@@ -12,11 +12,46 @@
 
     .table-wrapper {
         position: relative;
-        overflow: auto;
+        overflow: auto; 
         width: 100%;
         flex-grow: 1;
     }
 
+    .table-wrapper--proxy {
+        position: relative;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden !important;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        overflow-y: visible;
+        width: 100%;
+
+        /* hide scrollbar */
+        scrollbar-width: none;       
+        -ms-overflow-style: none;    
+    }
+
+    .table-scroll::-webkit-scrollbar {
+    height: 0 !important;        
+    }
+
+    .table-hscroll {
+    position: sticky;
+    bottom: 0;
+    height: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: white;
+    z-index: 20;
+    scrollbar-gutter: stable;
+    }
+
+    .table-hscroll__content {
+    height: 1px; 
+    }
     .no-rows-overlay-container {
         position: absolute;
         top: 0;
@@ -306,7 +341,7 @@
 
         padding: 12px 0; 
         background: white;
-        border-top: 0.5px solid var(--colors-delta-200);
+       
     }
 
 }

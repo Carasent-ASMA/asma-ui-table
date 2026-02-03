@@ -81,12 +81,7 @@ const Wrapper = <TData extends { id: string | number }>({
  *
  * @param setData: This is used to re-order the data after dragging with dnd use it with enableDnd
  */
-export const StyledTable = <
-    TData extends {
-        id: string | number
-    },
-    TCustomData = Record<string, unknown>,
->(
+export const StyledTable = <TData extends { id: string | number }, TCustomData = Record<string, unknown>>(
     props: StyledTableProps<TData, TCustomData> & {
         getColumnSizing?: (column_sizing: ColumnSizingState) => void
         getTableState?: (tableState: TableState) => void
@@ -99,105 +94,69 @@ export const StyledTable = <
     injectColumns(options)
     const { table } = useStyledTable(options)
 
-    const tableRef = useRef<HTMLTableElement | null>(null)
-    const [tableWidth, setTableWidth] = useState<number | null>(null)
-
-    useLayoutEffect(() => {
-        const tableElement = tableRef.current
-        if (!tableElement) return
-
-        const updateWidth = (type: 'setup' | 'resize') => {
-            const width = tableElement.getBoundingClientRect().width
-            setTableWidth((prevWidth) => {
-                if (type === 'setup' || width !== prevWidth) {
-                    return width
-                }
-                return prevWidth
-            })
-        }
-
-        const resizeObserver = new ResizeObserver(() => updateWidth('resize'))
-        resizeObserver.observe(tableElement)
-
-        updateWidth('setup')
-
-        return () => {
-            resizeObserver.unobserve(tableElement)
-        }
-    }, [])
-
-    const columnSizeVars = useMemo(() => {
-        if (!options.enableColumnResizing) return
-
-        const headers = table.getFlatHeaders()
-        const colSizes: { [key: string]: number } = {}
-        for (let i = 0; i < headers.length; i++) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const header = headers[i]!
-            colSizes[`--header-${header.id}-size`] = header.getSize()
-            colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
-        }
-        options.getTableState?.(table.getState())
-        options.getColumnSizing?.(table.getState().columnSizing)
-        return colSizes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [options.enableColumnResizing, table.getState().columnSizingInfo, table.getState().columnSizing])
-
-    const fetching = !!(data.length > 0) && props.loading
+    const fetching = data.length > 0 && !!props.loading
     const showNoRowsOverlay = data.length === 0 && !props.loading
 
     const stickyFooter = options.stickyFooter ?? false
     const isMobileView = useIsMobileView()
-
     const canShowStickyFooter = !isMobileView && stickyFooter
+
+    const enableProxyHScroll = !canShowStickyFooter
+    const { tableScrollRef, hScrollRef, hScrollContentRef } = useProxyHorizontalScrollSync(enableProxyHScroll)
+
+    const TableMarkup = (
+        <table className={style['styled-table']}>
+            <TableHeader
+                table={table}
+                styledTableProps={options}
+                tableCanResize={!!options.enableColumnResizing}
+                tableWidth={null}
+            />
+            <Fetching fetching={!!fetching} />
+            <TableBody table={table} styledTableProps={options} />
+        </table>
+    )
 
     return (
         <RootContextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
                 <div className={cn(style['asma-ui-table-styled-table'], tableClassName)} style={{ height }}>
-                    <div className={cn(style['table-wrapper'], fetching && style['table-wrapper-fetching'], className)}>
-                        <table
-                            ref={tableRef}
-                            className={style['styled-table']}
-                            style={{
-                                ...columnSizeVars,
-                            }}
-                        >
-                            <TableHeader
-                                table={table}
-                                styledTableProps={options}
-                                tableCanResize={!!options.enableColumnResizing}
-                                tableWidth={tableWidth}
-                            />
-                            <Fetching fetching={!!fetching} />
+                    <div
+                        className={cn(
+                            canShowStickyFooter ? style['table-wrapper'] : style['table-wrapper--proxy'],
+                            fetching && style['table-wrapper-fetching'],
 
-                            {columnSizeVars ? (
-                                <>
-                                    {table.getState().columnSizingInfo.isResizingColumn ? (
-                                        <MemoizedTableBody table={table} styledTableProps={options} />
-                                    ) : (
-                                        <TableBody table={table} styledTableProps={options} />
-                                    )}
-                                </>
-                            ) : (
-                                <TableBody table={table} styledTableProps={options} />
-                            )}
-                        </table>
-                        {!canShowStickyFooter && (
-                            <TableFooter
-                                table={table}
-                                styledTableProps={options}
-                                canShowStickyFooter={canShowStickyFooter}
-                            />
+                            className,
                         )}
-                        {showNoRowsOverlay && <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>}
+                    >
+                        {canShowStickyFooter ? (
+                            <>
+                                {TableMarkup}
+                                {showNoRowsOverlay && (
+                                    <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                <div ref={tableScrollRef} className={style['table-scroll']}>
+                                    {TableMarkup}
+                                </div>
+
+                                <div ref={hScrollRef} className={style['table-hscroll']}>
+                                    <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
+                                </div>
+
+                                <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
+
+                                {showNoRowsOverlay && (
+                                    <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
+                                )}
+                            </>
+                        )}
                     </div>
+
                     {canShowStickyFooter && (
-                        <TableFooter
-                            table={table}
-                            styledTableProps={options}
-                            canShowStickyFooter={canShowStickyFooter}
-                        />
+                        <TableFooter table={table} styledTableProps={options} canShowStickyFooter />
                     )}
                 </div>
             </Wrapper>
@@ -205,7 +164,59 @@ export const StyledTable = <
     )
 }
 
-export const MemoizedTableBody = memo(
+const MemoizedTableBody = memo(
     TableBody,
     (prev, next) => prev.table.options.data === next.table.options.data,
 ) as typeof TableBody
+
+function useProxyHorizontalScrollSync(enabled: boolean) {
+    const tableScrollRef = useRef<HTMLDivElement | null>(null)
+    const hScrollRef = useRef<HTMLDivElement | null>(null)
+    const hScrollContentRef = useRef<HTMLDivElement | null>(null)
+
+    useLayoutEffect(() => {
+        if (!enabled) return
+
+        const tableScrollEl = tableScrollRef.current
+        const hScrollEl = hScrollRef.current
+        const hScrollContentEl = hScrollContentRef.current
+        if (!tableScrollEl || !hScrollEl || !hScrollContentEl) return
+
+        let syncing = false
+
+        const syncWidth = () => {
+            hScrollContentEl.style.width = `${tableScrollEl.scrollWidth}px`
+        }
+
+        const syncProxyFromTable = () => {
+            if (syncing) return
+            syncing = true
+            hScrollEl.scrollLeft = tableScrollEl.scrollLeft
+            syncing = false
+        }
+
+        const syncTableFromProxy = () => {
+            if (syncing) return
+            syncing = true
+            tableScrollEl.scrollLeft = hScrollEl.scrollLeft
+            syncing = false
+        }
+
+        syncWidth()
+        syncProxyFromTable()
+
+        tableScrollEl.addEventListener('scroll', syncProxyFromTable, { passive: true })
+        hScrollEl.addEventListener('scroll', syncTableFromProxy, { passive: true })
+
+        const ro = new ResizeObserver(syncWidth)
+        ro.observe(tableScrollEl)
+
+        return () => {
+            tableScrollEl.removeEventListener('scroll', syncProxyFromTable)
+            hScrollEl.removeEventListener('scroll', syncTableFromProxy)
+            ro.disconnect()
+        }
+    }, [enabled])
+
+    return { tableScrollRef, hScrollRef, hScrollContentRef }
+}
