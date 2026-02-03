@@ -25,6 +25,14 @@ export function TableFooter<
     const totalRows = table.getFilteredRowModel().rows.length
     const shouldShowPagination = totalRows > pageSize
 
+    const footerNode = styledTableProps.footer?.(table)
+
+    const hasFooterNode = footerNode !== null && footerNode !== undefined && footerNode !== false
+
+    const hasAnythingToRender = hasFooterNode || shouldShowPagination
+
+    if (!hasAnythingToRender) return null
+  
     return (
         <div
             className={canShowStickyFooter ? style['table-footer--sticky'] : style['table-footer--inline']}
