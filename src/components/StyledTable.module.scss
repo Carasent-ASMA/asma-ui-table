@@ -24,6 +24,18 @@
         overflow-x: hidden !important;
     }
 
+    .table-wrapper--proxy-bottom {
+        position: relative;
+        width: 100%;
+        flex-grow: 1;
+
+        overflow-y: auto;
+        overflow-x: hidden !important;
+
+        display: flex;
+        flex-direction: column;
+    }   
+
     .table-scroll {
         overflow-x: auto;
         overflow-y: visible;
@@ -343,5 +355,19 @@
         background: white;
        
     }
+
+
+.table-bottom {
+  margin-top: auto; /* pushes down when short */
+}
+
+/* only when short: keep it pinned to bottom of scroll container */
+.table-bottom--sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  background: white;
+}
+    
 
 }

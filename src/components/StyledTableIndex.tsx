@@ -5,7 +5,7 @@ import { useStyledTable } from '../hooks/useStyledTable'
 import { injectColumns } from '../helpers/injectColumns'
 
 import style from './StyledTable.module.scss'
-import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ColumnSizingState } from '../types'
 import { TableHeader } from './table-header/TableHeader'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
@@ -15,6 +15,8 @@ import { cn } from 'src/helpers/cn'
 import { Fetching } from './Fetching'
 import { RootContextProvider } from 'src/context/RootContext'
 import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
+import { useProxyHorizontalScrollSync } from './columns/helpers/useProxyHorizontalScrollSync'
+import { useElementHeightPx } from './columns/helpers/useElementHeightPx'
 
 const DndContextCustom = <TData extends { id: string | number }>({
     data,
@@ -104,6 +106,18 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
     const enableProxyHScroll = !canShowStickyFooter
     const { tableScrollRef, hScrollRef, hScrollContentRef } = useProxyHorizontalScrollSync(enableProxyHScroll)
 
+    const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
+
+    const rowHeightPx = options.rowHeight ?? 48
+    const visibleRows = table.getRowModel().rows.length
+
+    const rowsFit = useMemo(() => {
+        if (rowHeightPx <= 0) return 0
+        return Math.floor(rowsAreaPx / rowHeightPx)
+    }, [rowsAreaPx, rowHeightPx])
+
+    const isShortTable = !canShowStickyFooter && visibleRows > 0 && visibleRows <= rowsFit
+
     const TableMarkup = (
         <table className={style['styled-table']}>
             <TableHeader
@@ -120,10 +134,18 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
     return (
         <RootContextProvider>
             <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
-                <div className={cn(style['asma-ui-table-styled-table'], tableClassName)} style={{ height }}>
+                <div
+                    ref={containerRef}
+                    className={cn(style['asma-ui-table-styled-table'], tableClassName)}
+                    style={{ height }}
+                >
                     <div
                         className={cn(
-                            canShowStickyFooter ? style['table-wrapper'] : style['table-wrapper--proxy'],
+                            canShowStickyFooter
+                                ? style['table-wrapper']
+                                : isShortTable
+                                ? style['table-wrapper--proxy-bottom']
+                                : style['table-wrapper--proxy'],
                             fetching && style['table-wrapper-fetching'],
 
                             className,
@@ -142,11 +164,15 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
                                     {TableMarkup}
                                 </div>
 
-                                <div ref={hScrollRef} className={style['table-hscroll']}>
-                                    <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
-                                </div>
+                                <div
+                                    className={cn(style['table-bottom'], isShortTable && style['table-bottom--sticky'])}
+                                >
+                                    <div ref={hScrollRef} className={style['table-hscroll']}>
+                                        <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
+                                    </div>
 
-                                <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
+                                    <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
+                                </div>
 
                                 {showNoRowsOverlay && (
                                     <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
@@ -162,61 +188,4 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
             </Wrapper>
         </RootContextProvider>
     )
-}
-
-const MemoizedTableBody = memo(
-    TableBody,
-    (prev, next) => prev.table.options.data === next.table.options.data,
-) as typeof TableBody
-
-function useProxyHorizontalScrollSync(enabled: boolean) {
-    const tableScrollRef = useRef<HTMLDivElement | null>(null)
-    const hScrollRef = useRef<HTMLDivElement | null>(null)
-    const hScrollContentRef = useRef<HTMLDivElement | null>(null)
-
-    useLayoutEffect(() => {
-        if (!enabled) return
-
-        const tableScrollEl = tableScrollRef.current
-        const hScrollEl = hScrollRef.current
-        const hScrollContentEl = hScrollContentRef.current
-        if (!tableScrollEl || !hScrollEl || !hScrollContentEl) return
-
-        let syncing = false
-
-        const syncWidth = () => {
-            hScrollContentEl.style.width = `${tableScrollEl.scrollWidth}px`
-        }
-
-        const syncProxyFromTable = () => {
-            if (syncing) return
-            syncing = true
-            hScrollEl.scrollLeft = tableScrollEl.scrollLeft
-            syncing = false
-        }
-
-        const syncTableFromProxy = () => {
-            if (syncing) return
-            syncing = true
-            tableScrollEl.scrollLeft = hScrollEl.scrollLeft
-            syncing = false
-        }
-
-        syncWidth()
-        syncProxyFromTable()
-
-        tableScrollEl.addEventListener('scroll', syncProxyFromTable, { passive: true })
-        hScrollEl.addEventListener('scroll', syncTableFromProxy, { passive: true })
-
-        const ro = new ResizeObserver(syncWidth)
-        ro.observe(tableScrollEl)
-
-        return () => {
-            tableScrollEl.removeEventListener('scroll', syncProxyFromTable)
-            hScrollEl.removeEventListener('scroll', syncTableFromProxy)
-            ro.disconnect()
-        }
-    }, [enabled])
-
-    return { tableScrollRef, hScrollRef, hScrollContentRef }
 }
