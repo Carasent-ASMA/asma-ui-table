@@ -164,13 +164,12 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
                                     {TableMarkup}
                                 </div>
 
+                                <div ref={hScrollRef} className={style['table-hscroll']}>
+                                    <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
+                                </div>
                                 <div
                                     className={cn(style['table-bottom'], isShortTable && style['table-bottom--sticky'])}
                                 >
-                                    <div ref={hScrollRef} className={style['table-hscroll']}>
-                                        <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
-                                    </div>
-
                                     <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
                                 </div>
 
