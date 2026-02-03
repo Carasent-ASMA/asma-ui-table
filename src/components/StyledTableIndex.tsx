@@ -154,9 +154,6 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
                         {canShowStickyFooter ? (
                             <>
                                 {TableMarkup}
-                                {showNoRowsOverlay && (
-                                    <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
-                                )}
                             </>
                         ) : (
                             <>
@@ -172,11 +169,10 @@ export const StyledTable = <TData extends { id: string | number }, TCustomData =
                                 >
                                     <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
                                 </div>
-
-                                {showNoRowsOverlay && (
-                                    <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
-                                )}
                             </>
+                        )}
+                        {showNoRowsOverlay && (
+                            <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
                         )}
                     </div>
 

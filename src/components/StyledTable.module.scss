@@ -20,6 +20,7 @@
     .table-wrapper--proxy {
         position: relative;
         width: 100%;
+        flex-grow: 1;
         overflow-y: auto;
         overflow-x: hidden !important;
     }
@@ -28,6 +29,7 @@
         position: relative;
         width: 100%;
         flex-grow: 1;
+        min-height: 0;
 
         overflow-y: auto;
         overflow-x: hidden !important;
@@ -40,6 +42,7 @@
         overflow-x: auto;
         overflow-y: visible;
         width: 100%;
+        flex-grow: 1;
 
         /* hide scrollbar */
         scrollbar-width: none;       
