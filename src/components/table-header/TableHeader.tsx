@@ -30,19 +30,16 @@ export function TableHeader<
         .getHeaderGroups()
         .some((group) => group.headers.some((header) => header.column.columnDef.fixedLeft === true))
 
-    const styles: CSSProperties = stickyHeader
-        ? {
-              ...tableHeaderStyle,
-              position: 'sticky',
-              top: -0.2,
-          }
-        : {
-              ...tableHeaderStyle,
-          }
-
+    const styles: CSSProperties = {
+        ...tableHeaderStyle,
+    }
     return (
         <thead
-            className={cn(style['table-header'], styledTableProps.tableHeaderClassName)}
+            className={cn(
+                style['table-header'],
+                stickyHeader && style['table-header--sticky'],
+                styledTableProps.tableHeaderClassName,
+            )}
             style={styles}
             ref={tableHeaderRef}
         >

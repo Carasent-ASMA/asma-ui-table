@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 
 export function useProxyHorizontalScrollSync(enabled: boolean) {
     const tableScrollRef = useRef<HTMLDivElement | null>(null)
+    const tableXRef = useRef<HTMLDivElement | null>(null)
     const hScrollRef = useRef<HTMLDivElement | null>(null)
     const hScrollContentRef = useRef<HTMLDivElement | null>(null)
 
@@ -9,45 +10,45 @@ export function useProxyHorizontalScrollSync(enabled: boolean) {
         if (!enabled) return
 
         const tableScrollEl = tableScrollRef.current
+        const tableXEl = tableXRef.current
         const hScrollEl = hScrollRef.current
         const hScrollContentEl = hScrollContentRef.current
-        if (!tableScrollEl || !hScrollEl || !hScrollContentEl) return
+        if (!tableScrollEl || !tableXEl || !hScrollEl || !hScrollContentEl) return
 
         let syncing = false
 
         const syncWidth = () => {
-            hScrollContentEl.style.width = `${tableScrollEl.scrollWidth}px`
+            hScrollContentEl.style.width = `${tableXEl.scrollWidth}px`
         }
 
         const syncProxyFromTable = () => {
             if (syncing) return
             syncing = true
-            hScrollEl.scrollLeft = tableScrollEl.scrollLeft
+            hScrollEl.scrollLeft = tableXEl.scrollLeft
             syncing = false
         }
 
         const syncTableFromProxy = () => {
             if (syncing) return
             syncing = true
-            tableScrollEl.scrollLeft = hScrollEl.scrollLeft
+            tableXEl.scrollLeft = hScrollEl.scrollLeft
             syncing = false
         }
 
         syncWidth()
         syncProxyFromTable()
 
-        tableScrollEl.addEventListener('scroll', syncProxyFromTable, { passive: true })
+        tableXEl.addEventListener('scroll', syncProxyFromTable, { passive: true })
         hScrollEl.addEventListener('scroll', syncTableFromProxy, { passive: true })
 
         const ro = new ResizeObserver(syncWidth)
-        ro.observe(tableScrollEl)
-
+        ro.observe(tableXEl)
         return () => {
-            tableScrollEl.removeEventListener('scroll', syncProxyFromTable)
+            tableXEl.removeEventListener('scroll', syncProxyFromTable)
             hScrollEl.removeEventListener('scroll', syncTableFromProxy)
             ro.disconnect()
         }
     }, [enabled])
 
-    return { tableScrollRef, hScrollRef, hScrollContentRef }
+    return { tableScrollRef, tableXRef, hScrollRef, hScrollContentRef }
 }

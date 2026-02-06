@@ -32,7 +32,6 @@ export function TableFooter<
     const hasAnythingToRender = hasFooterNode || shouldShowPagination
 
     if (!hasAnythingToRender) return null
-  
     return (
         <div
             className={canShowStickyFooter ? style['table-footer--sticky'] : style['table-footer--inline']}

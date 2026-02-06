@@ -12,22 +12,29 @@ export function TableBody<
     TCustomData = Record<string, unknown>,
 >({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
     const { columns, data, loading, enableDnd, rowHeight } = styledTableProps
+    const colSpan = table.getAllLeafColumns().length || columns.length || 1
+
+    if (loading && data.length === 0) {
+        return (
+            <tbody className={style['tbody']}>
+                <TableSkeleton colSpan={colSpan} rowHeight={rowHeight} />
+            </tbody>
+        )
+    }
+
+    if (data.length === 0) {
+        return null
+    }
 
     return (
         <tbody className={style['tbody']}>
-            {data.length === 0 && loading ? (
-                <TableSkeleton colSpan={columns.length} rowHeight={rowHeight} />
-            ) : data.length > 0 ? (
-                <>
-                    {enableDnd ? (
-                        <SortableContext items={data} strategy={verticalListSortingStrategy}>
-                            <TableRows table={table} styledTableProps={styledTableProps} />
-                        </SortableContext>
-                    ) : (
-                        <TableRows table={table} styledTableProps={styledTableProps} />
-                    )}
-                </>
-            ) : null}
+            {enableDnd ? (
+                <SortableContext items={data} strategy={verticalListSortingStrategy}>
+                    <TableRows table={table} styledTableProps={styledTableProps} />
+                </SortableContext>
+            ) : (
+                <TableRows table={table} styledTableProps={styledTableProps} />
+            )}
         </tbody>
     )
 }

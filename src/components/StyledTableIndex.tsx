@@ -1,186 +1,205 @@
-import { type StyledTableProps, type TableState } from '../types'
-import { TableBody } from './TableBody'
-import { TableFooter } from './table-footer/TableFooter'
-import { useStyledTable } from '../hooks/useStyledTable'
-import { injectColumns } from '../helpers/injectColumns'
-
-import style from './StyledTable.module.scss'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
-import type { ColumnSizingState } from '../types'
-import { TableHeader } from './table-header/TableHeader'
+import { useMemo } from 'react'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
+
 import { cn } from 'src/helpers/cn'
-import { Fetching } from './Fetching'
 import { RootContextProvider } from 'src/context/RootContext'
 import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
+
+import { type StyledTableProps, type TableState, type ColumnSizingState } from '../types'
+import { useStyledTable } from '../hooks/useStyledTable'
+import { injectColumns } from '../helpers/injectColumns'
+
+import { TableHeader } from './table-header/TableHeader'
+import { TableBody } from './TableBody'
+import { Fetching } from './Fetching'
+import { TableFooter } from './table-footer/TableFooter'
+
 import { useProxyHorizontalScrollSync } from './columns/helpers/useProxyHorizontalScrollSync'
 import { useElementHeightPx } from './columns/helpers/useElementHeightPx'
 
-const DndContextCustom = <TData extends { id: string | number }>({
-    data,
-    setData,
-    children,
+import style from './StyledTable.module.scss'
+
+type RowWithId = { id: string | number }
+
+function DndProvider<TData extends RowWithId>({
+  enabled,
+  data,
+  setData,
+  children,
 }: {
-    data: TData[]
-    setData?: (callback: (data: TData[]) => TData[]) => void
-    children: JSX.Element
-}) => {
-    const dataIds = useMemo<UniqueIdentifier[]>(() => data?.map((d) => d.id), [data])
+  enabled: boolean
+  data: TData[]
+  setData?: (callback: (data: TData[]) => TData[]) => void
+  children: React.ReactNode
+}) {
+  const dataIds = useMemo<UniqueIdentifier[]>(() => data.map((d) => d.id), [data])
 
-    function handleDragEnd(event: DragEndEvent) {
-        if (!setData) return
+  const onDragEnd = (event: DragEndEvent) => {
+    if (!enabled || !setData) return
 
-        const { active, over } = event
-        if (active && over && active.id !== over.id) {
-            setData((data) => {
-                const oldIndex = dataIds.indexOf(active.id)
-                const newIndex = dataIds.indexOf(over.id)
+    const { active, over } = event
+    if (!active || !over || active.id === over.id) return
 
-                return arrayMove(data, oldIndex, newIndex)
-            })
-        }
-    }
+    setData((prev) => {
+      const oldIndex = dataIds.indexOf(active.id)
+      const newIndex = dataIds.indexOf(over.id)
+      return arrayMove(prev, oldIndex, newIndex)
+    })
+  }
 
-    return (
-        <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-            onDragEnd={handleDragEnd}
-        >
-            {children}
-        </DndContext>
-    )
+  if (!enabled) return <>{children}</>
+
+  return (
+    <DndContext
+      collisionDetection={closestCenter}
+      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+      onDragEnd={onDragEnd}
+    >
+      {children}
+    </DndContext>
+  )
 }
 
-const Wrapper = <TData extends { id: string | number }>({
-    data,
-    setData,
-    enableDnd,
-    children,
+function OverlayShell({
+  enabled,
+  className,
+  children,
 }: {
-    data: TData[]
-    enableDnd: boolean
-    setData?: (callback: (data: TData[]) => TData[]) => void
-    children: JSX.Element
-}) => {
-    return enableDnd ? (
-        <DndContextCustom data={data} setData={setData}>
-            {children}
-        </DndContextCustom>
-    ) : (
-        <>{children}</>
-    )
+  enabled: boolean
+  className?: string
+  children: React.ReactNode
+}) {
+  if (!enabled) return <>{children}</>
+  return <div className={className}>{children}</div>
 }
 
-/**
- *
- * Custom props:
- * @param size: Column sizing. use NaN (width 100%) -  only one time for the main column. It will make the column very responsive.. Example is in Storybook.
- *
- *  @param focusable: Used for controlling the focus of rows. If set to true, the tabIndex={0} attribute will be added to each table row. Used, for example, when adding a new item to scroll to it and focus it
- *
- * @param setData: This is used to re-order the data after dragging with dnd use it with enableDnd
- */
-export const StyledTable = <TData extends { id: string | number }, TCustomData = Record<string, unknown>>(
-    props: StyledTableProps<TData, TCustomData> & {
-        getColumnSizing?: (column_sizing: ColumnSizingState) => void
-        getTableState?: (tableState: TableState) => void
-        setData?: (callback: (data: TData[]) => TData[]) => void
-    },
+export const StyledTable = <
+  TData extends RowWithId,
+  TCustomData = Record<string, unknown>
+>(
+  props: StyledTableProps<TData, TCustomData> & {
+    getColumnSizing?: (column_sizing: ColumnSizingState) => void
+    getTableState?: (tableState: TableState) => void
+    setData?: (callback: (data: TData[]) => TData[]) => void
+  },
 ) => {
-    const options = { ...props, rowHeight: props.rowHeight || 48 }
-    const { className, tableClassName, height, noRowsOverlay, data, enableDnd, setData } = options
+  const options = useMemo(() => ({ ...props, rowHeight: props.rowHeight || 48 }), [props])
 
-    injectColumns(options)
-    const { table } = useStyledTable(options)
+  const {
+    className,
+    tableClassName,
+    height,
+    noRowsOverlay,
+    data,
+    enableDnd,
+    setData,
+    loading,
+  } = options
 
-    const fetching = data.length > 0 && !!props.loading
-    const showNoRowsOverlay = data.length === 0 && !props.loading
+  injectColumns(options)
+  const { table } = useStyledTable(options)
 
-    const stickyFooter = options.stickyFooter ?? false
-    const isMobileView = useIsMobileView()
-    const canShowStickyFooter = !isMobileView && stickyFooter
+  const hasRows = data.length > 0
+  const fetching = hasRows && !!loading
+  const showNoRowsOverlay = !hasRows && !loading
 
-    const enableProxyHScroll = !canShowStickyFooter
-    const { tableScrollRef, hScrollRef, hScrollContentRef } = useProxyHorizontalScrollSync(enableProxyHScroll)
+  const isMobileView = useIsMobileView()
+  const wantsStickyFooter = !!options.stickyFooter
 
-    const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
+  // you can optionally add: && height != null
+  const canShowStickyFooter = wantsStickyFooter && !isMobileView
 
-    const rowHeightPx = options.rowHeight ?? 48
-    const visibleRows = table.getRowModel().rows.length
+  const enableProxyHScroll = !canShowStickyFooter
+  const { tableScrollRef, tableXRef, hScrollRef, hScrollContentRef } =
+    useProxyHorizontalScrollSync(enableProxyHScroll)
 
-    const rowsFit = useMemo(() => {
-        if (rowHeightPx <= 0) return 0
-        return Math.floor(rowsAreaPx / rowHeightPx)
-    }, [rowsAreaPx, rowHeightPx])
+  const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
 
-    const isShortTable = !canShowStickyFooter && visibleRows > 0 && visibleRows <= rowsFit
+  const rowHeightPx = options.rowHeight ?? 48
+  const visibleRows = table.getRowModel().rows.length
 
-    const TableMarkup = (
-        <table className={style['styled-table']}>
-            <TableHeader
-                table={table}
-                styledTableProps={options}
-                tableCanResize={!!options.enableColumnResizing}
-                tableWidth={null}
-            />
-            <Fetching fetching={!!fetching} />
-            <TableBody table={table} styledTableProps={options} />
-        </table>
-    )
+  const rowsFit = useMemo(() => {
+    if (rowHeightPx <= 0) return 0
+    return Math.floor(rowsAreaPx / rowHeightPx)
+  }, [rowsAreaPx, rowHeightPx])
 
-    return (
-        <RootContextProvider>
-            <Wrapper enableDnd={!!enableDnd} data={data} setData={setData}>
+  const isShortTable = !canShowStickyFooter && visibleRows > 0 && visibleRows <= rowsFit
+  const shouldExpandEmptyBody = !canShowStickyFooter && showNoRowsOverlay
+
+  const tableWrapperClass = cn(
+    canShowStickyFooter
+      ? style['table-wrapper']
+      : isShortTable || shouldExpandEmptyBody
+      ? style['table-wrapper--proxy-bottom']
+      : style['table-wrapper--proxy'],
+    fetching && style['table-wrapper-fetching'],
+     showNoRowsOverlay && style['table-wrapper--no-rows'],
+    className,
+  )
+
+  const TableMarkup = (
+    <table className={style['styled-table']}>
+      <TableHeader
+        table={table}
+        styledTableProps={options}
+        tableCanResize={!!options.enableColumnResizing}
+        tableWidth={null}
+      />
+      <Fetching fetching={!!fetching} />
+      <TableBody table={table} styledTableProps={options} />
+    </table>
+  )
+
+  return (
+    <RootContextProvider>
+      <DndProvider enabled={!!enableDnd} data={data} setData={setData}>
+        <div
+          ref={containerRef}
+          className={cn(style['asma-ui-table-styled-table'], tableClassName)}
+          style={{ height }}
+        >
+          <OverlayShell enabled={canShowStickyFooter} className={style['table-shell']}>
+            <div className={tableWrapperClass}>
+              {canShowStickyFooter ? (
+                TableMarkup
+              ) : (
                 <div
-                    ref={containerRef}
-                    className={cn(style['asma-ui-table-styled-table'], tableClassName)}
-                    style={{ height }}
+                  ref={tableScrollRef}
+                  className={cn(
+                    style['table-scroll'],
+                    
+                  )}
                 >
-                    <div
-                        className={cn(
-                            canShowStickyFooter
-                                ? style['table-wrapper']
-                                : isShortTable
-                                ? style['table-wrapper--proxy-bottom']
-                                : style['table-wrapper--proxy'],
-                            fetching && style['table-wrapper-fetching'],
+                  <div
+                    ref={tableXRef}
+                    className={cn(style['table-x'], !isShortTable && style['table-x--fill-height'])}
+                  >
+                    {TableMarkup}
+                  </div>
 
-                            className,
-                        )}
-                    >
-                        {canShowStickyFooter ? (
-                            <>
-                                {TableMarkup}
-                            </>
-                        ) : (
-                            <>
-                                <div ref={tableScrollRef} className={style['table-scroll']}>
-                                    {TableMarkup}
-                                </div>
+                  <div ref={hScrollRef} className={style['table-hscroll']}>
+                    <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
+                  </div>
 
-                                <div ref={hScrollRef} className={style['table-hscroll']}>
-                                    <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
-                                </div>
-                                <div
-                                    className={cn(style['table-bottom'], isShortTable && style['table-bottom--sticky'])}
-                                >
-                                    <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
-                                </div>
-                            </>
-                        )}
-                        {showNoRowsOverlay && (
-                            <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
-                        )}
-                    </div>
-
-                    {canShowStickyFooter && (
-                        <TableFooter table={table} styledTableProps={options} canShowStickyFooter />
-                    )}
+                  <div className={cn(style['table-bottom'], isShortTable && style['table-bottom--sticky'])}>
+                    <TableFooter table={table} styledTableProps={options} canShowStickyFooter={false} />
+                  </div>
                 </div>
-            </Wrapper>
-        </RootContextProvider>
-    )
+              )}
+
+              {showNoRowsOverlay && (
+                <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
+              )}
+            </div>
+          </OverlayShell>
+
+          {canShowStickyFooter && (
+            <TableFooter table={table} styledTableProps={options} canShowStickyFooter />
+          )}
+        </div>
+      </DndProvider>
+    </RootContextProvider>
+  )
 }
