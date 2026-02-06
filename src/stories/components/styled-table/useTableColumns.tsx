@@ -70,7 +70,7 @@ export const useStyledTableColumns = () => {
             },
             {
                 accessorFn: (row) => row.id,
-                id: 'multiheight-description',
+                id: 'about_me',
                 header: 'About Me',
                 cell: () => {
                     return (
@@ -85,7 +85,7 @@ export const useStyledTableColumns = () => {
             },
             {
                 accessorFn: (row) => row.id,
-                id: 'description',
+                id: 'about',
                 header: 'About',
                 cell: () => {
                     return (
@@ -101,7 +101,7 @@ export const useStyledTableColumns = () => {
             },
             {
                 accessorFn: (row) => row.lastName,
-                id: 'lastNameX',
+                id: 'last_name_2',
                 header: 'Last Name',
                 cell: (info) => {
                     const proxy = info.row.original

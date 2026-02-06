@@ -10,6 +10,7 @@ import {
 import { SELECT_COLUMN_ID, type StyledTableProps } from '../types'
 import { ExpandedRowsFeature } from 'src/custom-features/expand-rows'
 import { FocusedRowsFeature } from 'src/custom-features/focus-rows/FocusRowsFeature'
+import { OrderColumnsFeature } from 'src/custom-features/order-columns/OrderColumnsFeature'
 
 export const useStyledTable = <
     TData extends {
@@ -21,7 +22,7 @@ export const useStyledTable = <
 ) => {
     const { columns, data, initialState, pageSize, enableRowSelection, tableInstanceRef, locale, ...rest } = props
     const table = useReactTable({
-        _features: [ExpandedRowsFeature, FocusedRowsFeature],
+        _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature],
         columns,
         data,
         meta: { locale: locale ?? 'en' },

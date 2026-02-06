@@ -1,8 +1,8 @@
-import { type CellContext, type HeaderContext, type Row } from '@tanstack/react-table'
+import type { CellContext, HeaderContext, Row } from '@tanstack/react-table'
 import { RowActionMenu } from './components/RowActionMenu'
 import { HeaderActionMenu } from './components/HeaderActionMenu'
 import type { ReactNode } from 'react'
-import type { ColumnDef, IAction, ICustomAction, RowActionsState } from 'src/types'
+import { ACTIONS_COLUMN_ID, type ColumnDef, type IAction, type ICustomAction, type RowActionsState } from 'src/types'
 
 export function generateActionsColumn<TData>(options: {
     headerPin: boolean
@@ -11,18 +11,20 @@ export function generateActionsColumn<TData>(options: {
     rowHeight?: number
     customActionsColumnProps?: Partial<ColumnDef<TData, unknown>>
     rowActionsState?: (row: Row<TData>) => RowActionsState | undefined
+    locale?: 'en' | 'no'
 }) {
-    const { headerPin, actions, customActionsNode, rowHeight, customActionsColumnProps, rowActionsState } = options
+    const { headerPin, actions, customActionsNode, rowHeight, customActionsColumnProps, rowActionsState, locale } =
+        options
 
     return {
-        id: 'actions',
+        id: ACTIONS_COLUMN_ID,
         enableHiding: false,
         enableSorting: false,
         accessorFn: (row: TData) => {
             return row
         },
         header: (props: HeaderContext<TData, TData>) => {
-            return headerPin ? <HeaderActionMenu headerData={props} /> : null
+            return headerPin ? <HeaderActionMenu headerData={props} locale={locale} /> : null
         },
         cell: (cell: CellContext<TData, TData>) =>
             actions || customActionsNode ? (

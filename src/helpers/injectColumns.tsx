@@ -32,6 +32,7 @@ export const injectColumns = <
         textExpandArrow,
         customActionsColumnProps,
         rowActionsState,
+        locale,
     } = props
 
     const isFixed = columns.some((column) => column.fixedLeft === true)
@@ -45,6 +46,7 @@ export const injectColumns = <
                 rowHeight,
                 customActionsColumnProps,
                 rowActionsState,
+                locale,
             }),
         )
     }

@@ -16,7 +16,6 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                     checked={table.getIsAllRowsSelected()}
                     indeterminate={table.getIsSomeRowsSelected()}
                     onChange={table.getToggleAllRowsSelectedHandler()}
-                    classes={{ root: 'w-8 h-8' }}
                 />
             )
         },
@@ -30,7 +29,6 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                         disabled={!cell.row.getCanSelect()}
                         onClick={(e) => e.stopPropagation()}
                         onChange={cell.row.getToggleSelectedHandler()}
-                        classes={{ root: 'w-8 h-8' }}
                     />
                 </div>
             )

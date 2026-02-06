@@ -60,7 +60,7 @@ export const TGrini = () => {
                 stickyHeader
                 enableResizing
                 className='h-[calc(100vh-130px)]'
-                locale='no'
+                locale='en'
                 data={data}
                 columns={columns}
                 actions={(row) => generateActions(row)}
