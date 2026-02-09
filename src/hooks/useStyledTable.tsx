@@ -11,6 +11,8 @@ import { SELECT_COLUMN_ID, type StyledTableProps } from '../types'
 import { ExpandedRowsFeature } from 'src/custom-features/expand-rows'
 import { FocusedRowsFeature } from 'src/custom-features/focus-rows/FocusRowsFeature'
 import { OrderColumnsFeature } from 'src/custom-features/order-columns/OrderColumnsFeature'
+import { usePersistColumnOrder } from '../custom-features/order-columns/usePersistColumnOrder'
+import { usePersistedColumnOrder } from 'src/custom-features/order-columns/usePersistedColumnOrder'
 
 export const useStyledTable = <
     TData extends {
@@ -20,7 +22,20 @@ export const useStyledTable = <
 >(
     props: StyledTableProps<TData, TCustomData>,
 ) => {
-    const { columns, data, initialState, pageSize, enableRowSelection, tableInstanceRef, locale, ...rest } = props
+    const {
+        columns,
+        data,
+        initialState,
+        pageSize,
+        enableRowSelection,
+        tableInstanceRef,
+        locale,
+        persistColumnOrderKey,
+        ...rest
+    } = props
+
+    const columnOrder = usePersistedColumnOrder(persistColumnOrderKey)
+
     const table = useReactTable({
         _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature],
         columns,
@@ -32,6 +47,7 @@ export const useStyledTable = <
                 ...initialState?.columnVisibility,
                 [SELECT_COLUMN_ID]: false,
             },
+            columnOrder,
             ...initialState,
         },
         enableRowSelection,
@@ -56,6 +72,8 @@ export const useStyledTable = <
     if (tableInstanceRef) {
         tableInstanceRef.current = table
     }
+
+    usePersistColumnOrder(table, persistColumnOrderKey)
 
     return { table }
 }

@@ -31,11 +31,15 @@ import type {
     FocusedRow,
     FocusedRowsInstance,
 } from './custom-features/focus-rows'
+import type { OrderedColumnsOptions, OrderedColumnsTableState } from './custom-features/order-columns'
 
 declare module '@tanstack/react-table' {
-    interface TableState extends ExpandedRowsTableState, FocusedRowsTableState {}
+    interface TableState extends ExpandedRowsTableState, FocusedRowsTableState, OrderedColumnsTableState {}
 
-    interface TableOptionsResolved<TData extends RowData> extends ExpandedRowsOptions, FocusedRowsOptions {}
+    interface TableOptionsResolved<TData extends RowData>
+        extends ExpandedRowsOptions,
+            FocusedRowsOptions,
+            OrderedColumnsOptions {}
 
     interface Row<TData extends RowData> extends ExpandedRow, FocusedRow {}
 

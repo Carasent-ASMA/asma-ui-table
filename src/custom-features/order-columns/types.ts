@@ -6,4 +6,5 @@ export interface OrderedColumnsTableState {
 
 export interface OrderedColumnsOptions {
     onColumnOrderChange?: OnChangeFn<ColumnOrderState>
+    persistColumnOrderKey?: string
 }

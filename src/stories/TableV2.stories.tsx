@@ -113,6 +113,7 @@ export const TableV2 = () => {
                 defaultColumn={{
                     maxSize: 600,
                 }}
+                persistColumnOrderKey='ColumnOrderKey'
                 focusable
                 data={data}
                 stickyHeader
