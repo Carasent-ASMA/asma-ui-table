@@ -7,7 +7,6 @@ import { DropDownIcon } from 'src/shared-components/DropDownIcon'
 import { ACTIONS_COLUMN_ID, INTERNAL_COLUMN_IDS, type StyledTableProps } from 'src/types'
 import { getTableHeaderStyle } from 'src/helpers/getTableHeaderStyle'
 import { useRootContext } from 'src/context/RootContext'
-import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
 
 export function TableHeaderCell<
     TData extends {
@@ -32,9 +31,8 @@ export function TableHeaderCell<
     const { actions, hideHeader = false, enableResizing = false } = styledTableProps
     const ref = useRef<HTMLTableCellElement | null>(null)
     const { isResizing, enableResizingFlag, disableResizingFlag } = useRootContext()
-    const isMobileView = useIsMobileView()
 
-    const isFixed = !isMobileView && header.column.columnDef.fixedLeft
+    const isFixed = header.column.columnDef.fixedLeft
 
     const hasActionsColumn = useMemo(
         () => header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID),

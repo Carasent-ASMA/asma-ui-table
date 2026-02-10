@@ -4,7 +4,6 @@ import style from '../StyledTable.module.scss'
 import type { StyledTableProps } from 'src/types'
 import { cn } from 'src/helpers/cn'
 import type { CSSProperties } from 'react'
-import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
 
 export function TableHeader<
     TData extends {
@@ -23,8 +22,6 @@ export function TableHeader<
     tableWidth: number | null
 }) {
     const { stickyHeader = false, tableHeaderRef, tableHeaderStyle = {} } = styledTableProps
-
-    const isMobileView = useIsMobileView()
 
     const hasFixedLeftColumn = table
         .getHeaderGroups()
@@ -47,7 +44,7 @@ export function TableHeader<
                 return (
                     <tr key={headerGroup.id}>
                         {headerGroup.headers.map((header, index) => {
-                            const isFixed = !isMobileView && header.column.columnDef.fixedLeft
+                            const isFixed = header.column.columnDef.fixedLeft
                             const left = headerGroup.headers
                                 .slice(0, index)
                                 .reduce((acc, col) => acc + (col.column.getSize() || 0), 0)
