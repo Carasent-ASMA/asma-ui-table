@@ -68,15 +68,19 @@ export const FocusedRowsFeature: TableFeature = {
     createRow: <TData extends RowData>(row: Row<TData>, table: Table<TData>): void => {
         // Focus state
         row.isFocused = () => table.getState().focusedRow === row.id
+
         row.onChangeFocused = (newFocused: boolean, rowId?: string) => {
             const idToFocus = rowId ?? row.id
             table.setFocusedRow(() => (newFocused ? idToFocus : null))
 
             if (newFocused) {
                 const el = document.getElementById(idToFocus)
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                if (el) {
+                    el.focus({ preventScroll: true }) 
+                }
             }
         }
+
         row.toggleFocused = () => row.onChangeFocused(!row.isFocused())
 
         // Arrow navigation
@@ -86,7 +90,7 @@ export const FocusedRowsFeature: TableFeature = {
             const nextRow = allRows[currentIndex + 1]
             if (nextRow) {
                 nextRow.onChangeFocused(true, nextRow.id)
-                document.getElementById(nextRow.id)?.focus()
+                document.getElementById(nextRow.id)?.focus({ preventScroll: true })
             }
         }
 
@@ -96,7 +100,7 @@ export const FocusedRowsFeature: TableFeature = {
             const prevRow = allRows[currentIndex - 1]
             if (prevRow) {
                 prevRow.onChangeFocused(true, prevRow.id)
-                document.getElementById(prevRow.id)?.focus()
+                document.getElementById(prevRow.id)?.focus({ preventScroll: true })
             }
         }
     },
