@@ -27,8 +27,13 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                         dataTest='cell-select'
                         checked={cell.row.getIsSelected()}
                         disabled={!cell.row.getCanSelect()}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={cell.row.getToggleSelectedHandler()}
+                        onChange={() => {
+                            cell.row.toggleSelected()
+                        }}
+                        onMouseUp={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                        }}
                     />
                 </div>
             )
