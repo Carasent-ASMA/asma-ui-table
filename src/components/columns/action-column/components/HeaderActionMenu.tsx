@@ -153,7 +153,7 @@ export function HeaderActionMenu<TData>({
                                                     hideWrapper
                                                 />
                                             </span>
-                                            <span>
+                                            <span className='text-sm text-delta-700 font-roboto'>
                                                 {column.columnDef.pinnedHeaderText ??
                                                     (typeof column.columnDef.header === 'string'
                                                         ? column.columnDef.header
