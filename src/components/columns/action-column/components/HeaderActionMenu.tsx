@@ -3,11 +3,11 @@ import type { HeaderContext } from '@tanstack/react-table'
 import { useToggleMenuVisibility } from 'src/hooks/useToggleMenuVisibility.hook'
 import { PinIcon } from 'src/shared-components/PinIcon'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
-import { StyledMenuItem } from 'src/shared-components/StyledMenuItem'
 import { INTERNAL_COLUMN_IDS } from 'src/types'
 import { CSS } from '@dnd-kit/utilities'
 
 import styles from './TableActions.module.scss'
+import headerStyles from './HeaderActionMenu.module.scss'
 import { DndContext, useSensors, type DragEndEvent, MouseSensor, useSensor, closestCenter } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -90,7 +90,7 @@ export function HeaderActionMenu<TData>({
                 onClose={handleClose}
                 sx={{
                     '& .MuiPaper-root': {
-                        maxHeight: 'calc(7 * 44px)',
+                        maxHeight: 'calc(7 * 36px)',
                         overflowY: 'auto',
                         scrollbarWidth: 'thin',
                     },
@@ -125,39 +125,41 @@ export function HeaderActionMenu<TData>({
                             return (
                                 <SortableColumnItem key={column.id} id={column.id} disabled={dragDisabled}>
                                     <StyledTooltip title={tooltipTitle} arrow>
-                                        <span>
-                                            <StyledMenuItem
-                                                onClick={() => {
-                                                    if (hidingDisabled) return
-                                                    column.toggleVisibility(!column.getIsVisible())
-                                                }}
-                                                className='h-[44px] flex items-center'
-                                            >
-                                                <DotsHorizontalIcon
-                                                    width={20}
-                                                    height={20}
-                                                    className={cn(
-                                                        dragDisabled
-                                                            ? 'text-delta-300 cursor-not-allowed'
-                                                            : 'text-delta-800 cursor-grab active:cursor-grabbing',
-                                                    )}
+                                        <button
+                                            type='button'
+                                            onClick={() => {
+                                                if (hidingDisabled) return
+                                                column.toggleVisibility(!column.getIsVisible())
+                                            }}
+                                            className={headerStyles['table-action-item']}
+                                        >
+                                            <DotsHorizontalIcon
+                                                width={20}
+                                                height={20}
+                                                className={cn(
+                                                    headerStyles['drag-icon'],
+                                                    dragDisabled
+                                                        ? headerStyles['drag-icon--disabled']
+                                                        : headerStyles['drag-icon--enabled'],
+                                                )}
+                                            />
+                                            <span className='px-2'>
+                                                <StyledCheckbox
+                                                    readOnly={hidingDisabled}
+                                                    dataTest={`${column.id}-column-visibility-checkbox`}
+                                                    size='small'
+                                                    disableRipple
+                                                    checked={column.getIsVisible()}
+                                                    hideWrapper
                                                 />
-                                                <span className='px-2'>
-                                                    <StyledCheckbox
-                                                        readOnly={hidingDisabled}
-                                                        dataTest={`${column.id}-column-visibility-checkbox`}
-                                                        size='small'
-                                                        disableRipple
-                                                        checked={column.getIsVisible()}
-                                                        hideWrapper
-                                                    />
-                                                </span>
+                                            </span>
+                                            <span>
                                                 {column.columnDef.pinnedHeaderText ??
                                                     (typeof column.columnDef.header === 'string'
                                                         ? column.columnDef.header
                                                         : column.id)}
-                                            </StyledMenuItem>
-                                        </span>
+                                            </span>
+                                        </button>
                                     </StyledTooltip>
                                 </SortableColumnItem>
                             )
