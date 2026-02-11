@@ -8,7 +8,7 @@ import { INTERNAL_COLUMN_IDS } from 'src/types'
 import { CSS } from '@dnd-kit/utilities'
 
 import styles from './TableActions.module.scss'
-import { DndContext, useSensors, type DragEndEvent, MouseSensor, useSensor } from '@dnd-kit/core'
+import { DndContext, useSensors, type DragEndEvent, MouseSensor, useSensor, closestCenter } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { DotsHorizontalIcon } from 'src/shared-components/DotsHorizontalIcon'
@@ -99,6 +99,14 @@ export function HeaderActionMenu<TData>({
                 <DndContext
                     modifiers={[restrictToVerticalAxis, restrictToParentElement]}
                     onDragEnd={handleDragEnd}
+                    collisionDetection={(args) => {
+                        const collisions = closestCenter(args)
+
+                        return collisions.filter((collision) => {
+                            const column = filteredList.find((c) => c.id === collision.id)
+                            return !column?.columnDef.fixedLeft
+                        })
+                    }}
                     sensors={sensors}
                 >
                     <SortableContext items={filteredList.map((c) => c.id)} strategy={verticalListSortingStrategy}>
@@ -106,9 +114,17 @@ export function HeaderActionMenu<TData>({
                             const dragDisabled = !!column.columnDef.fixedLeft
                             const hidingDisabled = column.columnDef.enableHiding === false
 
+                            const tooltipTitle =
+                                dragDisabled || hidingDisabled ? (
+                                    <div>
+                                        {dragDisabled && t.column_reorder}
+                                        {hidingDisabled && t.column_hidden}
+                                    </div>
+                                ) : null
+
                             return (
                                 <SortableColumnItem key={column.id} id={column.id} disabled={dragDisabled}>
-                                    <StyledTooltip title={dragDisabled && t.column_reorder} arrow>
+                                    <StyledTooltip title={tooltipTitle} arrow>
                                         <span>
                                             <StyledMenuItem
                                                 onClick={() => {
@@ -123,21 +139,19 @@ export function HeaderActionMenu<TData>({
                                                     className={cn(
                                                         dragDisabled
                                                             ? 'text-delta-300 cursor-not-allowed'
-                                                            : 'text-delta-800 cursor-grab',
+                                                            : 'text-delta-800 cursor-grab active:cursor-grabbing',
                                                     )}
                                                 />
-                                                <StyledTooltip title={hidingDisabled && t.column_hidden} arrow>
-                                                    <span className='px-2'>
-                                                        <StyledCheckbox
-                                                            readOnly={hidingDisabled}
-                                                            dataTest={`${column.id}-column-visibility-checkbox`}
-                                                            size='small'
-                                                            disableRipple
-                                                            checked={column.getIsVisible()}
-                                                            hideWrapper
-                                                        />
-                                                    </span>
-                                                </StyledTooltip>
+                                                <span className='px-2'>
+                                                    <StyledCheckbox
+                                                        readOnly={hidingDisabled}
+                                                        dataTest={`${column.id}-column-visibility-checkbox`}
+                                                        size='small'
+                                                        disableRipple
+                                                        checked={column.getIsVisible()}
+                                                        hideWrapper
+                                                    />
+                                                </span>
                                                 {column.columnDef.pinnedHeaderText ??
                                                     (typeof column.columnDef.header === 'string'
                                                         ? column.columnDef.header
