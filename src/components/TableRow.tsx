@@ -77,7 +77,6 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             row.toggleExpand()
         } else if (hasRowClickHandler && isIdle) {
             onRowClick(e, row)
-            row.onChangeFocused(true)
         }
 
         disableResizingFlag()
