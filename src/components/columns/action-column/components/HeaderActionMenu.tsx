@@ -15,6 +15,7 @@ import { DotsHorizontalIcon } from 'src/shared-components/DotsHorizontalIcon'
 import { cn } from 'src/helpers/cn'
 import { StyledTooltip } from 'src/shared-components/tooltip'
 import { useTranslations } from 'src/hooks/useTranslations'
+import { StyledButton } from 'src/shared-components/button'
 
 function SortableColumnItem({ id, disabled, children }: { id: string; disabled: boolean; children: React.ReactNode }) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id, disabled })
@@ -53,12 +54,11 @@ export function HeaderActionMenu<TData>({
         const overColumnFixed = !!items.find((i) => i.id === over.id)?.columnDef.fixedLeft
 
         if (overColumnFixed) return
-        headerData.table.resetColumnOrder()
 
         headerData.table.setColumnOrder((columnOrder) => {
             const oldIndex = columnOrder.indexOf(active.id as string)
             const newIndex = columnOrder.indexOf(over.id as string)
-            return arrayMove(columnOrder, oldIndex, newIndex) //this is just a splice util
+            return arrayMove(columnOrder, oldIndex, newIndex)
         })
     }
 
@@ -166,6 +166,16 @@ export function HeaderActionMenu<TData>({
                         })}
                     </SortableContext>
                 </DndContext>
+                <div className='pb-2'>
+                    <StyledButton
+                        dataTest='reset-order-button'
+                        variant='text'
+                        size='small'
+                        onClick={() => headerData.table.resetColumnOrder()}
+                    >
+                        {t.reset_order}
+                    </StyledButton>
+                </div>
             </Popover>
         </div>
     )

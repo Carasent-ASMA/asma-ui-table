@@ -22,15 +22,19 @@ export const OrderColumnsFeature: TableFeature = {
         }
     },
     createTable: <TData extends RowData>(table: Table<TData>): void => {
+        const defaultColumnOrder = table.getAllLeafColumns().map((col) => col.id)
+
         table.setColumnOrder = (updater: Updater<ColumnOrderState>) => {
-            const safeUpdater: Updater<ColumnOrderState> = (old) => functionalUpdate(updater, old)
+            const safeUpdater: Updater<ColumnOrderState> = (old) => {
+                const safeOld = Array.isArray(old) ? old : []
+                return functionalUpdate(updater, safeOld)
+            }
 
             return table.options.onColumnOrderChange?.(safeUpdater)
         }
 
         table.resetColumnOrder = () => {
-            const ids = table.getAllLeafColumns().map((col) => col.id)
-            table.setColumnOrder(() => ids)
+            table.setColumnOrder(defaultColumnOrder)
         }
     },
 }
