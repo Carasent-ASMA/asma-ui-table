@@ -25,10 +25,7 @@ export const OrderColumnsFeature: TableFeature = {
         const defaultColumnOrder = table.getAllLeafColumns().map((col) => col.id)
 
         table.setColumnOrder = (updater: Updater<ColumnOrderState>) => {
-            const safeUpdater: Updater<ColumnOrderState> = (old) => {
-                const safeOld = Array.isArray(old) ? old : []
-                return functionalUpdate(updater, safeOld)
-            }
+            const safeUpdater: Updater<ColumnOrderState> = (old) => functionalUpdate(updater, old)
 
             return table.options.onColumnOrderChange?.(safeUpdater)
         }

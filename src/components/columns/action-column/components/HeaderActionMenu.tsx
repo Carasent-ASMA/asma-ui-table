@@ -16,6 +16,7 @@ import { cn } from 'src/helpers/cn'
 import { StyledTooltip } from 'src/shared-components/tooltip'
 import { useTranslations } from 'src/hooks/useTranslations'
 import { StyledButton } from 'src/shared-components/button'
+import { compact } from 'lodash-es'
 
 function SortableColumnItem({ id, disabled, children }: { id: string; disabled: boolean; children: React.ReactNode }) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id, disabled })
@@ -56,9 +57,12 @@ export function HeaderActionMenu<TData>({
         if (overColumnFixed) return
 
         headerData.table.setColumnOrder((columnOrder) => {
-            const oldIndex = columnOrder.indexOf(active.id as string)
-            const newIndex = columnOrder.indexOf(over.id as string)
-            return arrayMove(columnOrder, oldIndex, newIndex)
+            const order = compact(columnOrder).length
+                ? columnOrder
+                : headerData.table.getAllLeafColumns().map((col) => col.id)
+            const oldIndex = order.indexOf(active.id as string)
+            const newIndex = order.indexOf(over.id as string)
+            return arrayMove(order, oldIndex, newIndex)
         })
     }
 
@@ -166,7 +170,7 @@ export function HeaderActionMenu<TData>({
                         })}
                     </SortableContext>
                 </DndContext>
-                <div className='pb-2'>
+                <div className='pb-2 pl-2'>
                     <StyledButton
                         dataTest='reset-order-button'
                         variant='text'
