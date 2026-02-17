@@ -8,5 +8,15 @@ export const StyledMenuItem = (props: MenuItemProps) => (
             root: clsx('px-3 py-2.5', props.classes?.root),
             ...props.classes,
         }}
+        sx={{
+            '&.Mui-disabled': {
+                pointerEvents: 'auto',
+                cursor: 'not-allowed',
+                '&:hover': {
+                    backgroundColor: 'transparent !important',
+                },
+            },
+            ...props.sx,
+        }}
     />
 )
