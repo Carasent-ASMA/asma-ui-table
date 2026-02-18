@@ -128,7 +128,7 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     )
 
     const TableMarkup = (
-        <table className={style['styled-table']}>
+        <table className={style['styled-table']} style={{ width: table.getTotalSize(), minWidth: '100%' }}>
             <TableHeader
                 table={table}
                 styledTableProps={options}

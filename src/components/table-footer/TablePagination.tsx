@@ -40,19 +40,18 @@ export function TablePagination<TData>({
         [],
     )
 
-   const scrollToTop = useCallback(() => {
-    const asmaTableClass = styleTable['asma-ui-table-styled-table']
-    const tableContainer = tablePaginationRef.current?.closest(`.${asmaTableClass}`)
-    
-    const scrollContainer = tableContainer?.querySelector(
-        `.${styleTable['table-scroll']}, .${styleTable['table-wrapper']}`
-    ) as HTMLElement
-    
-    if (scrollContainer) {
-        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-}, [])
+    const scrollToTop = useCallback(() => {
+        const asmaTableClass = styleTable['asma-ui-table-styled-table']
+        const tableContainer = tablePaginationRef.current?.closest(`.${asmaTableClass}`)
 
+        const scrollContainer = tableContainer?.querySelector(
+            `.${styleTable['table-scroll']}, .${styleTable['table-wrapper']}`,
+        ) as HTMLElement
+
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+    }, [])
 
     const pagesLength = table.getPageCount() || 1
     const currentPage = table.getState().pagination.pageIndex + 1

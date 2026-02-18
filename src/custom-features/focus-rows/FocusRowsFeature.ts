@@ -76,7 +76,7 @@ export const FocusedRowsFeature: TableFeature = {
             if (newFocused) {
                 const el = document.getElementById(idToFocus)
                 if (el) {
-                    el.focus({ preventScroll: true }) 
+                    el.focus({ preventScroll: true })
                 }
             }
         }
