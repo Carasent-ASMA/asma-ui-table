@@ -8,7 +8,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 import styles from './TableActions.module.scss'
 import headerStyles from './HeaderActionMenu.module.scss'
-import { DndContext, useSensors, type DragEndEvent, MouseSensor, useSensor, closestCenter } from '@dnd-kit/core'
+import { DndContext, useSensors, type DragEndEvent, useSensor, closestCenter, PointerSensor } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { DotsHorizontalIcon } from 'src/shared-components/DotsHorizontalIcon'
@@ -24,6 +24,7 @@ function SortableColumnItem({ id, disabled, children }: { id: string; disabled: 
     const style: React.CSSProperties = {
         transform: CSS.Transform.toString(transform),
         transition,
+        touchAction: 'none',
     }
 
     return (
@@ -67,9 +68,9 @@ export function HeaderActionMenu<TData>({
     }
 
     const sensors = useSensors(
-        useSensor(MouseSensor, {
+        useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 10,
+                distance: 8,
             },
         }),
     )
