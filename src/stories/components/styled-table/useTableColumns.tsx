@@ -113,7 +113,76 @@ export const useStyledTableColumns = () => {
                 },
                 minSize: 100,
             },
-
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'last_name_3',
+                header: 'Last Name',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='flex items-center gap-5 py-[14px]'>
+                            <div className='text-sm text-black'>{proxy.lastName}</div>
+                        </div>
+                    )
+                },
+                minSize: 100,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'last_name_4',
+                header: 'Last Name',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='flex items-center gap-5 py-[14px]'>
+                            <div className='text-sm text-black'>{proxy.lastName}</div>
+                        </div>
+                    )
+                },
+                minSize: 100,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'last_name_5',
+                header: 'Last Name',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='flex items-center gap-5 py-[14px]'>
+                            <div className='text-sm text-black'>{proxy.lastName}</div>
+                        </div>
+                    )
+                },
+                minSize: 100,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'last_name_6',
+                header: 'Last Name',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='flex items-center gap-5 py-[14px]'>
+                            <div className='text-sm text-black'>{proxy.lastName}</div>
+                        </div>
+                    )
+                },
+                minSize: 100,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'last_name_7',
+                header: 'Last Name',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='flex items-center gap-5 py-[14px]'>
+                            <div className='text-sm text-black'>{proxy.lastName}</div>
+                        </div>
+                    )
+                },
+                minSize: 100,
+            },
             // columnHelper.accessor('visits', {
             //     id: 'visits',
             //     header: 'Visits',

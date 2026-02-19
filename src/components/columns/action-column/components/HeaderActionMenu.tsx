@@ -8,7 +8,15 @@ import { CSS } from '@dnd-kit/utilities'
 
 import styles from './TableActions.module.scss'
 import headerStyles from './HeaderActionMenu.module.scss'
-import { DndContext, useSensors, type DragEndEvent, useSensor, closestCenter, PointerSensor } from '@dnd-kit/core'
+import {
+    DndContext,
+    useSensors,
+    type DragEndEvent,
+    useSensor,
+    closestCenter,
+    PointerSensor,
+    type DraggableAttributes,
+} from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { DotsHorizontalIcon } from 'src/shared-components/DotsHorizontalIcon'
@@ -17,19 +25,30 @@ import { StyledTooltip } from 'src/shared-components/tooltip'
 import { useTranslations } from 'src/hooks/useTranslations'
 import { StyledButton } from 'src/shared-components/button'
 import { compact } from 'lodash-es'
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
 
-function SortableColumnItem({ id, disabled, children }: { id: string; disabled: boolean; children: React.ReactNode }) {
+function SortableColumnItem({
+    id,
+    disabled,
+    children,
+}: {
+    id: string
+    disabled: boolean
+    children: (drag: {
+        attributes: DraggableAttributes
+        listeners: SyntheticListenerMap | undefined
+    }) => React.ReactNode
+}) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id, disabled })
 
     const style: React.CSSProperties = {
         transform: CSS.Transform.toString(transform),
         transition,
-        touchAction: 'none',
     }
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
+        <div ref={setNodeRef} style={style}>
+            {children({ attributes, listeners })}
         </div>
     )
 }
@@ -129,43 +148,53 @@ export function HeaderActionMenu<TData>({
 
                             return (
                                 <SortableColumnItem key={column.id} id={column.id} disabled={dragDisabled}>
-                                    <StyledTooltip title={tooltipTitle} arrow>
-                                        <button
-                                            type='button'
-                                            onClick={() => {
-                                                if (hidingDisabled) return
-                                                column.toggleVisibility(!column.getIsVisible())
-                                            }}
-                                            className={headerStyles['table-action-item']}
-                                        >
-                                            <DotsHorizontalIcon
-                                                width={20}
-                                                height={20}
-                                                className={cn(
-                                                    headerStyles['drag-icon'],
-                                                    dragDisabled
-                                                        ? headerStyles['drag-icon--disabled']
-                                                        : headerStyles['drag-icon--enabled'],
-                                                )}
-                                            />
-                                            <span className='px-2'>
-                                                <StyledCheckbox
-                                                    readOnly={hidingDisabled}
-                                                    dataTest={`${column.id}-column-visibility-checkbox`}
-                                                    size='small'
-                                                    disableRipple
-                                                    checked={column.getIsVisible()}
-                                                    hideWrapper
+                                    {({ listeners, attributes }) => (
+                                        <StyledTooltip title={tooltipTitle} arrow>
+                                            <button
+                                                type='button'
+                                                onClick={() => {
+                                                    if (hidingDisabled) return
+                                                    column.toggleVisibility(!column.getIsVisible())
+                                                }}
+                                                className={headerStyles['table-action-item']}
+                                            >
+                                                <DotsHorizontalIcon
+                                                    width={20}
+                                                    height={20}
+                                                    {...attributes}
+                                                    {...listeners}
+                                                    style={{
+                                                        touchAction: 'none',
+                                                        WebkitUserSelect: 'none',
+                                                        userSelect: 'none',
+                                                        WebkitTouchCallout: 'none',
+                                                    }}
+                                                    className={cn(
+                                                        headerStyles['drag-icon'],
+                                                        dragDisabled
+                                                            ? headerStyles['drag-icon--disabled']
+                                                            : headerStyles['drag-icon--enabled'],
+                                                    )}
                                                 />
-                                            </span>
-                                            <span className='text-sm text-delta-700 font-roboto'>
-                                                {column.columnDef.pinnedHeaderText ??
-                                                    (typeof column.columnDef.header === 'string'
-                                                        ? column.columnDef.header
-                                                        : column.id)}
-                                            </span>
-                                        </button>
-                                    </StyledTooltip>
+                                                <span className='px-2'>
+                                                    <StyledCheckbox
+                                                        readOnly={hidingDisabled}
+                                                        dataTest={`${column.id}-column-visibility-checkbox`}
+                                                        size='small'
+                                                        disableRipple
+                                                        checked={column.getIsVisible()}
+                                                        hideWrapper
+                                                    />
+                                                </span>
+                                                <span className='text-sm text-delta-700 font-roboto'>
+                                                    {column.columnDef.pinnedHeaderText ??
+                                                        (typeof column.columnDef.header === 'string'
+                                                            ? column.columnDef.header
+                                                            : column.id)}
+                                                </span>
+                                            </button>
+                                        </StyledTooltip>
+                                    )}
                                 </SortableColumnItem>
                             )
                         })}
