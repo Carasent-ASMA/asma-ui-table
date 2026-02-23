@@ -23,7 +23,13 @@ export function TableFooter<
 
     const pageSize = table.getState().pagination.pageSize
     const totalRows = table.getFilteredRowModel().rows.length
-    const shouldShowPagination = totalRows > pageSize
+
+    const isManualPagination = !!table.options.manualPagination
+    const pagesLength = table.getPageCount() || 1
+
+    const shouldShowPagination = isManualPagination
+        ? pagesLength > 1
+        : totalRows > pageSize
 
     const footerNode = styledTableProps.footer?.(table)
 
