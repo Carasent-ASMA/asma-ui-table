@@ -9,6 +9,7 @@
         "autodocs",
         "Autosize",
         "capslock",
+        "Carasent",
         "clsx",
         "Docgen",
         "fontsource",
@@ -38,5 +39,7 @@
         "img",
         "*.backup"
     ],
-    "ignoreRegExpList": ["enum.*"]
+    "ignoreRegExpList": [
+        "enum.*"
+    ]
 }
