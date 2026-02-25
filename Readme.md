@@ -1,5 +1,7 @@
 # How to create and use the Design System
 
+> **Workflow test**: Testing parallel git operations with ThreadPoolExecutor 🔧
+
 ## Component composition.
 
 - When creating components that consists of several components, each component should be styled.
