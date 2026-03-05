@@ -269,7 +269,9 @@
     }
 
     .t-row.is-loading {
-        opacity: 0.5;
+        .t-cell {
+            opacity: 0.5;
+        }
     }
 
     .action-cell-default-background {
