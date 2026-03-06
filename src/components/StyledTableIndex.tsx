@@ -1,13 +1,13 @@
-import { useMemo } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
 
 import { cn } from 'src/helpers/cn'
 import { RootContextProvider } from 'src/context/RootContext'
-import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
+import { mobileView, useWindowWidthSize } from 'src/hooks/useWindowWidthSize.hook'
 
-import { type StyledTableProps, type TableState, type ColumnSizingState } from '../types'
+import type { StyledTableProps, TableState, ColumnSizingState } from '../types'
 import { useStyledTable } from '../hooks/useStyledTable'
 import { injectColumns } from '../helpers/injectColumns'
 
@@ -93,15 +93,30 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     const fetching = hasRows && !!loading
     const showNoRowsOverlay = !hasRows && !loading
 
-    const isMobileView = useIsMobileView()
+    const windowWidth = useWindowWidthSize()
+    const isMobileView = mobileView(windowWidth)
     const wantsStickyFooter = !!options.stickyFooter
 
     // you can optionally add: && height != null
     const canShowStickyFooter = wantsStickyFooter && !isMobileView
+    const [hasInternalOverflow, setHasInternalOverflow] = useState(false)
+    const wrapperRef = useRef<HTMLDivElement | null>(null)
 
     const enableProxyHScroll = !canShowStickyFooter
     const { tableScrollRef, tableXRef, hScrollRef, hScrollContentRef } =
         useProxyHorizontalScrollSync(enableProxyHScroll)
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for overflow identification>
+    useLayoutEffect(() => {
+        const host = canShowStickyFooter ? wrapperRef.current : tableXRef.current ?? tableScrollRef.current
+
+        if (!host) {
+            setHasInternalOverflow(false)
+            return
+        }
+
+        setHasInternalOverflow(host.scrollWidth > host.clientWidth)
+    }, [canShowStickyFooter, tableXRef, tableScrollRef, windowWidth])
 
     const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
 
@@ -146,10 +161,11 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 <div
                     ref={containerRef}
                     className={cn(style['asma-ui-table-styled-table'], tableClassName)}
+                    data-x-overflow={hasInternalOverflow ? 'true' : 'false'}
                     style={{ height }}
                 >
                     <OverlayShell enabled={canShowStickyFooter} className={style['table-shell']}>
-                        <div className={tableWrapperClass}>
+                        <div ref={wrapperRef} className={tableWrapperClass}>
                             {canShowStickyFooter ? (
                                 TableMarkup
                             ) : (

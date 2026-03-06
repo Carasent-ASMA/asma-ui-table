@@ -88,6 +88,11 @@ export const TEdward = () => {
                     height={'100%'}
                     locale='en'
                     data={data}
+                    actions={() => [
+                        {
+                            label: 'Test action',
+                        },
+                    ]}
                     columns={columns}
                     enableColumnResizing={true}
                     columnResizeMode='onChange'
@@ -154,6 +159,7 @@ const useColumns = () => {
                         </div>
                     )
                 },
+                fixedLeft: data.fixedLeft,
                 minSize: 200,
                 maxSize: data.maxSize,
                 // size: id === 'col1' ? data.size : undefined,
