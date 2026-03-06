@@ -9,7 +9,7 @@ const translations = {
     no: {
         column_reorder: 'Denne kolonnen er fast og kan ikke flyttes.',
         column_hidden: 'Denne kolonnen er fast og kan ikke skjules.',
-        reset_order: 'Tilbakestill ordre',
+        reset_order: 'Tilbakestill rekkefølge',
     },
 }
 
