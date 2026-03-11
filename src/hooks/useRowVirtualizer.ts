@@ -2,12 +2,6 @@ import type { Row } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import type { MutableRefObject } from 'react'
 
-export type RowWindow = {
-    indexes: number[]
-    paddingTop: number
-    paddingBottom: number
-}
-
 export function useRowVirtualizer<TData extends { id: string | number }>({
     rows,
     rowHeight,

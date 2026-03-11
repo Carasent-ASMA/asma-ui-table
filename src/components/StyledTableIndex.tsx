@@ -98,7 +98,6 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     const isMobileView = mobileView(windowWidth)
     const wantsStickyFooter = !!options.stickyFooter
 
-    // you can optionally add: && height != null
     const canShowStickyFooter = wantsStickyFooter && !isMobileView
     const [hasInternalOverflow, setHasInternalOverflow] = useState(false)
     const wrapperRef = useRef<HTMLDivElement | null>(null)
@@ -142,8 +141,9 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
         showNoRowsOverlay && style['table-wrapper--no-rows'],
         className,
     )
+    const scrollRef = canShowStickyFooter ? wrapperRef : tableScrollRef
 
-    const { columnWindow } = useColumnVirtualizer({ table, scrollRef: tableScrollRef, isMobileView })
+    const { columnWindow } = useColumnVirtualizer({ table, scrollRef, isMobileView })
 
     const TableMarkup = (
         <table className={style['styled-table']} style={{ width: table.getTotalSize(), minWidth: '100%' }}>
@@ -155,12 +155,7 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 columnWindow={columnWindow}
             />
             <Fetching fetching={!!fetching} />
-            <TableBody
-                table={table}
-                styledTableProps={options}
-                scrollRef={tableScrollRef}
-                columnWindow={columnWindow}
-            />
+            <TableBody table={table} styledTableProps={options} scrollRef={scrollRef} columnWindow={columnWindow} />
         </table>
     )
 
