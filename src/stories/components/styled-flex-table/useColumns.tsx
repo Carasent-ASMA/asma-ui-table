@@ -24,6 +24,18 @@ export const useColumns = () => {
                 size: 30,
             },
             {
+                accessorFn: (row) => row.template_uuid,
+                id: 'uuid',
+                header: 'Uuid',
+                headerAlign: 'center',
+                fixedLeft: true,
+                cell: (info) => {
+                    const proxy = info.row.original
+
+                    return <div className='text-sm text-black py-[12px]'>{`${proxy.template_uuid}`}</div>
+                },
+            },
+            {
                 accessorFn: (row) => row.title,
                 id: 'title',
                 header: 'Title',
@@ -32,7 +44,7 @@ export const useColumns = () => {
                 cell: (info) => {
                     const proxy = info.row.original
                     return (
-                        <div className='' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <div style={{ minWidth: 25, minHeight: 25 }}>
                                 {/* <QnrIcon width={20} height={20} color='blue' /> */}
                             </div>
@@ -46,8 +58,63 @@ export const useColumns = () => {
                 },
             },
             {
+                accessorFn: (row) => row.context,
+                id: 'context',
+                header: 'Context',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.context}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.archived,
+                id: 'archived',
+                header: 'Archived',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.archived ? 'true' : 'false'}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.updated_at,
+                id: 'updated_at',
+                header: 'Updated at',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.updated_at}</div>
+                        </div>
+                    )
+                },
+            },
+
+            {
                 accessorFn: (row) => row.id,
-                id: 'favorite-sucks',
+                id: 'id_2',
                 enableHiding: false,
                 enableSorting: false,
                 header() {
@@ -56,13 +123,14 @@ export const useColumns = () => {
                 cell() {
                     return <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
                 },
+                fixedLeft: false,
                 minSize: 30,
                 maxSize: 30,
                 size: 30,
             },
             {
                 accessorFn: (row) => row.template_uuid,
-                id: 'uuid',
+                id: 'uuid_2',
                 header: 'Uuid',
                 headerAlign: 'center',
                 // minSize: 350,
@@ -70,6 +138,292 @@ export const useColumns = () => {
                     const proxy = info.row.original
 
                     return <span className='text-sm text-black'>{`${proxy.template_uuid}`}</span>
+                },
+            },
+            {
+                accessorFn: (row) => row.title,
+                id: 'title_2',
+                header: 'Title',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>
+                                {proxy.title}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                            </div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.context,
+                id: 'context_2',
+                header: 'Context',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.context}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.archived,
+                id: 'archived_2',
+                header: 'Archived',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.archived ? 'true' : 'false'}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.updated_at,
+                id: 'updated_at_2',
+                header: 'Updated at',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.updated_at}</div>
+                        </div>
+                    )
+                },
+            },
+
+            {
+                accessorFn: (row) => row.id,
+                id: 'id_3',
+                enableHiding: false,
+                enableSorting: false,
+                header() {
+                    return <CheckIcon color='#7a899e' width='20' />
+                },
+                cell() {
+                    return <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
+                },
+                fixedLeft: false,
+                minSize: 30,
+                maxSize: 30,
+                size: 30,
+            },
+            {
+                accessorFn: (row) => row.template_uuid,
+                id: 'uuid_3',
+                header: 'Uuid',
+                headerAlign: 'center',
+                // minSize: 350,
+                cell: (info) => {
+                    const proxy = info.row.original
+
+                    return <span className='text-sm text-black'>{`${proxy.template_uuid}`}</span>
+                },
+            },
+            {
+                accessorFn: (row) => row.title,
+                id: 'title_3',
+                header: 'Title',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>
+                                {proxy.title}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                            </div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.context,
+                id: 'context_3',
+                header: 'Context',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.context}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.archived,
+                id: 'archived_3',
+                header: 'Archived',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.archived ? 'true' : 'false'}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.updated_at,
+                id: 'updated_at_3',
+                header: 'Updated at',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.updated_at}</div>
+                        </div>
+                    )
+                },
+            },
+
+            {
+                accessorFn: (row) => row.id,
+                id: 'id_4',
+                enableHiding: false,
+                enableSorting: false,
+                header() {
+                    return <CheckIcon color='#7a899e' width='20' />
+                },
+                cell() {
+                    return <CheckIcon color={'#7a899e'} width='20' cursor={'pointer'} />
+                },
+                fixedLeft: false,
+                minSize: 30,
+                maxSize: 30,
+                size: 30,
+            },
+            {
+                accessorFn: (row) => row.template_uuid,
+                id: 'uuid_4',
+                header: 'Uuid',
+                headerAlign: 'center',
+                // minSize: 350,
+                cell: (info) => {
+                    const proxy = info.row.original
+
+                    return <span className='text-sm text-black'>{`${proxy.template_uuid}`}</span>
+                },
+            },
+            {
+                accessorFn: (row) => row.title,
+                id: 'title_4',
+                header: 'Title',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>
+                                {proxy.title}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                                {proxy.title.length < 10 && proxy.template_uuid}
+                            </div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.context,
+                id: 'context_4',
+                header: 'Context',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.context}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.archived,
+                id: 'archived_4',
+                header: 'Archived',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.archived ? 'true' : 'false'}</div>
+                        </div>
+                    )
+                },
+            },
+            {
+                accessorFn: (row) => row.updated_at,
+                id: 'updated_at_4',
+                header: 'Updated at',
+                fixedLeft: false,
+                headerAlign: 'center',
+                cell: (info) => {
+                    const proxy = info.row.original
+                    return (
+                        <div className='py-[12px]' style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ minWidth: 25, minHeight: 25 }}>
+                                {/* <QnrIcon width={20} height={20} color='blue' /> */}
+                            </div>
+                            <div className='text-sm text-black'>{proxy.updated_at}</div>
+                        </div>
+                    )
                 },
             },
             // {

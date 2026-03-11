@@ -1,19 +1,23 @@
 import { flexRender, type Row } from '@tanstack/react-table'
-import { Fragment, useMemo, type CSSProperties, useEffect } from 'react'
+import { Fragment, useMemo, type CSSProperties, useEffect, useCallback } from 'react'
 import { ACTIONS_COLUMN_ID, type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useRootContext } from 'src/context/RootContext'
+import type { ColumnWindow } from 'src/hooks/useColumnVirtualizer'
+import { compact } from 'lodash-es'
 
 export function TableRow<TData extends { id: string | number }, TCustomData = Record<string, unknown>>({
     styledTableProps,
     row,
     index,
+    columnWindow: { paddingLeft, paddingRight, indexes },
 }: {
     styledTableProps: StyledTableProps<TData, TCustomData>
     row: Row<TData>
+    columnWindow: ColumnWindow
     index: number
 }) {
     const {
@@ -100,8 +104,19 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         left: allCells.slice(0, idx).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
     }))
 
-    const fixedColumns = useMemo(
-        () => positionedCells.filter(({ column }) => column.columnDef.fixedLeft),
+    const centerCells = useMemo(
+        () =>
+            positionedCells.filter((cell) => !cell.column.columnDef.fixedLeft && cell.column.id !== ACTIONS_COLUMN_ID),
+        [positionedCells],
+    )
+
+    const rightCells = useMemo(
+        () => positionedCells.filter((cell) => cell.column.id === ACTIONS_COLUMN_ID),
+        [positionedCells],
+    )
+
+    const leftCells = useMemo(
+        () => positionedCells.filter((cell) => cell.column.columnDef.fixedLeft),
         [positionedCells],
     )
 
@@ -109,10 +124,72 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     const singleSelection = row.getIsSelected() && spaceForCheckmark
     const hasRowClickHandler = onRowClick instanceof Function
 
+    const centerCellsToRender = indexes.length > 0 ? compact(indexes.map((index) => centerCells[index])) : centerCells
+
+    const renderCell = useCallback(
+        (cell: (typeof positionedCells)[number], renderIndex: number) => {
+            const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
+            const isFixed = cell.column.columnDef.fixedLeft
+            const isLastFixedCell = cell.id === leftCells.at(-1)?.id
+            const isExpandedRow = row.isExpanded()
+            const isFirstCell = renderIndex === 0
+
+            return (
+                <td
+                    key={cell.id}
+                    className={clsx(
+                        style['t-cell'],
+                        hasRowClickHandler && 'cursor-pointer',
+                        tdClassName,
+                        isActionsCell && style['action-cell'],
+                        isActionsCell && Boolean(actions) && leftCells.length && style['shadowed'],
+                        isActionsCell &&
+                            (getRowClassName?.(row) ? getRowClassName?.(row) : style['action-cell-default-background']),
+                        isFixed && style['fixed-cell'],
+                        isLastFixedCell && style['shadowed'],
+                        row.getIsSelected() && style['selected'],
+                        isFixed &&
+                            (getRowClassName?.(row) ? getRowClassName?.(row) : style['fixed-cell-default-background']),
+                        isExpandedRow && style['expanded_row'],
+                        (singleSelection || row.isFocused()) && style['single-selection'],
+                    )}
+                    style={{ left: isFixed ? cell.left : undefined }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            minWidth: isFirstCell ? 32 : undefined,
+                            position: 'relative',
+                        }}
+                    >
+                        {isFirstCell && singleSelection && (
+                            <span
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                }}
+                            >
+                                <Checkmark />
+                            </span>
+                        )}
+                        <span style={{ marginLeft: isFirstCell && spaceForCheckmark ? 30 : 0, width: '100%' }}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </span>
+                    </div>
+                </td>
+            )
+        },
+        [singleSelection, actions, getRowClassName, hasRowClickHandler, leftCells, row, spaceForCheckmark, tdClassName],
+    )
+
     return (
         <Fragment key={row.id}>
             <tr
-                role='row'
                 aria-selected={row.getIsSelected() || row.isFocused() ? 'true' : 'false'}
                 tabIndex={row.isFocused() ? 0 : -1}
                 data-index={index}
@@ -147,71 +224,39 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                     }
                 }}
             >
-                {positionedCells.map((cell, idx) => {
-                    const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
-                    const isFixed = cell.column.columnDef.fixedLeft
-                    const isLastFixedCell = cell.id === fixedColumns.at(-1)?.id
-                    const isExpandedRow = row.isExpanded()
-                    const isFirstCell = idx === 0
+                {leftCells.map((cell, idx) => renderCell(cell, idx))}
 
-                    // If first cell, always reserve space for the checkmark (even if not selected)
-                    return (
-                        <td
-                            key={cell.id}
-                            className={clsx(
-                                style['t-cell'],
-                                hasRowClickHandler && 'cursor-pointer',
-                                tdClassName,
-                                isActionsCell && style['action-cell'],
-                                isActionsCell && Boolean(actions) && fixedColumns.length && style['shadowed'],
-                                isActionsCell &&
-                                    (getRowClassName?.(row)
-                                        ? getRowClassName?.(row)
-                                        : style['action-cell-default-background']),
+                {paddingLeft > 0 && (
+                    <td
+                        aria-hidden
+                        className={style['t-cell']}
+                        style={{
+                            width: String(paddingLeft) + 'px',
+                            minWidth: String(paddingLeft) + 'px',
+                            maxWidth: String(paddingLeft) + 'px',
+                            padding: 0,
+                            border: 'none',
+                        }}
+                    />
+                )}
 
-                                isFixed && style['fixed-cell'],
-                                isLastFixedCell && style['shadowed'],
-                                row.getIsSelected() && style['selected'],
-                                isFixed &&
-                                    (getRowClassName?.(row)
-                                        ? getRowClassName?.(row)
-                                        : style['fixed-cell-default-background']),
-                                isExpandedRow && style['expanded_row'],
-                                (singleSelection || row.isFocused()) && style['single-selection'],
-                            )}
-                            style={{
-                                left: isFixed ? cell.left : undefined,
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    minWidth: isFirstCell ? 32 : undefined,
-                                    position: 'relative',
-                                }}
-                            >
-                                {isFirstCell && singleSelection && (
-                                    <span
-                                        style={{
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            position: 'absolute',
-                                            left: 0,
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                        }}
-                                    >
-                                        <Checkmark />
-                                    </span>
-                                )}
-                                <span style={{ marginLeft: isFirstCell && spaceForCheckmark ? 30 : 0, width: '100%' }}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </span>
-                            </div>
-                        </td>
-                    )
-                })}
+                {centerCellsToRender.map((cell, idx) => renderCell(cell, leftCells.length + idx))}
+
+                {paddingRight > 0 && (
+                    <td
+                        aria-hidden
+                        className={style['t-cell']}
+                        style={{
+                            width: String(paddingRight) + 'px',
+                            minWidth: String(paddingRight) + 'px',
+                            maxWidth: String(paddingRight) + 'px',
+                            padding: 0,
+                            border: 'none',
+                        }}
+                    />
+                )}
+
+                {rightCells.map((cell, idx) => renderCell(cell, leftCells.length + centerCellsToRender.length + idx))}
             </tr>
             {row.getIsExpanded() && (
                 <>
@@ -235,6 +280,7 @@ export const Checkmark = () => (
         viewBox='0 2 22 22'
         style={{ color: 'var(--colors-gama-500)' }}
     >
+        <title>Checkmark</title>
         <path fill='currentColor' d='M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z' />
     </svg>
 )

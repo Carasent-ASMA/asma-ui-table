@@ -1,9 +1,10 @@
 import { type Table } from '@tanstack/react-table'
 import { TableHeaderCell } from './TableHeaderCell'
 import style from '../StyledTable.module.scss'
-import type { StyledTableProps } from 'src/types'
+import { ACTIONS_COLUMN_ID, type StyledTableProps } from 'src/types'
 import { cn } from 'src/helpers/cn'
-import type { CSSProperties } from 'react'
+import { type CSSProperties } from 'react'
+import type { ColumnWindow } from 'src/hooks/useColumnVirtualizer'
 
 export function TableHeader<
     TData extends {
@@ -15,21 +16,21 @@ export function TableHeader<
     styledTableProps,
     tableCanResize,
     tableWidth,
+    columnWindow: { paddingLeft, paddingRight, indexes },
 }: {
     table: Table<TData>
     styledTableProps: StyledTableProps<TData, TCustomData>
     tableCanResize: boolean
     tableWidth: number | null
+    columnWindow: ColumnWindow
 }) {
     const { stickyHeader = false, tableHeaderRef, tableHeaderStyle = {} } = styledTableProps
-
-    const hasFixedLeftColumn = table
-        .getHeaderGroups()
-        .some((group) => group.headers.some((header) => header.column.columnDef.fixedLeft === true))
+    const headerGroups = table.getHeaderGroups()
 
     const styles: CSSProperties = {
         ...tableHeaderStyle,
     }
+
     return (
         <thead
             className={cn(
@@ -40,27 +41,90 @@ export function TableHeader<
             style={styles}
             ref={tableHeaderRef}
         >
-            {table.getHeaderGroups().map((headerGroup) => {
+            {headerGroups.map((headerGroup) => {
+                const positionedHeaders = headerGroup.headers.map((header, index, allHeaders) => ({
+                    header,
+                    left: allHeaders.slice(0, index).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
+                }))
+
+                const leftHeaders = positionedHeaders.filter(({ header }) => header.column.columnDef.fixedLeft)
+                const centerHeaders = positionedHeaders.filter(
+                    ({ header }) => !header.column.columnDef.fixedLeft && header.column.id !== ACTIONS_COLUMN_ID,
+                )
+                const rightHeaders = positionedHeaders.filter(({ header }) => header.column.id === ACTIONS_COLUMN_ID)
+
+                const centerHeadersToRender = indexes.reduce<typeof centerHeaders>((acc, index) => {
+                    const header = centerHeaders[index]
+                    if (header) {
+                        acc.push(header)
+                    }
+                    return acc
+                }, [])
+
                 return (
                     <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header, index) => {
-                            const isFixed = header.column.columnDef.fixedLeft
-                            const left = headerGroup.headers
-                                .slice(0, index)
-                                .reduce((acc, col) => acc + (col.column.getSize() || 0), 0)
+                        {leftHeaders.map(({ header, left }) => (
+                            <TableHeaderCell
+                                key={header.id}
+                                styledTableProps={styledTableProps}
+                                header={header}
+                                tableCanResize={tableCanResize}
+                                left={left}
+                                tableWidth={tableWidth}
+                            />
+                        ))}
 
+                        {paddingLeft > 0 && (
+                            <th
+                                aria-hidden
+                                style={{
+                                    width: String(paddingLeft) + 'px',
+                                    minWidth: String(paddingLeft) + 'px',
+                                    maxWidth: String(paddingLeft) + 'px',
+                                    padding: 0,
+                                    border: 'none',
+                                }}
+                            />
+                        )}
+
+                        {centerHeadersToRender.map((item) => {
+                            if (!item) return null
+                            const { header, left } = item
                             return (
                                 <TableHeaderCell
-                                    key={header.column.id}
+                                    key={header.id}
                                     styledTableProps={styledTableProps}
                                     header={header}
                                     tableCanResize={tableCanResize}
-                                    left={isFixed ? left : 0}
-                                    hasFixedLeftColumn={hasFixedLeftColumn}
+                                    left={left}
                                     tableWidth={tableWidth}
                                 />
                             )
                         })}
+
+                        {paddingRight > 0 && (
+                            <th
+                                aria-hidden
+                                style={{
+                                    width: String(paddingRight) + 'px',
+                                    minWidth: String(paddingRight) + 'px',
+                                    maxWidth: String(paddingRight) + 'px',
+                                    padding: 0,
+                                    border: 'none',
+                                }}
+                            />
+                        )}
+
+                        {rightHeaders.map(({ header, left }) => (
+                            <TableHeaderCell
+                                key={header.id}
+                                styledTableProps={styledTableProps}
+                                header={header}
+                                tableCanResize={tableCanResize}
+                                left={left}
+                                tableWidth={tableWidth}
+                            />
+                        ))}
                     </tr>
                 )
             })}

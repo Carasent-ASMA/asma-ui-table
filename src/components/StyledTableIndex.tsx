@@ -20,6 +20,7 @@ import { useProxyHorizontalScrollSync } from './columns/helpers/useProxyHorizont
 import { useElementHeightPx } from './columns/helpers/useElementHeightPx'
 
 import style from './StyledTable.module.scss'
+import { useColumnVirtualizer } from 'src/hooks/useColumnVirtualizer'
 
 type RowWithId = { id: string | number }
 
@@ -142,6 +143,8 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
         className,
     )
 
+    const { columnWindow } = useColumnVirtualizer({ table, scrollRef: tableScrollRef, isMobileView })
+
     const TableMarkup = (
         <table className={style['styled-table']} style={{ width: table.getTotalSize(), minWidth: '100%' }}>
             <TableHeader
@@ -149,9 +152,15 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 styledTableProps={options}
                 tableCanResize={!!options.enableColumnResizing}
                 tableWidth={null}
+                columnWindow={columnWindow}
             />
             <Fetching fetching={!!fetching} />
-            <TableBody table={table} styledTableProps={options} />
+            <TableBody
+                table={table}
+                styledTableProps={options}
+                scrollRef={tableScrollRef}
+                columnWindow={columnWindow}
+            />
         </table>
     )
 

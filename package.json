@@ -3,7 +3,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "version": "1.0.135",
+    "version": "1.0.137",
     "type": "module",
     "files": [
         "dist/**/*",
@@ -58,6 +58,7 @@
         "@fontsource/roboto": "^5.0.4",
         "@mui/material": "^5.13.7",
         "@tanstack/react-table": "^8.21.3",
+        "@tanstack/react-virtual": "^3.13.21",
         "clsx": "^1.2.1",
         "lodash-es": "^4.17.21",
         "react": "^18.2.0",
