@@ -155,7 +155,7 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 columnWindow={columnWindow}
             />
             <Fetching fetching={!!fetching} />
-            <TableBody table={table} styledTableProps={options} scrollRef={scrollRef} columnWindow={columnWindow} />
+            <TableBody table={table} styledTableProps={options} columnWindow={columnWindow} />
         </table>
     )
 

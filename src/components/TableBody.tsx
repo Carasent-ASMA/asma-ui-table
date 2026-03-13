@@ -4,7 +4,6 @@ import { TableSkeleton } from './TableSkeleton'
 import { TableRows } from './TableRows'
 import style from './StyledTable.module.scss'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import type { MutableRefObject } from 'react'
 import type { ColumnWindow } from 'src/hooks/useColumnVirtualizer'
 
 export function TableBody<
@@ -15,12 +14,10 @@ export function TableBody<
 >({
     table,
     styledTableProps,
-    scrollRef,
     columnWindow,
 }: {
     table: Table<TData>
     styledTableProps: StyledTableProps<TData, TCustomData>
-    scrollRef?: MutableRefObject<HTMLDivElement | null>
     columnWindow: ColumnWindow
 }) {
     const { columns, data, loading, enableDnd, rowHeight } = styledTableProps
@@ -42,20 +39,10 @@ export function TableBody<
         <tbody className={style['tbody']}>
             {enableDnd ? (
                 <SortableContext items={data} strategy={verticalListSortingStrategy}>
-                    <TableRows
-                        table={table}
-                        styledTableProps={styledTableProps}
-                        scrollRef={scrollRef}
-                        columnWindow={columnWindow}
-                    />
+                    <TableRows table={table} styledTableProps={styledTableProps} columnWindow={columnWindow} />
                 </SortableContext>
             ) : (
-                <TableRows
-                    table={table}
-                    styledTableProps={styledTableProps}
-                    scrollRef={scrollRef}
-                    columnWindow={columnWindow}
-                />
+                <TableRows table={table} styledTableProps={styledTableProps} columnWindow={columnWindow} />
             )}
         </tbody>
     )
