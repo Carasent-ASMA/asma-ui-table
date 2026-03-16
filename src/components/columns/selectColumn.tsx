@@ -31,7 +31,7 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                 <button
                     type='button'
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
-                    className='pl-2 flex items-center justify-start size-full'
+                    className='pl-2 flex w-full items-center justify-start m-0 p-0'
                     onClick={() => cell.row.toggleSelected()}
                 >
                     <StyledCheckbox
