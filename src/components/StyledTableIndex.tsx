@@ -159,6 +159,12 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
         </table>
     )
 
+    const NoRowsOverlay = showNoRowsOverlay ? (
+        <div className={style['no-rows-overlay-container']}>
+            <div className={style['no-rows-overlay-content']}>{noRowsOverlay}</div>
+        </div>
+    ) : null
+
     return (
         <RootContextProvider>
             <DndProvider enabled={!!enableDnd} data={data} setData={setData}>
@@ -171,7 +177,10 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                     <OverlayShell enabled={canShowStickyFooter} className={style['table-shell']}>
                         <div ref={wrapperRef} className={tableWrapperClass}>
                             {canShowStickyFooter ? (
-                                TableMarkup
+                                <>
+                                    {TableMarkup}
+                                    {NoRowsOverlay}
+                                </>
                             ) : (
                                 <div ref={tableScrollRef} className={cn(style['table-scroll'])}>
                                     <div
@@ -180,6 +189,8 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                                     >
                                         {TableMarkup}
                                     </div>
+
+                                    {NoRowsOverlay}
 
                                     <div ref={hScrollRef} className={style['table-hscroll']}>
                                         <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
@@ -198,10 +209,6 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                                         />
                                     </div>
                                 </div>
-                            )}
-
-                            {showNoRowsOverlay && (
-                                <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
                             )}
                         </div>
                     </OverlayShell>
