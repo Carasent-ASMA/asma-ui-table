@@ -1,13 +1,13 @@
-import { useMemo } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { DndContext, closestCenter, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove } from '@dnd-kit/sortable'
 
 import { cn } from 'src/helpers/cn'
 import { RootContextProvider } from 'src/context/RootContext'
-import { useIsMobileView } from 'src/hooks/useWindowWidthSize.hook'
+import { mobileView, useWindowWidthSize } from 'src/hooks/useWindowWidthSize.hook'
 
-import { type StyledTableProps, type TableState, type ColumnSizingState } from '../types'
+import type { StyledTableProps, TableState, ColumnSizingState } from '../types'
 import { useStyledTable } from '../hooks/useStyledTable'
 import { injectColumns } from '../helpers/injectColumns'
 
@@ -20,6 +20,7 @@ import { useProxyHorizontalScrollSync } from './columns/helpers/useProxyHorizont
 import { useElementHeightPx } from './columns/helpers/useElementHeightPx'
 
 import style from './StyledTable.module.scss'
+import { useColumnVirtualizer } from 'src/hooks/useColumnVirtualizer'
 
 type RowWithId = { id: string | number }
 
@@ -93,15 +94,29 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     const fetching = hasRows && !!loading
     const showNoRowsOverlay = !hasRows && !loading
 
-    const isMobileView = useIsMobileView()
+    const windowWidth = useWindowWidthSize()
+    const isMobileView = mobileView(windowWidth)
     const wantsStickyFooter = !!options.stickyFooter
 
-    // you can optionally add: && height != null
     const canShowStickyFooter = wantsStickyFooter && !isMobileView
+    const [hasInternalOverflow, setHasInternalOverflow] = useState(false)
+    const wrapperRef = useRef<HTMLDivElement | null>(null)
 
     const enableProxyHScroll = !canShowStickyFooter
     const { tableScrollRef, tableXRef, hScrollRef, hScrollContentRef } =
         useProxyHorizontalScrollSync(enableProxyHScroll)
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for overflow identification>
+    useLayoutEffect(() => {
+        const host = canShowStickyFooter ? wrapperRef.current : tableXRef.current ?? tableScrollRef.current
+
+        if (!host) {
+            setHasInternalOverflow(false)
+            return
+        }
+
+        setHasInternalOverflow(host.scrollWidth > host.clientWidth)
+    }, [canShowStickyFooter, tableXRef, tableScrollRef, windowWidth])
 
     const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
 
@@ -126,6 +141,9 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
         showNoRowsOverlay && style['table-wrapper--no-rows'],
         className,
     )
+    const scrollRef = canShowStickyFooter ? wrapperRef : tableScrollRef
+
+    const { columnWindow } = useColumnVirtualizer({ table, scrollRef, isMobileView })
 
     const TableMarkup = (
         <table className={style['styled-table']} style={{ width: table.getTotalSize(), minWidth: '100%' }}>
@@ -134,11 +152,18 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 styledTableProps={options}
                 tableCanResize={!!options.enableColumnResizing}
                 tableWidth={null}
+                columnWindow={columnWindow}
             />
             <Fetching fetching={!!fetching} />
-            <TableBody table={table} styledTableProps={options} />
+            <TableBody table={table} styledTableProps={options} columnWindow={columnWindow} />
         </table>
     )
+
+    const NoRowsOverlay = showNoRowsOverlay ? (
+        <div className={style['no-rows-overlay-container']}>
+            <div className={style['no-rows-overlay-content']}>{noRowsOverlay}</div>
+        </div>
+    ) : null
 
     return (
         <RootContextProvider>
@@ -146,12 +171,16 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                 <div
                     ref={containerRef}
                     className={cn(style['asma-ui-table-styled-table'], tableClassName)}
+                    data-x-overflow={hasInternalOverflow ? 'true' : 'false'}
                     style={{ height }}
                 >
                     <OverlayShell enabled={canShowStickyFooter} className={style['table-shell']}>
-                        <div className={tableWrapperClass}>
+                        <div ref={wrapperRef} className={tableWrapperClass}>
                             {canShowStickyFooter ? (
-                                TableMarkup
+                                <>
+                                    {TableMarkup}
+                                    {NoRowsOverlay}
+                                </>
                             ) : (
                                 <div ref={tableScrollRef} className={cn(style['table-scroll'])}>
                                     <div
@@ -160,6 +189,8 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                                     >
                                         {TableMarkup}
                                     </div>
+
+                                    {NoRowsOverlay}
 
                                     <div ref={hScrollRef} className={style['table-hscroll']}>
                                         <div ref={hScrollContentRef} className={style['table-hscroll__content']} />
@@ -178,10 +209,6 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                                         />
                                     </div>
                                 </div>
-                            )}
-
-                            {showNoRowsOverlay && (
-                                <div className={style['no-rows-overlay-container']}>{noRowsOverlay}</div>
                             )}
                         </div>
                     </OverlayShell>

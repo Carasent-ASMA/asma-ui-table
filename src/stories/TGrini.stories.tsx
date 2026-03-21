@@ -32,7 +32,7 @@ export const TGrini = () => {
     }, [columns.length])
 
     return (
-        <div className='mx-auto max-w-[1200px] flex flex-col gap-10'>
+        <div className='mx-auto w-full flex flex-col gap-10'>
             <div className='flex items-center gap-x-2 justify-end'>
                 <StyledButton
                     dataTest='test-2'
@@ -58,6 +58,7 @@ export const TGrini = () => {
             <StyledTable<ITemplate, ITemplate>
                 tableInstanceRef={tableRef}
                 stickyHeader
+                stickyFooter={false}
                 enableResizing
                 className='h-[calc(100vh-130px)]'
                 locale='en'
@@ -79,7 +80,10 @@ export const TGrini = () => {
                     </div>
                 }
                 rowHeight={40}
-                pageSize={30}
+                enableColumnResizing={true}
+                columnResizeMode='onChange'
+                pageSize={50}
+                textExpandArrow={true}
                 footer={(table) => {
                     return <div>columns - {table.getAllColumns().length}</div>
                 }}

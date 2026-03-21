@@ -119,7 +119,7 @@ export type StyledTableProps<TData, TCustomData> = {
     expandArrow?: boolean
     defaultExpanded?: boolean
     loading?: boolean
-    noRowsOverlay?: ReactElement
+    noRowsOverlay?: ReactNode
     tableInstanceRef?: React.MutableRefObject<Table<TData> | null>
     className?: string
     tableClassName?: string

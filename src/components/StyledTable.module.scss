@@ -1,4 +1,12 @@
 .asma-ui-table-styled-table {
+    --action-cell-shadow: none;
+    --fixed-cell-shadow: none;
+
+    &[data-x-overflow='true'] {
+        --action-cell-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
+        --fixed-cell-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
     *,
     *:after,
     *:before {
@@ -99,13 +107,22 @@
     }
 
     .no-rows-overlay-container {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-        z-index: 5;
-        top: 32px;
+        width: 100%;
+        flex: 1 1 auto;
+        min-height: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+    }
+
+    .no-rows-overlay-content {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .styled-table {
@@ -234,9 +251,8 @@
             z-index: 1;
 
             @media (min-width: 743px) {
+                box-shadow: var(--action-cell-shadow);
                 &.shadowed {
-                    box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
-
                     &.single-selection {
                         box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
 
@@ -257,9 +273,8 @@
                 left: 0;
                 z-index: 1;
 
+                box-shadow: var(--fixed-cell-shadow);
                 &.shadowed {
-                    box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
-
                     &.single-selection {
                         box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
                     }
@@ -269,7 +284,9 @@
     }
 
     .t-row.is-loading {
-        opacity: 0.5;
+        .t-cell {
+            opacity: 0.5;
+        }
     }
 
     .action-cell-default-background {
@@ -356,9 +373,7 @@
                 background-color: var(--colors-gray-10);
 
                 @media (min-width: 743px) {
-                    &.shadowed {
-                        box-shadow: -15px 0px 15px rgba(0, 0, 0, 0.1);
-                    }
+                    box-shadow: var(--action-cell-shadow);
                 }
             }
 
@@ -369,7 +384,7 @@
                     background-color: var(--colors-gray-10);
                     z-index: 160;
 
-                    box-shadow: 15px 0px 15px rgba(0, 0, 0, 0.1);
+                    box-shadow: var(--fixed-cell-shadow);
                 }
             }
         }
@@ -416,6 +431,11 @@
     .table-wrapper--proxy-bottom.table-wrapper--no-rows,
     .table-wrapper.table-wrapper--no-rows {
         min-height: 130px;
+    }
+
+    .table-wrapper.table-wrapper--no-rows {
+        display: flex;
+        flex-direction: column;
     }
 
     .table-bottom--sticky {

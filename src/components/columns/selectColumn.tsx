@@ -10,32 +10,43 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
         size: 38,
         header: ({ table }: HeaderContext<TData, TData>) => {
             return (
-                <StyledCheckbox
-                    size='small'
-                    dataTest='cell-select-all'
-                    checked={table.getIsAllRowsSelected()}
-                    indeterminate={table.getIsSomeRowsSelected()}
-                    onChange={table.getToggleAllRowsSelectedHandler()}
-                />
+                <button
+                    type='button'
+                    className='pl-2 flex size-full items-center justify-start'
+                    onClick={() => table.toggleAllRowsSelected()}
+                >
+                    <StyledCheckbox
+                        size='small'
+                        dataTest='cell-select-all'
+                        checked={table.getIsAllRowsSelected()}
+                        indeterminate={table.getIsSomeRowsSelected()}
+                        // DO NOT REMOVE needed for layout consistency
+                        hideWrapper
+                    />
+                </button>
             )
         },
         cell: ({ cell }: CellContext<TData, TData>) => {
             return (
-                <div style={{ height: rowHeight ? rowHeight : 'auto' }} className='flex items-center w-full'>
+                <button
+                    type='button'
+                    style={{ height: rowHeight ? rowHeight : 'auto' }}
+                    className='pl-2 flex w-full items-center justify-start m-0 p-0'
+                    onClick={() => cell.row.toggleSelected()}
+                >
                     <StyledCheckbox
                         size='small'
                         dataTest='cell-select'
                         checked={cell.row.getIsSelected()}
+                        // DO NOT REMOVE needed for layout consistency
+                        hideWrapper
                         disabled={!cell.row.getCanSelect()}
-                        onChange={() => {
-                            cell.row.toggleSelected()
-                        }}
                         onMouseUp={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
                         }}
                     />
-                </div>
+                </button>
             )
         },
         fixedLeft: isFixed,

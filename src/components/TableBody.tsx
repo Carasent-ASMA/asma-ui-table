@@ -1,16 +1,25 @@
-import { type Table } from '@tanstack/react-table'
+import type { Table } from '@tanstack/react-table'
 import type { StyledTableProps } from '../types'
 import { TableSkeleton } from './TableSkeleton'
 import { TableRows } from './TableRows'
 import style from './StyledTable.module.scss'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import type { ColumnWindow } from 'src/hooks/useColumnVirtualizer'
 
 export function TableBody<
     TData extends {
         id: string | number
     },
     TCustomData = Record<string, unknown>,
->({ table, styledTableProps }: { table: Table<TData>; styledTableProps: StyledTableProps<TData, TCustomData> }) {
+>({
+    table,
+    styledTableProps,
+    columnWindow,
+}: {
+    table: Table<TData>
+    styledTableProps: StyledTableProps<TData, TCustomData>
+    columnWindow: ColumnWindow
+}) {
     const { columns, data, loading, enableDnd, rowHeight } = styledTableProps
     const colSpan = table.getAllLeafColumns().length || columns.length || 1
 
@@ -30,10 +39,10 @@ export function TableBody<
         <tbody className={style['tbody']}>
             {enableDnd ? (
                 <SortableContext items={data} strategy={verticalListSortingStrategy}>
-                    <TableRows table={table} styledTableProps={styledTableProps} />
+                    <TableRows table={table} styledTableProps={styledTableProps} columnWindow={columnWindow} />
                 </SortableContext>
             ) : (
-                <TableRows table={table} styledTableProps={styledTableProps} />
+                <TableRows table={table} styledTableProps={styledTableProps} columnWindow={columnWindow} />
             )}
         </tbody>
     )
