@@ -10,6 +10,9 @@
         "dist/style.css",
         "tw-configs/**/*"
     ],
+    "repository": {
+        "url": "https://github.com/Carasent-ASMA/asma-ui-table"
+    },
     "keywords": [],
     "author": "asma-team",
     "types": "./dist/index.d.ts",
