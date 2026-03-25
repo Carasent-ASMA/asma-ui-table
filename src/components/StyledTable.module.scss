@@ -107,22 +107,17 @@
     }
 
     .no-rows-overlay-container {
-        width: 100%;
-        flex: 1 1 auto;
-        min-height: 130px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: auto;
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: auto;
+        z-index: 5;
     }
 
     .no-rows-overlay-content {
         width: 100%;
         max-width: 100%;
-        min-height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .styled-table {
@@ -430,12 +425,7 @@
     .table-wrapper--proxy.table-wrapper--no-rows,
     .table-wrapper--proxy-bottom.table-wrapper--no-rows,
     .table-wrapper.table-wrapper--no-rows {
-        min-height: 130px;
-    }
-
-    .table-wrapper.table-wrapper--no-rows {
-        display: flex;
-        flex-direction: column;
+        min-height: var(--no-rows-content-height, 130px);
     }
 
     .table-bottom--sticky {
