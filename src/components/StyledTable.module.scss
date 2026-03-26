@@ -245,21 +245,19 @@
             right: -1px;
             z-index: 1;
 
-            @media (min-width: 743px) {
-                box-shadow: var(--action-cell-shadow);
-                &.shadowed {
-                    &.single-selection {
-                        box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
+            box-shadow: var(--action-cell-shadow);
+            &.shadowed {
+                &.single-selection {
+                    box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400);
 
-                        &:last-child {
-                            box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400),
-                                inset -2px 0 0 0 var(--colors-gama-400);
-                        }
+                    &:last-child {
+                        box-shadow: inset 0 2px 0 0 var(--colors-gama-400), inset 0 -2px 0 0 var(--colors-gama-400),
+                            inset -2px 0 0 0 var(--colors-gama-400);
                     }
                 }
             }
         }
-
+ 
         .fixed-cell {
             height: 100%;
 
@@ -366,10 +364,7 @@
                 right: -1px;
                 z-index: 1;
                 background-color: var(--colors-gray-10);
-
-                @media (min-width: 743px) {
-                    box-shadow: var(--action-cell-shadow);
-                }
+                box-shadow: var(--action-cell-shadow);
             }
 
             @media (min-width: 743px) {
