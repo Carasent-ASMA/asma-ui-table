@@ -7,7 +7,7 @@ import {
     getSortedRowModel,
     getPaginationRowModel,
 } from '@tanstack/react-table'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { SELECT_COLUMN_ID, type StyledTableProps } from '../types'
 import { ExpandedRowsFeature } from 'src/custom-features/expand-rows'
 import { FocusedRowsFeature } from 'src/custom-features/focus-rows/FocusRowsFeature'
@@ -40,6 +40,7 @@ export const useStyledTable = <
 
     const columnOrder = usePersistedColumnOrder(persistColumnOrderKey)
     const persistedPageSize = usePersistedPageSize(uniqueKey)
+    const resolvedPageSize = persistedPageSize ?? pageSize ?? 50
 
     const table = useReactTable({
         _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature],
@@ -47,7 +48,7 @@ export const useStyledTable = <
         data,
         meta: { locale: locale ?? 'en' },
         initialState: {
-            pagination: { pageIndex: 0, pageSize: persistedPageSize ?? pageSize ?? 50 },
+            pagination: { pageIndex: 0, pageSize: resolvedPageSize },
             columnVisibility: {
                 ...initialState?.columnVisibility,
                 [SELECT_COLUMN_ID]: false,
@@ -80,19 +81,36 @@ export const useStyledTable = <
 
     usePersistColumnOrder(table, persistColumnOrderKey)
 
+    const storageKey = getPersistedPageSizeKey(uniqueKey)
     const pageSizeState = table.getState().pagination?.pageSize
+    const hydratedStorageKeyRef = useRef<string | undefined>(undefined)
 
     useEffect(() => {
-        const storageKey = getPersistedPageSizeKey(uniqueKey)
+        hydratedStorageKeyRef.current = undefined
 
-        if (!storageKey || !pageSizeState) return
+        const currentPageSize = table.getState().pagination?.pageSize
+
+        if (currentPageSize === resolvedPageSize) return
+
+        table.setPageIndex(0)
+        table.setPageSize(resolvedPageSize)
+    }, [resolvedPageSize, storageKey, table])
+
+    useEffect(() => {
+        if (!storageKey || pageSizeState == null) return
+
+        if (hydratedStorageKeyRef.current !== storageKey) {
+            if (pageSizeState !== resolvedPageSize) return
+
+            hydratedStorageKeyRef.current = storageKey
+        }
 
         try {
             localStorage.setItem(storageKey, JSON.stringify(pageSizeState))
         } catch (e) {
             console.error(e)
         }
-    }, [pageSizeState, uniqueKey])
+    }, [pageSizeState, resolvedPageSize, storageKey])
 
     return { table }
 }
