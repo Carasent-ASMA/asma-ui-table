@@ -138,7 +138,6 @@ export type StyledTableProps<TData, TCustomData> = {
     renderSubRows?: (props: { rows: TCustomData[]; row: TData }) => ReactElement | null
     getRowSelectionIds?: (ids: string[]) => void
     hideHeader?: boolean
-    showRowCountSelect?: boolean
     pageSize?: number
     enableResizing?: boolean
     enableDnd?: boolean
@@ -150,6 +149,7 @@ export type StyledTableProps<TData, TCustomData> = {
     singleSelectionRow?: boolean
     rowActionsState?: (row: Row<TData>) => RowActionsState | undefined
     stickyFooter?: boolean
+    hideRowCountSelect?: boolean
     /**
      * @info A unique identifier for the table. This name is used to store the table's state in localStorage,
      * ensuring that the table state is persisted across sessions for the specific table instance.

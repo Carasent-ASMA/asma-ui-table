@@ -1,5 +1,15 @@
 /// <reference types="vite/client" />
 
+declare module '*.module.scss' {
+    const classes: Record<string, string>
+    export default classes
+}
+
+declare module '*.scss' {
+    const content: string
+    export default content
+}
+
 declare module '*.json' {
     const value: { [key: string]: any }
     export default value
