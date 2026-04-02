@@ -1,7 +1,11 @@
 import { type Table } from '@tanstack/react-table'
+import paginationStyle from './TablePagination.module.scss'
 import { TablePagination } from './TablePagination'
+import { TableRowCountSelect } from './TableRowCountSelect'
 import type { StyledTableProps } from '../../types'
 import style from '../StyledTable.module.scss'
+
+const MIN_ROWS_FOR_FOOTER = 5
 
 export function TableFooter<
     TData extends {
@@ -17,27 +21,23 @@ export function TableFooter<
     styledTableProps: StyledTableProps<TData, TCustomData>
     canShowStickyFooter: boolean
 }) {
-    if (styledTableProps.hideFooter || styledTableProps.data.length === 0) return null
+    const totalRowCount = table.getRowCount()
+    const pageCount = table.getPageCount() || 1
+    const footerNode = styledTableProps.footer?.(table)
+    const hasFooterNode = footerNode !== null && footerNode !== undefined && footerNode !== false
+    const locale = styledTableProps.locale || 'en'
+    const hasEnoughRowsForFooter = totalRowCount >= MIN_ROWS_FOR_FOOTER
+
+    if (styledTableProps.hideFooter || !hasEnoughRowsForFooter) return null
 
     const paginationAlignLeft = styledTableProps.paginationAlignLeft
-
-    const pageSize = table.getState().pagination.pageSize
-    const totalRows = table.getFilteredRowModel().rows.length
-
-    const isManualPagination = !!table.options.manualPagination
-    const pagesLength = table.getPageCount() || 1
-
-    const shouldShowPagination = isManualPagination
-        ? pagesLength > 1
-        : totalRows > pageSize
-
-    const footerNode = styledTableProps.footer?.(table)
-
-    const hasFooterNode = footerNode !== null && footerNode !== undefined && footerNode !== false
-
-    const hasAnythingToRender = hasFooterNode || shouldShowPagination
+    const shouldShowRowCountSelect = !styledTableProps.hideRowCountSelect
+    const shouldShowPagination = pageCount > 1
+    const shouldShowControls = shouldShowRowCountSelect || shouldShowPagination
+    const hasAnythingToRender = hasFooterNode || shouldShowControls
 
     if (!hasAnythingToRender) return null
+
     return (
         <div
             className={canShowStickyFooter ? style['table-footer--sticky'] : style['table-footer--inline']}
@@ -48,15 +48,14 @@ export function TableFooter<
                 {}
             }
         >
-            {!paginationAlignLeft && styledTableProps.footer?.(table)}
-            {shouldShowPagination && (
-                <TablePagination
-                    table={table}
-                    showRowSelect={!!styledTableProps.showRowCountSelect}
-                    locale={styledTableProps.locale || 'en'}
-                />
+            {!paginationAlignLeft && footerNode}
+            {shouldShowControls && (
+                <div className={paginationStyle['table-pagination']}>
+                    {shouldShowRowCountSelect && <TableRowCountSelect table={table} locale={locale} />}
+                    {shouldShowPagination && <TablePagination table={table} locale={locale} />}
+                </div>
             )}
-            {paginationAlignLeft && styledTableProps.footer?.(table)}
+            {paginationAlignLeft && footerNode}
         </div>
     )
 }

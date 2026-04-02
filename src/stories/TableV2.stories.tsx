@@ -117,7 +117,6 @@ export const TableV2 = () => {
                 focusable
                 data={data}
                 stickyHeader
-                showRowCountSelect
                 className='h-[calc(100vh-170px)]'
                 locale='no'
                 tableInstanceRef={tableRef}

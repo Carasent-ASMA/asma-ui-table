@@ -7,12 +7,15 @@ import {
     getSortedRowModel,
     getPaginationRowModel,
 } from '@tanstack/react-table'
+import { useEffect } from 'react'
 import { SELECT_COLUMN_ID, type StyledTableProps } from '../types'
 import { ExpandedRowsFeature } from 'src/custom-features/expand-rows'
 import { FocusedRowsFeature } from 'src/custom-features/focus-rows/FocusRowsFeature'
 import { OrderColumnsFeature } from 'src/custom-features/order-columns/OrderColumnsFeature'
 import { usePersistColumnOrder } from '../custom-features/order-columns/usePersistColumnOrder'
 import { usePersistedColumnOrder } from 'src/custom-features/order-columns/usePersistedColumnOrder'
+
+import { getPersistedPageSizeKey, usePersistedPageSize } from './usePersistedPageSize'
 
 export const useStyledTable = <
     TData extends {
@@ -31,10 +34,12 @@ export const useStyledTable = <
         tableInstanceRef,
         locale,
         persistColumnOrderKey,
+        uniqueKey,
         ...rest
     } = props
 
     const columnOrder = usePersistedColumnOrder(persistColumnOrderKey)
+    const persistedPageSize = usePersistedPageSize(uniqueKey)
 
     const table = useReactTable({
         _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature],
@@ -42,7 +47,7 @@ export const useStyledTable = <
         data,
         meta: { locale: locale ?? 'en' },
         initialState: {
-            pagination: { pageIndex: 0, pageSize: pageSize || 50 },
+            pagination: { pageIndex: 0, pageSize: persistedPageSize ?? pageSize ?? 50 },
             columnVisibility: {
                 ...initialState?.columnVisibility,
                 [SELECT_COLUMN_ID]: false,
@@ -74,6 +79,20 @@ export const useStyledTable = <
     }
 
     usePersistColumnOrder(table, persistColumnOrderKey)
+
+    const pageSizeState = table.getState().pagination?.pageSize
+
+    useEffect(() => {
+        const storageKey = getPersistedPageSizeKey(uniqueKey)
+
+        if (!storageKey || !pageSizeState) return
+
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(pageSizeState))
+        } catch (e) {
+            console.error(e)
+        }
+    }, [pageSizeState, uniqueKey])
 
     return { table }
 }
