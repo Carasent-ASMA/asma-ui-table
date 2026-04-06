@@ -1,6 +1,8 @@
 import type { CellContext, HeaderContext } from '@tanstack/react-table'
 import { SELECT_COLUMN_ID } from '../../types'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
+import { StyledTooltip } from 'src/shared-components/tooltip'
+import { cn } from 'src/helpers/cn'
 
 export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
     return {
@@ -27,25 +29,31 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
             )
         },
         cell: ({ cell }: CellContext<TData, TData>) => {
+            const disabled = !cell.row.getCanSelect()
             return (
                 <button
                     type='button'
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
                     className='pl-2 flex w-full items-center justify-start m-0 p-0'
+                    disabled={disabled}
                     onClick={() => cell.row.toggleSelected()}
                 >
-                    <StyledCheckbox
-                        size='small'
-                        dataTest='cell-select'
-                        checked={cell.row.getIsSelected()}
-                        // DO NOT REMOVE needed for layout consistency
-                        hideWrapper
-                        disabled={!cell.row.getCanSelect()}
-                        onMouseUp={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                        }}
-                    />
+                    <StyledTooltip arrow title={cell.row.getRowSelectionTooltip()}>
+                        <span className={disabled ? 'cursor-not-allowed' : ''}>
+                            <StyledCheckbox
+                                size='small'
+                                dataTest='cell-select'
+                                checked={cell.row.getIsSelected()}
+                                // DO NOT REMOVE needed for layout consistency
+                                hideWrapper
+                                disabled={disabled}
+                                onMouseUp={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                }}
+                            />
+                        </span>
+                    </StyledTooltip>
                 </button>
             )
         },
