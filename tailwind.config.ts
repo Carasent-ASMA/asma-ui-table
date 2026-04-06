@@ -20,6 +20,9 @@ export default {
             animation,
             keyframes,
             colors,
+            cursor: {
+                'not-allowed-red': 'url("/src/assets/cursors/row-selection-disabled.svg"), not-allowed',
+            },
         },
     },
     plugins: [require('tailwind-scrollbar')],

@@ -36,10 +36,13 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
                     className='pl-2 flex w-full items-center justify-start m-0 p-0'
                     disabled={disabled}
-                    onClick={() => cell.row.toggleSelected()}
+                    onClick={() => {
+                        if (disabled) return
+                        cell.row.toggleSelected()
+                    }}
                 >
-                    <StyledTooltip arrow title={cell.row.getRowSelectionTooltip()}>
-                        <span className={disabled ? 'cursor-not-allowed' : ''}>
+                    <StyledTooltip arrow placement='top-start' title={cell.row.getRowSelectionTooltip()}>
+                        <span className={disabled ? 'cursor-not-allowed-red' : ''}>
                             <StyledCheckbox
                                 size='small'
                                 dataTest='cell-select'
