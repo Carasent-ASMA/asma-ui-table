@@ -1,8 +1,8 @@
 import type { CellContext, HeaderContext } from '@tanstack/react-table'
 import { SELECT_COLUMN_ID } from '../../types'
+import style from '../StyledTable.module.scss'
 import { StyledCheckbox } from 'src/shared-components/StyledCheckbox'
 import { StyledTooltip } from 'src/shared-components/tooltip'
-import { cn } from 'src/helpers/cn'
 
 export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
     return {
@@ -35,14 +35,14 @@ export function selectColumn<TData>(isFixed: boolean, rowHeight?: number) {
                     type='button'
                     style={{ height: rowHeight ? rowHeight : 'auto' }}
                     className='pl-2 flex w-full items-center justify-start m-0 p-0'
-                    disabled={disabled}
+                    aria-disabled={disabled}
                     onClick={() => {
                         if (disabled) return
                         cell.row.toggleSelected()
                     }}
                 >
                     <StyledTooltip arrow placement='top-start' title={cell.row.getRowSelectionTooltip()}>
-                        <span className={disabled ? 'cursor-not-allowed-red' : ''}>
+                        <span className={disabled ? style['cursor-not-allowed'] : undefined}>
                             <StyledCheckbox
                                 size='small'
                                 dataTest='cell-select'
