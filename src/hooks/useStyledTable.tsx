@@ -16,6 +16,7 @@ import { usePersistColumnOrder } from '../custom-features/order-columns/usePersi
 import { usePersistedColumnOrder } from 'src/custom-features/order-columns/usePersistedColumnOrder'
 
 import { getPersistedPageSizeKey, usePersistedPageSize } from './usePersistedPageSize'
+import { RowSelectionTooltipFeature } from 'src/custom-features/row-selection-tooltip/RowSelectionTooltipFeature'
 
 export const useStyledTable = <
     TData extends {
@@ -43,7 +44,7 @@ export const useStyledTable = <
     const resolvedPageSize = persistedPageSize ?? pageSize ?? 50
 
     const table = useReactTable({
-        _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature],
+        _features: [ExpandedRowsFeature, FocusedRowsFeature, OrderColumnsFeature, RowSelectionTooltipFeature],
         columns,
         data,
         meta: { locale: locale ?? 'en' },

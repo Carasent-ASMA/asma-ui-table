@@ -11,6 +11,7 @@ import type {
     ColumnMeta,
     HeaderContext,
     Row,
+    RowModel,
     TableOptions,
     Table,
     ColumnDef,
@@ -32,21 +33,23 @@ import type {
     FocusedRowsInstance,
 } from './custom-features/focus-rows'
 import type { OrderedColumnsOptions, OrderedColumnsTableState } from './custom-features/order-columns'
+import type { RowSelectionTooltipOptions, RowSelectionTooltipRow } from './custom-features/row-selection-tooltip'
 
 declare module '@tanstack/react-table' {
     interface TableState extends ExpandedRowsTableState, FocusedRowsTableState, OrderedColumnsTableState {}
 
     interface TableOptionsResolved<TData extends RowData>
-        extends ExpandedRowsOptions,
-            FocusedRowsOptions,
-            OrderedColumnsOptions {}
+        extends ExpandedRowsOptions, FocusedRowsOptions, OrderedColumnsOptions, RowSelectionTooltipOptions<TData> {}
 
-    interface Row<TData extends RowData> extends ExpandedRow, FocusedRow {}
+    interface Row<TData extends RowData> extends ExpandedRow, FocusedRow, RowSelectionTooltipRow<TData> {}
 
-    interface Table<TData extends RowData> extends ExpandedRowsInstance, FocusedRowsInstance {}
+    interface Table<TData extends RowData> extends ExpandedRowsInstance, FocusedRowsInstance {
+        getCoreRowModel: () => RowModel<TData>
+    }
 
     interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
-        extends VisibilityColumnDef,
+        extends
+            VisibilityColumnDef,
             ColumnPinningColumnDef,
             // TODO find out what if replacement is needed
             // FiltersColumnDef<TData>,
