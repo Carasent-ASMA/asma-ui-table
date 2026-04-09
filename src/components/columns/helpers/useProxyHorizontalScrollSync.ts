@@ -41,8 +41,14 @@ export function useProxyHorizontalScrollSync(enabled: boolean) {
         tableXEl.addEventListener('scroll', syncProxyFromTable, { passive: true })
         hScrollEl.addEventListener('scroll', syncTableFromProxy, { passive: true })
 
+        const content = tableXEl.querySelector('table')
         const ro = new ResizeObserver(syncWidth)
         ro.observe(tableXEl)
+
+        if (content) {
+            ro.observe(content)
+        }
+
         return () => {
             tableXEl.removeEventListener('scroll', syncProxyFromTable)
             hScrollEl.removeEventListener('scroll', syncTableFromProxy)

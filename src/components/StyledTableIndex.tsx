@@ -108,7 +108,6 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     const { tableScrollRef, tableXRef, hScrollRef, hScrollContentRef } =
         useProxyHorizontalScrollSync(enableProxyHScroll)
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for overflow identification>
     useLayoutEffect(() => {
         const host = canShowStickyFooter ? wrapperRef.current : tableXRef.current ?? tableScrollRef.current
 
@@ -117,8 +116,28 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
             return
         }
 
-        setHasInternalOverflow(host.scrollWidth > host.clientWidth)
-    }, [canShowStickyFooter, tableXRef, tableScrollRef, windowWidth])
+        const content = host.querySelector('table')
+
+        const updateOverflow = () => {
+            const nextHasOverflow = host.scrollWidth > host.clientWidth
+            setHasInternalOverflow((prevHasOverflow) =>
+                prevHasOverflow === nextHasOverflow ? prevHasOverflow : nextHasOverflow,
+            )
+        }
+
+        updateOverflow()
+
+        const resizeObserver = new ResizeObserver(updateOverflow)
+        resizeObserver.observe(host)
+
+        if (content) {
+            resizeObserver.observe(content)
+        }
+
+        return () => {
+            resizeObserver.disconnect()
+        }
+    }, [canShowStickyFooter, tableXRef, tableScrollRef])
 
     const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
 
