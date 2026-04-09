@@ -5,6 +5,8 @@ import dts from 'vite-plugin-dts'
 import tsConfigPaths from 'vite-tsconfig-paths'
 import * as packageJson from './package.json'
 
+const peerDependencies = Object.keys(packageJson.peerDependencies ?? {})
+
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
@@ -26,7 +28,7 @@ export default defineConfig({
             fileName: (format) => `asma-ui-table.${format}.js`,
         },
         rollupOptions: {
-            external: [...Object.keys(packageJson.peerDependencies), ...Object.keys(packageJson.devDependencies)],
+            external: (id) => peerDependencies.some((dependency) => id === dependency || id.startsWith(`${dependency}/`)),
             output: {
                 // globals: {
                 //     react: 'React',

@@ -182,7 +182,7 @@ const useColumns = () => {
     }, [])
 }
 
-const getFooter = (table: Table<IFixedTest>, tableRef: React.RefObject<Table<IFixedTest>>) => {
+const getFooter = (table: Table<IFixedTest>, tableRef: React.RefObject<Table<IFixedTest> | null>) => {
     return (
         <div className='uppercase w-full justify-end font-semibold text-gama-500 mr-2 flex gap-4 items-center'>
             <StyledButton
