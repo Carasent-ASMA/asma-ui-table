@@ -140,14 +140,23 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
     }, [canShowStickyFooter, tableXRef, tableScrollRef])
 
     const { ref: containerRef, heightPx: rowsAreaPx } = useElementHeightPx<HTMLDivElement>()
+    const { ref: inlineFooterRef, heightPx: inlineFooterHeightPx } = useElementHeightPx<HTMLDivElement>()
 
     const rowHeightPx = options.rowHeight ?? 48
     const visibleRows = table.getRowModel().rows.length
+    const inlineHeaderHeightPx = options.hideHeader ? 0 : 32
+    const inlineHScrollHeightPx = 12
 
     const rowsFit = useMemo(() => {
         if (rowHeightPx <= 0) return 0
-        return Math.floor(rowsAreaPx / rowHeightPx)
-    }, [rowsAreaPx, rowHeightPx])
+
+        const reservedHeightPx = canShowStickyFooter
+            ? 0
+            : inlineHeaderHeightPx + inlineFooterHeightPx + inlineHScrollHeightPx
+        const availableRowsAreaPx = Math.max(0, rowsAreaPx - reservedHeightPx)
+
+        return Math.floor(availableRowsAreaPx / rowHeightPx)
+    }, [canShowStickyFooter, inlineFooterHeightPx, inlineHeaderHeightPx, inlineHScrollHeightPx, rowHeightPx, rowsAreaPx])
 
     const isShortTable = !canShowStickyFooter && visibleRows > 0 && visibleRows <= rowsFit
     const shouldExpandEmptyBody = !canShowStickyFooter && showNoRowsOverlay
@@ -244,6 +253,7 @@ export const StyledTable = <TData extends RowWithId, TCustomData = Record<string
                                     </div>
 
                                     <div
+                                        ref={inlineFooterRef}
                                         className={cn(
                                             style['table-bottom'],
                                             isShortTable && style['table-bottom--sticky'],
