@@ -20,7 +20,7 @@ export function useColumnVirtualizer<TData extends { id: string | number }>({
 }) {
     const centerColumns = table
         .getVisibleLeafColumns()
-        .filter((column) => !column.columnDef.fixedLeft && column.id !== ACTIONS_COLUMN_ID)
+        .filter((column) => !column.columnDef.fixedLeft && !column.columnDef.fixedRight && column.id !== ACTIONS_COLUMN_ID)
 
     const columnVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableCellElement>({
         count: centerColumns.length,

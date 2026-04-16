@@ -72,7 +72,7 @@ export function HeaderActionMenu<TData>({
         const { active, over } = event
         if (!active || !over || active.id === over.id) return
 
-        const overColumnFixed = !!items.find((i) => i.id === over.id)?.columnDef.fixedLeft
+        const overColumnFixed = !!items.find((i) => i.id === over.id)?.columnDef.fixedLeft || !!items.find((i) => i.id === over.id)?.columnDef.fixedRight
 
         if (overColumnFixed) return
 
@@ -128,14 +128,14 @@ export function HeaderActionMenu<TData>({
 
                         return collisions.filter((collision) => {
                             const column = filteredList.find((c) => c.id === collision.id)
-                            return !column?.columnDef.fixedLeft
+                            return !column?.columnDef.fixedLeft && !column?.columnDef.fixedRight
                         })
                     }}
                     sensors={sensors}
                 >
                     <SortableContext items={filteredList.map((c) => c.id)} strategy={verticalListSortingStrategy}>
                         {filteredList.map((column) => {
-                            const dragDisabled = !!column.columnDef.fixedLeft
+                            const dragDisabled = !!column.columnDef.fixedLeft || !!column.columnDef.fixedRight
                             const hidingDisabled = column.columnDef.enableHiding === false
 
                             const tooltipTitle =

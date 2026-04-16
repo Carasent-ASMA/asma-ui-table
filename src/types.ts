@@ -60,6 +60,7 @@ declare module '@tanstack/react-table' {
         cellAlign?: 'left' | 'center' | 'right'
         headerAlign?: 'left' | 'center' | 'right'
         fixedLeft?: boolean
+        fixedRight?: boolean
         pinnedHeaderText?: string
     }
     interface TableMeta<TData extends RowData> {

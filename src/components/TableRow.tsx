@@ -106,13 +106,32 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
 
     const centerCells = useMemo(
         () =>
-            positionedCells.filter((cell) => !cell.column.columnDef.fixedLeft && cell.column.id !== ACTIONS_COLUMN_ID),
+            positionedCells.filter(
+                (cell) =>
+                    !cell.column.columnDef.fixedLeft &&
+                    !cell.column.columnDef.fixedRight &&
+                    cell.column.id !== ACTIONS_COLUMN_ID,
+            ),
         [positionedCells],
     )
 
     const rightCells = useMemo(
-        () => positionedCells.filter((cell) => cell.column.id === ACTIONS_COLUMN_ID),
+        () => {
+            const pinnedRightCells = positionedCells.filter(
+                (cell) => cell.column.columnDef.fixedRight || cell.column.id === ACTIONS_COLUMN_ID,
+            )
+
+            return pinnedRightCells.map((cell, index, allCells) => ({
+                ...cell,
+                right: allCells.slice(index + 1).reduce((acc, col) => acc + (col.column.getSize() || 0), 0),
+            }))
+        },
         [positionedCells],
+    )
+
+    const hasActionsColumn = useMemo(
+        () => rightCells.some((cell) => cell.column.id === ACTIONS_COLUMN_ID),
+        [rightCells],
     )
 
     const leftCells = useMemo(
@@ -129,8 +148,10 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
     const renderCell = useCallback(
         (cell: (typeof positionedCells)[number], renderIndex: number) => {
             const isActionsCell = cell.column.id === ACTIONS_COLUMN_ID
-            const isFixed = cell.column.columnDef.fixedLeft
+            const isFixedLeft = cell.column.columnDef.fixedLeft
+            const isFixedRight = Boolean(cell.column.columnDef.fixedRight)
             const isLastFixedCell = cell.id === leftCells.at(-1)?.id
+            const isFirstRightFixedCell = cell.id === rightCells.at(0)?.id && !isActionsCell
             const isExpandedRow = row.isExpanded()
             const isFirstCell = renderIndex === 0
 
@@ -145,15 +166,26 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                         isActionsCell && Boolean(actions) && leftCells.length && style['shadowed'],
                         isActionsCell &&
                             (getRowClassName?.(row) ? getRowClassName?.(row) : style['action-cell-default-background']),
-                        isFixed && style['fixed-cell'],
+                        isFixedLeft && style['fixed-cell'],
+                        isFixedRight && style['fixed-right-cell'],
                         isLastFixedCell && style['shadowed'],
+                        isFirstRightFixedCell && style['shadowed-right'],
                         row.getIsSelected() && style['selected'],
-                        isFixed &&
+                        isFixedLeft &&
                             (getRowClassName?.(row) ? getRowClassName?.(row) : style['fixed-cell-default-background']),
+                        isFixedRight &&
+                            (getRowClassName?.(row)
+                                ? getRowClassName?.(row)
+                                : style['fixed-right-cell-default-background']),
                         isExpandedRow && style['expanded_row'],
                         (singleSelection || row.isFocused()) && style['single-selection'],
                     )}
-                    style={{ left: isFixed ? cell.left : undefined }}
+                    style={{
+                        left: isFixedLeft ? cell.left : undefined,
+                        right: isFixedRight
+                            ? (cell as (typeof rightCells)[number]).right + (hasActionsColumn ? -1 : 0)
+                            : undefined,
+                    }}
                 >
                     <div
                         style={{
@@ -184,7 +216,18 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                 </td>
             )
         },
-        [singleSelection, actions, getRowClassName, hasRowClickHandler, leftCells, row, spaceForCheckmark, tdClassName],
+        [
+            singleSelection,
+            actions,
+            getRowClassName,
+            hasRowClickHandler,
+            hasActionsColumn,
+            leftCells,
+            rightCells,
+            row,
+            spaceForCheckmark,
+            tdClassName,
+        ],
     )
 
     return (
