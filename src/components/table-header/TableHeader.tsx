@@ -49,9 +49,20 @@ export function TableHeader<
 
                 const leftHeaders = positionedHeaders.filter(({ header }) => header.column.columnDef.fixedLeft)
                 const centerHeaders = positionedHeaders.filter(
-                    ({ header }) => !header.column.columnDef.fixedLeft && header.column.id !== ACTIONS_COLUMN_ID,
+                    ({ header }) =>
+                        !header.column.columnDef.fixedLeft &&
+                        !header.column.columnDef.fixedRight &&
+                        header.column.id !== ACTIONS_COLUMN_ID,
                 )
-                const rightHeaders = positionedHeaders.filter(({ header }) => header.column.id === ACTIONS_COLUMN_ID)
+                const rightHeaders = positionedHeaders
+                    .filter(({ header }) => header.column.columnDef.fixedRight || header.column.id === ACTIONS_COLUMN_ID)
+                const hasActionsColumn = rightHeaders.some(({ header }) => header.column.id === ACTIONS_COLUMN_ID)
+                const rightHeadersWithOffsets = rightHeaders.map((headerItem, index, allHeaders) => ({
+                    ...headerItem,
+                    right:
+                        allHeaders.slice(index + 1).reduce((acc, col) => acc + (col.header.column.getSize() || 0), 0) +
+                        (hasActionsColumn ? -1 : 0),
+                }))
 
                 const centerHeadersToRender = indexes.reduce<typeof centerHeaders>((acc, index) => {
                     const header = centerHeaders[index]
@@ -115,13 +126,14 @@ export function TableHeader<
                             />
                         )}
 
-                        {rightHeaders.map(({ header, left }) => (
+                        {rightHeadersWithOffsets.map(({ header, left, right }) => (
                             <TableHeaderCell
                                 key={header.id}
                                 styledTableProps={styledTableProps}
                                 header={header}
                                 tableCanResize={tableCanResize}
                                 left={left}
+                                right={right}
                                 tableWidth={tableWidth}
                             />
                         ))}

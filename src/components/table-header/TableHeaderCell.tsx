@@ -18,12 +18,14 @@ export function TableHeaderCell<
     header,
     tableCanResize = false,
     left,
+    right,
     tableWidth,
 }: {
     styledTableProps: StyledTableProps<TData, TCustomData>
     header: Header<TData, unknown>
     tableCanResize: boolean
     left: number
+    right?: number
     tableWidth: number | null
 }) {
     const {  hideHeader = false, enableResizing = false } = styledTableProps
@@ -31,6 +33,7 @@ export function TableHeaderCell<
     const { isResizing, enableResizingFlag, disableResizingFlag } = useRootContext()
 
     const isFixed = header.column.columnDef.fixedLeft
+    const isFixedRight = Boolean(header.column.columnDef.fixedRight)
 
     const hasActionsColumn = useMemo(
         () => header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID),
@@ -53,10 +56,12 @@ export function TableHeaderCell<
                 //  sticky actions
                 header.column.id === ACTIONS_COLUMN_ID && style['t-cell__actions'],
                 isFixed && style['t-cell__fixed'],
+                isFixedRight && style['t-cell__fixed-right'],
             )}
             style={{
                 ...getTableHeaderStyle({ enableResizing, header, element: ref.current, tableWidth }),
                 ...(isFixed && { left }),
+                ...(isFixedRight && { right }),
             }}
         >
             <div
