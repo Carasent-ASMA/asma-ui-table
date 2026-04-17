@@ -39,6 +39,10 @@ export function TableHeaderCell<
         () => header.headerGroup.headers.some((hdr) => hdr.id === ACTIONS_COLUMN_ID),
         [header.headerGroup.headers],
     )
+    const hasFixedRightColumns = useMemo(
+        () => header.headerGroup.headers.some((hdr) => Boolean(hdr.column.columnDef.fixedRight)),
+        [header.headerGroup.headers],
+    )
     const lastColumn = useMemo(
         () => header.headerGroup.headers[header.headerGroup.headers.length - (hasActionsColumn ? 2 : 1)],
         [header.headerGroup.headers, hasActionsColumn],
@@ -55,6 +59,7 @@ export function TableHeaderCell<
                 // *
                 //  sticky actions
                 header.column.id === ACTIONS_COLUMN_ID && style['t-cell__actions'],
+                header.column.id === ACTIONS_COLUMN_ID && hasFixedRightColumns && style['t-cell__actions--no-shadow'],
                 isFixed && style['t-cell__fixed'],
                 isFixedRight && style['t-cell__fixed-right'],
             )}

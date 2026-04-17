@@ -252,6 +252,11 @@
             z-index: 1;
 
             box-shadow: var(--action-cell-shadow);
+
+            &.action-cell--no-shadow {
+                box-shadow: none;
+            }
+
             &.shadowed {
                 &.single-selection {
                     box-shadow:
@@ -403,6 +408,10 @@
                 z-index: 1;
                 background-color: var(--colors-gray-10);
                 box-shadow: var(--action-cell-shadow);
+
+                &.t-cell__actions--no-shadow {
+                    box-shadow: none;
+                }
             }
 
             @media (min-width: 743px) {
