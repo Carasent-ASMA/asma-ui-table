@@ -134,6 +134,11 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         [rightCells],
     )
 
+    const hasFixedRightColumns = useMemo(
+        () => rightCells.some((cell) => Boolean(cell.column.columnDef.fixedRight)),
+        [rightCells],
+    )
+
     const leftCells = useMemo(
         () => positionedCells.filter((cell) => cell.column.columnDef.fixedLeft),
         [positionedCells],
@@ -163,6 +168,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                         hasRowClickHandler && 'cursor-pointer',
                         tdClassName,
                         isActionsCell && style['action-cell'],
+                        isActionsCell && hasFixedRightColumns && style['action-cell--no-shadow'],
                         isActionsCell && Boolean(actions) && leftCells.length && style['shadowed'],
                         isActionsCell &&
                             (getRowClassName?.(row) ? getRowClassName?.(row) : style['action-cell-default-background']),
@@ -222,6 +228,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             getRowClassName,
             hasRowClickHandler,
             hasActionsColumn,
+            hasFixedRightColumns,
             leftCells,
             rightCells,
             row,
