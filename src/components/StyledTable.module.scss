@@ -163,6 +163,10 @@
                 .fixed-cell {
                     background-color: var(--colors-gray-50);
                 }
+
+                .fixed-right-cell {
+                    background-color: var(--colors-gray-50);
+                }
             }
         }
 
@@ -175,6 +179,10 @@
 
             @media (min-width: 743px) {
                 .fixed-cell {
+                    background-color: var(--colors-gama-25);
+                }
+
+                .fixed-right-cell {
                     background-color: var(--colors-gama-25);
                 }
             }
