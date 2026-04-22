@@ -154,6 +154,7 @@ export function RowActionMenu<TData>({
                                                 className={action.className}
                                                 disabled={action.disabled}
                                                 onClick={() => {
+                                                    if (action.disabled) return
                                                     action.onClick?.(tableData.row)
                                                 }}
                                                 onMouseDown={(e) => {
