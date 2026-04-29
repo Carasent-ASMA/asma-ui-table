@@ -1,6 +1,6 @@
 import { flexRender, type Row } from '@tanstack/react-table'
 import { Fragment, useMemo, type CSSProperties, useEffect, useCallback } from 'react'
-import { ACTIONS_COLUMN_ID, isCustomAction, type StyledTableProps } from '../types'
+import { ACTIONS_COLUMN_ID, type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
@@ -34,7 +34,6 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         defaultExpanded,
         actions,
         customActionsNode,
-        rowActionsState,
         textExpandArrow,
         enableMultiRowSelection,
         enableRowSelection,
@@ -136,19 +135,8 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         [rightCells],
     )
 
-    const shouldStickActionsCell = useMemo(() => {
-        if (customActionsNode) return true
-        if (!actions) return false
 
-        const state = rowActionsState?.(row) ?? { state: 'enabled' as const }
-        if (state.state === 'hidden') return false
-
-        const rowActions = actions(row)
-        if (state.state === 'disabled') return true
-        if (rowActions.length === 0) return false
-
-        return rowActions.some((action) => (isCustomAction(action) ? true : !action.hide))
-    }, [actions, customActionsNode, row, rowActionsState])
+    const shouldStickActionsCell = Boolean(actions) || Boolean(customActionsNode)
 
     const hasFixedRightColumns = useMemo(
         () => rightCells.some((cell) => Boolean(cell.column.columnDef.fixedRight)),
@@ -254,6 +242,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             tdClassName,
         ],
     )
+
 
     return (
         <Fragment key={row.id}>
