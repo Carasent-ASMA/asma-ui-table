@@ -265,6 +265,13 @@
                 box-shadow: none;
             }
 
+            &.action-cell--not-fixed {
+                position: static;
+                right: auto;
+                z-index: auto;
+                box-shadow: none;
+            }
+
             &.shadowed {
                 &.single-selection {
                     box-shadow:

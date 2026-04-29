@@ -1,6 +1,6 @@
 import { flexRender, type Row } from '@tanstack/react-table'
 import { Fragment, useMemo, type CSSProperties, useEffect, useCallback } from 'react'
-import { ACTIONS_COLUMN_ID, type StyledTableProps } from '../types'
+import { ACTIONS_COLUMN_ID, isCustomAction, type StyledTableProps } from '../types'
 import style from './StyledTable.module.scss'
 import clsx from 'clsx'
 import { useSortable } from '@dnd-kit/sortable'
@@ -33,6 +33,8 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         renderSubRows,
         defaultExpanded,
         actions,
+        customActionsNode,
+        rowActionsState,
         textExpandArrow,
         enableMultiRowSelection,
         enableRowSelection,
@@ -134,6 +136,20 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
         [rightCells],
     )
 
+    const shouldStickActionsCell = useMemo(() => {
+        if (customActionsNode) return true
+        if (!actions) return false
+
+        const state = rowActionsState?.(row) ?? { state: 'enabled' as const }
+        if (state.state === 'hidden') return false
+
+        const rowActions = actions(row)
+        if (state.state === 'disabled') return true
+        if (rowActions.length === 0) return false
+
+        return rowActions.some((action) => (isCustomAction(action) ? true : !action.hide))
+    }, [actions, customActionsNode, row, rowActionsState])
+
     const hasFixedRightColumns = useMemo(
         () => rightCells.some((cell) => Boolean(cell.column.columnDef.fixedRight)),
         [rightCells],
@@ -168,8 +184,9 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
                         hasRowClickHandler && 'cursor-pointer',
                         tdClassName,
                         isActionsCell && style['action-cell'],
-                        isActionsCell && hasFixedRightColumns && style['action-cell--no-shadow'],
-                        isActionsCell && Boolean(actions) && leftCells.length && style['shadowed'],
+                        isActionsCell && !shouldStickActionsCell && style['action-cell--not-fixed'],
+                        isActionsCell && shouldStickActionsCell && hasFixedRightColumns && style['action-cell--no-shadow'],
+                        isActionsCell && shouldStickActionsCell && Boolean(actions) && leftCells.length && style['shadowed'],
                         isActionsCell &&
                             (getRowClassName?.(row) ? getRowClassName?.(row) : style['action-cell-default-background']),
                         isFixedLeft && style['fixed-cell'],
@@ -232,6 +249,7 @@ export function TableRow<TData extends { id: string | number }, TCustomData = Re
             leftCells,
             rightCells,
             row,
+            shouldStickActionsCell,
             spaceForCheckmark,
             tdClassName,
         ],
